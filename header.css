@@ -84,6 +84,17 @@ h1 {
     }
 }
 
+/* Style the user icon */
+.user-icon {
+    font-size: 24px;
+    margin-right: 5px;
+}
+
+/* Style the username */
+#usernamePlaceholder {
+    font-weight: bold;
+}
+
 /* Style the logout link */
 .logout a {
     text-decoration: none;
