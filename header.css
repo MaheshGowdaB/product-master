@@ -83,3 +83,19 @@ h1 {
         right: 15px;
     }
 }
+
+/* Style the logout link */
+.logout a {
+    text-decoration: none;
+    color: white;
+    background-color: #e44d26; /* Use a color that complements your theme */
+    padding: 8px 15px;
+    border-radius: 5px;
+    margin-left: 10px;
+    transition: background-color 0.3s;
+}
+
+/* Add hover effect for the logout link */
+.logout a:hover {
+    background-color: #c53717; /* Adjusted color on hover */
+}
