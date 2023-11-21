@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#registerButton").click(function (e) {
+                e.preventDefault();
+
+                // Validation
+                var mobileNo = $("#MobileNo").val();
+                var emailId = $("#EmailId").val();
+                var password = $("#Password").val();
+
+                if (!isValidMobileNumber(mobileNo)) {
+                    alert("Mobile number should be 10 digits and contain only numbers.");
+                    return;
+                }
+
+                if (!isValidEmail(emailId)) {
+                    alert("Email should end with @gmail.com.");
+                    return;
+                }
+
+                if (!isValidPassword(password)) {
+                    alert("Password should have one capital letter, one small letter, one number, one symbol, and be at least 8 characters long.");
+                    return;
+                }
+
+                // AJAX submission
+                $.ajax({
+                    type: "POST",
+                    url: "registration_process.php",
+                    data: $("#registrationForm").serialize(),
+                    success: function (response) {
+                        alert(response);
+                        if (response.includes("registered")) {
+                            // Save username in local storage
+                            var username = $('#UserName').val();
+                            localStorage.setItem('username', username);
+
+                            // Redirect to welcome.html
+                            window.location.href = 'welcome.html';
+                        } else if (response.includes("Error")) {
+                            // Handle error if needed
+                        } else {
+                            window.location.href = 'welcome.html';
+                        }
+                    }
+                });
+            });
+
+            function isValidMobileNumber(mobileNo) {
+                return /^\d{10}$/.test(mobileNo);
+            }
+
+            function isValidEmail(email) {
+                return email.endsWith("@gmail.com");
+            }
+
+            function isValidPassword(password) {
+                var regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+                return regex.test(password);
+            }
+        });
+    </script>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Registration</h1>
+        <form id="registrationForm" action="registration_process.php" method="post">
+            <label for="Name">Name:</label>
+            <input type="text" id="Name" name="Name" required>
+
+            <label for="MobileNo">Mobile Number:</label>
+            <input type="text" id="MobileNo" name="MobileNo" required>
+
+            <label for="EmailId">Email:</label>
+            <input type="email" id="EmailId" name="EmailId" required>
+
+            <label for="Gender">Gender:</label>
+            <select id="Gender" name="Gender" required>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select>
+
+            <label for="UserName">Username:</label>
+            <input type="text" id="UserName" name="UserName" required>
+
+            <label for="Password">Password:</label>
+            <input type="password" id="Password" name="Password" required>
+
+            <input type="button" id="registerButton" value="Register">
+        </form>
+        <p>Already have an account? <a href="login.html">Login here</a>.</p>
+    </div>
+
+</body>
+
+</html>

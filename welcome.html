@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background-color: #333;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .menu-icon,
+        .user-icon {
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .user-icon {
+            font-size: 20px;
+            margin-right: 5px;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+        }
+
+        .logout a {
+            text-decoration: none;
+            color: white;
+        }
+
+        center {
+            margin-top: 50px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .menu-options {
+            display: none;
+            position: absolute;
+            top: 100%; /* Adjusted to position below the header */
+            left: 0;
+            width: 20%;
+            height: 1000%;
+            background-color: #333;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            color: white;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .menu-options a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 8px 0;
+        }
+
+        @media only screen and (max-width: 600px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .user-menu {
+                margin-top: 10px;
+            }
+
+            .menu-icon {
+                position: absolute;
+                top: 15px;
+                right: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="menu-icon" onclick="toggleMenu()">☰</div>
+        <div class="user-menu">
+            <div class="user-menu">
+                <div class="user-icon">&#128100;</div>
+                <div class="logout"><a href="#" id="logoutLink">Logout</a></div>
+            </div>
+        </div>
+        <div class="menu-options" id="menuOptions">
+            <a href="#">Home</a>
+            <a href="#">About</a>
+            <a href="#">Services</a>
+            <a href="#">Blog</a>
+            <a href="#">Contact</a>
+            <!-- Add more options as needed -->
+        </div>
+    </header>
+    <center>
+        <h1>Welcome, <span id="usernamePlaceholder"></span>!</h1>
+    </center>
+
+    <script>
+        function toggleMenu() {
+            var menuOptions = document.getElementById('menuOptions');
+            var menuIcon = document.querySelector('.menu-icon');
+
+            if (menuOptions.style.display === 'block') {
+                menuOptions.style.display = 'none';
+                menuIcon.innerHTML = '☰';
+            } else {
+                menuOptions.style.display = 'block';
+                menuIcon.innerHTML = '✖';
+            }
+        }
+
+        var storedUsername = localStorage.getItem('username');
+        if (storedUsername) {
+            document.getElementById('usernamePlaceholder').textContent = storedUsername;
+        } else {
+            document.getElementById('usernamePlaceholder').textContent = 'Guest';
+        }
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#logoutLink').on('click', function (e) {
+                e.preventDefault();
+
+                // Ask for confirmation
+                var confirmLogout = confirm("Are you sure you want to logout?");
+                if (!confirmLogout) {
+                    return;
+                }
+
+                localStorage.removeItem('username');
+
+                $.ajax({
+                    type: 'GET',
+                    url: 'logout_process.php',
+                    success: function (response) {
+                        if (response === 'success') {
+                            window.location.href = 'login.html';
+                        } else {
+                            alert('Logout failed. Please try again.');
+                        }
+                    },
+                    error: function () {
+                        alert('Error occurred during logout process');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

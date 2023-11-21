@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Login</h1>
+        <form id="loginForm" action="login_process.php" method="post">
+            <label for="UserName">Username:</label>
+            <input type="text" id="UserName" name="UserName" required>
+
+            <label for="Password">Password:</label>
+            <div class="password-container">
+                <input type="password" id="Password" name="Password" required>
+                <span class="password-toggle" onclick="togglePasswordVisibility()">&#x1F441;</span>
+            </div>
+
+            <input type="submit" value="Login">
+        </form>
+        <p>Don't have an account? <a href="registration.html">Register here</a>.</p>
+    </div>
+
+    <script>
+        function togglePasswordVisibility() {
+            var passwordField = $('#Password');
+            var passwordToggle = $('.password-toggle');
+
+            if (passwordField.attr('type') === 'password') {
+                passwordField.attr('type', 'text');
+                passwordToggle.html('&#x1F440;'); // Eye open symbol
+            } else {
+                passwordField.attr('type', 'password');
+                passwordToggle.html('&#x1F441;'); // Eye closed symbol
+            }
+        }
+
+        $(document).ready(function(){
+            $('#loginForm').submit(function(e){
+                e.preventDefault(); // Prevent form submission
+
+                // Perform AJAX request
+                $.ajax({
+                    type: 'POST',
+                    url: 'login_process.php',
+                    data: $('#loginForm').serialize(),
+                    success: function(response){
+                        if(response == 1){
+                            // Save username in local storage
+                            var username = $('#UserName').val();
+                            localStorage.setItem('username', username);
+
+                            // Redirect to welcom.php
+                            window.location.href = 'welcome.html';
+                        } else {
+                            alert('Invalid username or password');
+                        }
+                    },
+                    error: function(){
+                        alert('Error occurred during login process');
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
