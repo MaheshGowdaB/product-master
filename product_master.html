@@ -125,7 +125,7 @@ function initializeHeader() {
     </div>
   </nav>
   <div class="container my-4">
-    <table class="table" id="employeeTable">
+    <table class="table" id="productTable">
       <!-- Table content will be populated dynamically using JavaScript -->
     </table>
   </div>
@@ -196,7 +196,12 @@ function initializeHeader() {
   function confirmAddProduct() {
     return confirm("Are you sure you want to add this product?");
   }
+
 </script>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-rddjVBzVT4HCAqGXL1DYlSe12aAzLu+eEzNSiCyr4UvMoU6bsKQmThAwAHLgjz9w" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-rA5KuL8Hc7Ow5s/g/Ty8t35p9tPdRiYziZmnn9Z18ekyiWsKjNlCFywXB9IHtDR5" crossorigin="anonymous"></script>
 
 <!-- Edit Employee Modal -->
 <div class="modal fade" id="editEmployeeModal" tabindex="-1" aria-labelledby="editEmployeeModalLabel" aria-hidden="true">
@@ -245,26 +250,26 @@ function initializeHeader() {
     // JavaScript to perform dynamic operations
     $(document).ready(function () {
       // Function to refresh the table
-      function refreshTable() {
-        $.ajax({
-          url: 'get_employees.php',
-          type: 'GET',
-          success: function (data) {
-            $('#employeeTable').html(data);
-          }
-        });
-      }
-
-      // Event listener for the refresh button
-      $('#refreshButton').click(function () {
-        refreshTable();
+      function refreshProductTable() {
+      $.ajax({
+        url: 'get_products.php',
+        type: 'GET',
+        success: function (data) {
+          $('#productTable').html(data);
+        }
       });
+    }
+
+    // Event listener for the refresh button
+    $(document).ready(function () {
+      refreshProductTable();
+    });
 
       // Event listener for the search button
       $('#searchButton').click(function () {
         var searchId = $('#searchInput').val();
         $.ajax({
-          url: 'get_employees.php',
+          url: 'get_products.php',
           type: 'GET',
           data: { search: searchId },
           success: function (data) {
