@@ -251,19 +251,20 @@ function initializeHeader() {
     $(document).ready(function () {
       // Function to refresh the table
       function refreshProductTable() {
-      $.ajax({
-        url: 'get_products.php',
-        type: 'GET',
-        success: function (data) {
-          $('#productTable').html(data);
-        }
-      });
-    }
+        $.ajax({
+          url: 'get_products.php',
+          type: 'GET',
+          success: function (data) {
+            $('#productTable').html(data);
+          }
+        });
+      }
 
-    // Event listener for the refresh button
-    $(document).ready(function () {
-      refreshProductTable();
-    });
+      // Event listener for the refresh button
+      $('#refreshButton').click(function () {
+        // Call the function to refresh with all data
+        refreshProductTable();
+      });
 
       // Event listener for the search button
       $('#searchButton').click(function () {
@@ -273,7 +274,7 @@ function initializeHeader() {
           type: 'GET',
           data: { search: searchId },
           success: function (data) {
-            $('#employeeTable').html(data);
+            $('#productTable').html(data);
           }
         });
       });
@@ -296,8 +297,10 @@ function initializeHeader() {
         $("#editSalary").val(salary);
       }
 
+      
+
       // Initial table load
-      refreshTable();
+      refreshProductTable();
     });
   </script>
 </body>
