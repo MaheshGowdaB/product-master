@@ -43,7 +43,7 @@ while ($row = $result->fetch_assoc()) {
         <td>{$row['product_image']}</td>
         <td>
             <a class='btn btn-primary edit-product' href='#' data-bs-toggle='modal' data-bs-target='#editProductModal'
-                data-id='{$row['id']}'
+                data-id='{$row['product_code']}'
                 data-name='{$row['product_name']}'
                 data-UOM='{$row['UOM']}'
                 data-stock='{$row['stock']}'
@@ -52,7 +52,8 @@ while ($row = $result->fetch_assoc()) {
                 data-product-image='{$row['product_image']}'>
                 Edit
             </a>
-            <a class='btn btn-danger delete-product' href='delete_product.php?id={$row['id']}' onclick=\"return confirm('Are you sure you want to delete this product?')\">Delete</a>
+            <a class='btn btn-danger delete-product' href='delete_product.php?id={$row['product_code']}' onclick=\"return confirm('Are you sure you want to delete this Product?')\">Delete</a>
+
         </td>
     </tr>
     ";
