@@ -199,66 +199,52 @@ function initializeHeader() {
 
 </script>
 
-<!-- HTML - Edit Employee Modal -->
+    <!-- Edit Employee Modal -->
 <div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editProductModalLabel">Edit Product Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form method="POST" action="edit_products.php" onsubmit="return confirmEdit();">
-                    <div class="mb-3">
-                        <label for="product_code" class="form-label">Product Code</label>
-                        <input type="text" class="form-control" id="product_code" name="product_code" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="product_name" class="form-label">Product Name</label>
-                        <input type="text" class="form-control" id="product_name" name="product_name" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="UOM" class="form-label">Unit of Measure</label>
-                        <!-- Change input type to select -->
-                        <select class="form-select" id="UOM" name="UOM" required>
-                            <option value="" selected disabled>Select UOM</option>
-                            <option value="kg">Kilogram (kg)</option>
-                            <option value="g">Gram (g)</option>
-                            <option value="lb">Pound (lb)</option>
-                            <option value="oz">Ounce (oz)</option>
-                            <option value="ltr">Liter (ltr)</option>
-                            <option value="ml">Milliliter (ml)</option>
-                            <option value="m">Meter (m)</option>
-                            <option value="cm">Centimeter (cm)</option>
-                            <option value="mm">Millimeter (mm)</option>
-                            <!-- Add more options as needed -->
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="stock" class="form-label">Stock</label>
-                        <input type="number" class="form-control" id="stock" name="stock" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="selling_price" class="form-label">Selling Price</label>
-                        <input type="number" class="form-control" id="selling_price" name="selling_price" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="offer_price" class="form-label">Offer Price</label>
-                        <input type="number" class="form-control" id="offer_price" name="offer_price" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="product_image" class="form-label">Product Image</label>
-                        <input type="text" class="form-control" id="product_image" name="product_image" required>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Save Changes</button>
-                    </div>
-                </form>
-            </div>
-        </div>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editProductModalLabel">Edit Product Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" action="edit_products.php" onsubmit="return confirmEdit();">     
+          <div class="mb-3">
+            <label for="product_code" class="form-label">Product Code</label>
+            <input type="text" class="form-control" id="product_code" name="product_code" required>
+          </div>
+          <div class="mb-3">
+            <label for="product_name" class="form-label">Product Name</label>
+            <input type="text" class="form-control" id="product_name" name="product_name" required>
+          </div>
+          <div class="mb-3">
+            <label for="UOM" class="form-label">Unit of Measure</label>
+            <input type="text" class="form-control" id="UOM" name="UOM" required>
+          </div>
+          <div class="mb-3">
+            <label for="stock" class="form-label">Stock</label>
+            <input type="number" class="form-control" id="stock" name="stock" required>
+          </div>
+          <div class="mb-3">
+            <label for="selling_price" class="form-label">Selling Price</label>
+            <input type="number" class="form-control" id="selling_price" name="selling_price" required>
+          </div>
+          <div class="mb-3">
+            <label for="offer_price" class="form-label">Offer Price</label>
+            <input type="number" class="form-control" id="offer_price" name="offer_price" required>
+          </div>
+          <div class="mb-3">
+            <label for="product_image" class="form-label">Product Image</label>
+            <input type="text" class="form-control" id="product_image" name="product_image" required>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+          </div>
+        </form>
+      </div>
     </div>
+  </div>
 </div>
-
 
 <script>
   function confirmEdit() {
@@ -307,29 +293,32 @@ function initializeHeader() {
         });
       });
 
+
 // Event listener for the edit button
 $(document).on("click", ".edit-product", function () {
-    var product_code = $(this).data("id");
-    var product_name = $(this).data("name");
-    var UOM = $(this).data("uom"); // Use lowercase 'uom' to match the data attribute
+    var productCode = $(this).data("id");
+    var productName = $(this).data("name");
+    var UOM = $(this).data("uom");
     var stock = $(this).data("stock");
-    var selling_price = $(this).data("selling-price");
-    var offer_price = $(this).data("offer-price");
-    var product_image = $(this).data("product-image");
+    var sellingPrice = $(this).data("selling-price");
+    var offerPrice = $(this).data("offer-price");
+    var productImage = $(this).data("product-image");
 
-    populateEditModal(product_code, product_name, UOM, stock, selling_price, offer_price, product_image);
+    populateEditModal(productCode, productName, UOM, stock, sellingPrice, offerPrice, productImage);
 });
 
 // Function to populate the edit modal with selected product details
-function populateEditModal(product_code, product_name, UOM, stock, selling_price, offer_price, product_image) {
-    $("#product_code").val(product_code);
-    $("#product_name").val(product_name);
+function populateEditModal(productCode, productName, UOM, stock, sellingPrice, offerPrice, productImage) {
+    $("#product_code").val(productCode);
+    $("#product_name").val(productName);
     $("#UOM").val(UOM);
     $("#stock").val(stock);
-    $("#selling_price").val(selling_price);
-    $("#offer_price").val(offer_price);
-    $("#product_image").val(product_image);
+    $("#selling_price").val(sellingPrice);
+    $("#offer_price").val(offerPrice);
+    $("#product_image").val(productImage);
 }
+
+
 
 
 
