@@ -115,8 +115,7 @@ function initializeHeader() {
           <li class="nav-item">
             <div class="form-inline">
               <div class="input-group">
-                <input class="form-control" type="search" id="searchInput" placeholder="Search Employee ID" aria-label="Search">
-                <button class="btn btn-outline-success" id="searchButton">Search</button>
+                <input class="form-control" type="search" id="searchInput" placeholder="Search Product Code" aria-label="Search">
               </div>
             </div>
           </li>
@@ -280,18 +279,19 @@ function initializeHeader() {
 });
 
 
-      // Event listener for the search button
-      $('#searchButton').click(function () {
-        var searchId = $('#searchInput').val();
-        $.ajax({
-          url: 'get_products.php',
-          type: 'GET',
-          data: { search: searchId },
-          success: function (data) {
+// Event listener for the search input field
+$('#searchInput').on('input', function () {
+    var searchId = $(this).val();
+    $.ajax({
+        url: 'get_products.php',
+        type: 'GET',
+        data: { search: searchId },
+        success: function (data) {
             $('#productTable').html(data);
-          }
-        });
-      });
+        }
+    });
+});
+
 
 
 // Event listener for the edit button

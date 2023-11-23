@@ -3,10 +3,11 @@ include "connection.php";
 
 if (isset($_GET['search']) && !empty($_GET['search'])) {
     $search_id = $_GET['search'];
-    $sql = "SELECT * FROM tblproducts WHERE product_code = '$search_id'";
+    $sql = "SELECT * FROM tblproducts WHERE product_code LIKE '$search_id%'";
 } else {
     $sql = "SELECT * FROM tblproducts";
 }
+
 
 $result = $conn->query($sql);
 
