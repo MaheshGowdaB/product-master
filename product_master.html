@@ -129,7 +129,7 @@ function initializeHeader() {
     </table>
   </div>
     
- <!-- Add New Product Modal -->
+<!-- Add New Product Modal -->
 <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -151,16 +151,6 @@ function initializeHeader() {
             <label for="UOM" class="form-label">Unit of Measure</label>
             <select class="form-select" id="UOM" name="UOM" required>
               <option value="" selected disabled>Select UOM</option>
-              <option value="kg">Kilogram (kg)</option>
-              <option value="g">Gram (g)</option>
-              <option value="lb">Pound (lb)</option>
-              <option value="oz">Ounce (oz)</option>
-              <option value="ltr">Liter (ltr)</option>
-              <option value="ml">Milliliter (ml)</option>
-              <option value="m">Meter (m)</option>
-              <option value="cm">Centimeter (cm)</option>
-              <option value="mm">Millimeter (mm)</option>
-              <!-- Add more options as needed -->
             </select>
           </div>
           <div class="mb-3">
@@ -183,22 +173,27 @@ function initializeHeader() {
           <div class="modal-footer">
             <button type="submit" class="btn btn-primary">Add Product</button>
           </div>
-          <!-- Add this hidden input field to your form -->
           <input type="hidden" id="username" name="username" value="">
-
         </form>
       </div>
     </div>
   </div>
 </div>
+
+<!-- Script to populate UOM options for Add New Product modal -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    populateUOMSelect('UOM');
+  });
+</script>
+
 <script>
   function confirmAddProduct() {
     return confirm("Are you sure you want to add this product?");
   }
-
 </script>
 
-    <!-- Edit Employee Modal -->
+<!-- Edit Product Modal -->
 <div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -207,35 +202,38 @@ function initializeHeader() {
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form method="POST" action="edit_products.php" onsubmit="return confirmEdit();">     
+        <form method="POST" action="edit_product.php" onsubmit="return confirmEditProduct();">
           <div class="mb-3">
-            <label for="product_code" class="form-label">Product Code</label>
-            <input type="text" class="form-control" id="product_code" name="product_code" required>
+            <label for="editProductCode" class="form-label">Product Code</label>
+            <input type="text" class="form-control" id="editProductCode" name="productCode" readonly>
           </div>
           <div class="mb-3">
-            <label for="product_name" class="form-label">Product Name</label>
-            <input type="text" class="form-control" id="product_name" name="product_name" required>
+            <label for="editProductName" class="form-label">Product Name</label>
+            <input type="text" class="form-control" id="editProductName" name="productName" required>
           </div>
           <div class="mb-3">
-            <label for="UOM" class="form-label">Unit of Measure</label>
-            <input type="text" class="form-control" id="UOM" name="UOM" required>
+            <label for="editUOM" class="form-label">Unit of Measure</label>
+            <select class="form-select" id="editUOM" name="UOM" required>
+              <!-- Options for Unit of Measure will be populated dynamically -->
+            </select>
           </div>
           <div class="mb-3">
-            <label for="stock" class="form-label">Stock</label>
-            <input type="number" class="form-control" id="stock" name="stock" required>
+            <label for="editStock" class="form-label">Stock</label>
+            <input type="number" class="form-control" id="editStock" name="stock" required>
           </div>
           <div class="mb-3">
-            <label for="selling_price" class="form-label">Selling Price</label>
-            <input type="number" class="form-control" id="selling_price" name="selling_price" required>
+            <label for="editSellingPrice" class="form-label">Selling Price</label>
+            <input type="number" class="form-control" id="editSellingPrice" name="sellingPrice" required>
           </div>
           <div class="mb-3">
-            <label for="offer_price" class="form-label">Offer Price</label>
-            <input type="number" class="form-control" id="offer_price" name="offer_price" required>
+            <label for="editOfferPrice" class="form-label">Offer Price</label>
+            <input type="number" class="form-control" id="editOfferPrice" name="offerPrice" required>
           </div>
           <div class="mb-3">
-            <label for="product_image" class="form-label">Product Image</label>
-            <input type="text" class="form-control" id="product_image" name="product_image" required>
+            <label for="editProductImage" class="form-label">Product Image URL</label>
+            <input type="text" class="form-control" id="editProductImage" name="productImage" required>
           </div>
+
           <div class="modal-footer">
             <button type="submit" class="btn btn-primary">Save Changes</button>
           </div>
@@ -245,11 +243,40 @@ function initializeHeader() {
   </div>
 </div>
 
+<!-- Script to populate UOM options for Edit Product modal -->
 <script>
-  function confirmEdit() {
+  document.addEventListener('DOMContentLoaded', function () {
+    populateUOMSelect('editUOM');
+  });
+</script>
+
+<script>
+  function confirmEditProduct() {
     return confirm("Are you sure you want to save these changes?");
   }
 </script>
+
+
+<script>
+  function populateUOMSelect(elementId) {
+    var uomSelect = document.getElementById(elementId);
+    var uomOptions = ["", "kg", "g", "lb", "oz", "ltr", "ml", "m", "cm", "mm"];
+
+    // Clear existing options
+    uomSelect.innerHTML = '';
+
+    // Add new options
+    for (var i = 0; i < uomOptions.length; i++) {
+      var option = document.createElement("option");
+      option.value = uomOptions[i];
+      option.text = uomOptions[i].charAt(0).toUpperCase() + uomOptions[i].slice(1); // Capitalize the first letter
+      uomSelect.add(option);
+    }
+  }
+</script>
+
+
+
 
  <!-- Bootstrap Bundle with Popper -->
  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
@@ -304,18 +331,22 @@ $(document).on("click", ".edit-product", function () {
     var offerPrice = $(this).data("offer-price");
     var productImage = $(this).data("product-image");
 
-    populateEditModal(productCode, productName, UOM, stock, sellingPrice, offerPrice, productImage);
+    populateEditProductModal(productCode, productName, UOM, stock, sellingPrice, offerPrice, productImage);
 });
 
 // Function to populate the edit modal with selected product details
-function populateEditModal(productCode, productName, UOM, stock, sellingPrice, offerPrice, productImage) {
-    $("#product_code").val(productCode);
-    $("#product_name").val(productName);
-    $("#UOM").val(UOM);
-    $("#stock").val(stock);
-    $("#selling_price").val(sellingPrice);
-    $("#offer_price").val(offerPrice);
-    $("#product_image").val(productImage);
+function populateEditProductModal(productCode, productName, UOM, stock, sellingPrice, offerPrice, productImage) {
+    // Set values in the edit product modal input fields
+    $("#editProductCode").val(productCode);
+    $("#editProductName").val(productName);
+    $("#editUOM").val(UOM);
+    $("#editStock").val(stock);
+    $("#editSellingPrice").val(sellingPrice);
+    $("#editOfferPrice").val(offerPrice);
+    $("#editProductImage").val(productImage);
+
+    // Display the edit product modal
+    $("#editProductModal").modal("show");
 }
 
 
