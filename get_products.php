@@ -2,12 +2,18 @@
 include "connection.php";
 
 if (isset($_GET['search']) && !empty($_GET['search'])) {
-    $search_id = $_GET['search'];
-    $sql = "SELECT * FROM tblproducts WHERE product_code LIKE '$search_id%'";
+    $search_text = $_GET['search'];
+    $sql = "SELECT * FROM tblproducts WHERE 
+            product_code LIKE '%$search_text%' OR
+            product_name LIKE '%$search_text%' OR
+            UOM LIKE '%$search_text%' OR
+            stock LIKE '%$search_text%' OR
+            selling_price LIKE '%$search_text%' OR
+            offer_price LIKE '%$search_text%' OR
+            product_image LIKE '%$search_text%'";
 } else {
     $sql = "SELECT * FROM tblproducts";
 }
-
 
 $result = $conn->query($sql);
 

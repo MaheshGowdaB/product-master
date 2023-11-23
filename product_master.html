@@ -306,13 +306,12 @@ function initializeHeader() {
 });
 
 
-// Event listener for the search input field
 $('#searchInput').on('input', function () {
-    var searchId = $(this).val();
+    var searchValue = $(this).val();
     $.ajax({
         url: 'get_products.php',
         type: 'GET',
-        data: { search: searchId },
+        data: { search: searchValue },
         success: function (data) {
             $('#productTable').html(data);
         }
