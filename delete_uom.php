@@ -4,7 +4,6 @@ include "connection.php";
 if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['keyCode'])) {
     // Retrieve the Key Code from the query parameters
     $keyCode = $_GET['keyCode'];
-
     // Validate and sanitize input (you can add more validation as needed)
     $keyCode = mysqli_real_escape_string($conn, $keyCode);
 

@@ -17,7 +17,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($conn->query($sql) === TRUE) {
         // Update successful
-        echo json_encode(array('status' => 'success', 'message' => 'UOM updated successfully'));
+        $response = array('status' => 'success', 'message' => 'UOM updated successfully');
+        echo json_encode($response);
+
+        // Additional step: Add the redirection to uom_master.html
+        if ($response['status'] === 'success') {
+            header('Location: uom_master.html');
+            exit;  // Make sure to exit after the redirection
+        }
     } else {
         // Update failed
         echo json_encode(array('status' => 'error', 'message' => 'Error updating UOM'));

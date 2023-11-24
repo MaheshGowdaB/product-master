@@ -310,18 +310,20 @@ $(document).ready(function () {
                             <td>${row.UOMName}</td>
                             <td>${row.Value}</td>
                             <td>
-  <div class="btn-group" role="group">
-    <a class='btn btn-primary edit-uom' href='#' data-bs-toggle='modal' data-bs-target='#editUOMModal'
-      data-id='${row.KeyCode}'
-      data-name='${row.UOMName}'
-      data-value='${row.Value}'>
-      Edit
-    </a>
-    <a class='btn btn-danger delete-uom' href='delete_uom.php?id=${row.KeyCode}' onclick="return confirm('Are you sure you want to delete this UOM?')">
-      Delete
-    </a>
-  </div>
-</td>
+                                <div class="btn-group" role="group">
+                                <a class='btn btn-primary edit-uom' href='#' data-bs-toggle='modal' data-bs-target='#editUOMModal'
+                                data-id='${row.KeyCode}'
+                                data-name='${row.UOMName}'
+                                data-value='${row.Value}'>
+                                Edit
+                                </a>
+                                <a class='btn btn-danger delete-uom' href='#' data-bs-toggle='modal' data-bs-target='#deleteUOMModal'
+                                data-id='${row.KeyCode}' data-name='${row.UOMName}' data-value='${row.Value}'>
+                                Delete
+                                </a>
+
+                                </div>
+                            </td>
                         </tr>
                     `);
                 });
@@ -369,6 +371,112 @@ $('#searchInput').on('input', function () {
                 $('#editUOMModal').find('#editUOMName').val(uomName);
                 $('#editUOMModal').find('#editValue').val(value);
             });
+
+
+
+            // Handle the response from edit_uom.php
+function handleEditUOMResponse(response) {
+    var message;
+    var status;
+
+    if (response.status === 'success') {
+        // If the edit was successful, set the message and status accordingly
+        message = 'UOM updated successfully';
+        status = 'success';
+    } else {
+        // If the edit failed, set the message and status accordingly
+        message = 'Error updating UOM';
+        status = 'error';
+    }
+
+    // Show a popup with the message and a continue button
+    showPopup(message, status);
+}
+
+
+// Function to show a popup with a message and a continue button
+function showPopup(message, status) {
+    var popup = `
+        <div class="modal fade" id="popupModal" tabindex="-1" aria-labelledby="popupModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="popupModalLabel">${status === 'success' ? 'Success' : 'Error'}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        ${message}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="continueToUOMMaster()">Continue</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Append the popup to the body and show it
+    $('body').append(popup);
+    $('#popupModal').modal('show');
+
+    // Remove the popup from the DOM after it's closed
+    $('#popupModal').on('hidden.bs.modal', function () {
+        $(this).remove();
+    });
+}
+
+// Function to redirect to uom_master.html
+function continueToUOMMaster() {
+    window.location.href = 'uom_master.html';
+}
+
+
+
+
+
+
+function deleteUOM(keyCode) {
+    $.ajax({
+        type: 'GET',
+        url: 'delete_uom.php',
+        data: { keyCode: keyCode },
+        dataType: 'json',
+        success: function (response) {
+            handleDeleteUOMResponse(response);
+        },
+        error: function () {
+            alert('Error occurred during UOM deletion process');
+        }
+    });
+}
+
+// Handle the response from delete_uom.php
+function handleDeleteUOMResponse(response) {
+    if (response.status === 'success') {
+        // Show a success message
+        alert(response.message);
+
+        // Refresh the UOM table after deletion
+        refreshUOMTable();
+    } else {
+        // Show an error message
+        alert(response.message);
+    }
+}
+
+
+
+
+$(document).on("click", ".delete-uom", function () {
+    var keyCode = $(this).data("id");
+
+    // Ask for confirmation before deletion
+    var confirmDelete = confirm("Are you sure you want to delete this UOM?");
+    if (confirmDelete) {
+        // Call the deleteUOM function
+        deleteUOM(keyCode);
+    }
+});
 
 
 
