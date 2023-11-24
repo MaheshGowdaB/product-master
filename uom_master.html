@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <title>UOM Master</title>
+  <link rel="stylesheet" href="header.css">
+</head>
+<body>
+    <header class="header">
+        <div class="menu-icon" onclick="toggleMenu()">☰</div>
+        <div class="user-menu">
+            <div class="user-menu">
+                <div class="user-icon">&#128100;</div>
+                <span id="usernamePlaceholder"></span>
+                <div class="logout"><a href="#" id="logoutLink">Logout</a></div>
+            </div>
+        </div>
+        <div class="menu-options" id="menuOptions">
+            <a href="welcome.html">Home</a>
+            <a href="#">About</a>
+            <a href="product_master.html">Product Master</a>
+            <a href="uom_master.html">UOM Master</a>
+            <a href="#">Blog</a>
+            <a href="#">Contact</a>
+        </div>
+    </header>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="header.js"></script>
+    <script>
+        $(document).ready(function () {
+            initializeHeader();
+        });
+
+        function initializeHeader() {
+            var storedUsername = localStorage.getItem('username');
+            var usernameInput = document.getElementById('username');
+  
+            if (storedUsername) {
+                document.getElementById('usernamePlaceholder').textContent = storedUsername;
+                usernameInput.value = storedUsername;
+            } else {
+                document.getElementById('usernamePlaceholder').textContent = 'Guest';
+                usernameInput.value = 'Guest';
+            }
+
+            $('#logoutLink').on('click', function (e) {
+                e.preventDefault();
+                var confirmLogout = confirm("Are you sure you want to logout?");
+                if (!confirmLogout) {
+                    return;
+                }
+
+                localStorage.removeItem('username');
+
+                $.ajax({
+                    type: 'GET',
+                    url: 'logout_process.php',
+                    success: function (response) {
+                        if (response === 'success') {
+                            window.location.href = 'login.html';
+                        } else {
+                            alert('Logout failed. Please try again.');
+                        }
+                    },
+                    error: function () {
+                        alert('Error occurred during logout process');
+                    }
+                });
+            });
+        }
+
+        function toggleMenu() {
+            var menuOptions = document.getElementById('menuOptions');
+            var menuIcon = document.querySelector('.menu-icon');
+
+            if (menuOptions.style.display === 'block') {
+                menuOptions.style.display = 'none';
+                menuIcon.innerHTML = '☰';
+            } else {
+                menuOptions.style.display = 'block';
+                menuIcon.innerHTML = '✖';
+            }
+        }
+    </script>
+
+
+
+
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <button type="button" class="btn btn-primary nav-link active" data-bs-toggle="modal" data-bs-target="#addUOMModal">
+              Add New
+            </button>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="#" id="refreshButton">Refresh</a>
+          </li>
+          <li class="nav-item">
+            <div class="form-inline">
+              <div class="input-group">
+                <input class="form-control" type="search" id="searchInput" placeholder="Search UOM" aria-label="Search">
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+    <div class="container my-4">
+        <table class="table" id="uomTable">
+            <!-- Table content will be populated dynamically using JavaScript -->
+        </table>
+    </div>
+
+   <!-- Add New UOM Modal -->
+<div class="modal fade" id="addUOMModal" tabindex="-1" aria-labelledby="addUOMModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addUOMModalLabel">Add New UOM</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="add_uom.php" onsubmit="return confirmAddUOM();">
+                    <div class="mb-3">
+                        <label for="addUOMName" class="form-label">UOM Name</label>
+                        <input type="text" class="form-control" id="addUOMName" name="UOMName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="addValue" class="form-label">Value</label>
+                        <input type="text" class="form-control" id="addValue" name="Value" required>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" id="addUOMButton">Add UOM</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function confirmAddUOM() {
+        // You can add additional validation logic here if needed
+        return true;
+    }
+</script>
+
+
+   <!-- Edit UOM Modal -->
+<div class="modal fade" id="editUOMModal" tabindex="-1" aria-labelledby="editUOMModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editUOMModalLabel">Edit UOM Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="edit_uom.php" onsubmit="return confirmEditUOM();">
+                    <div class="mb-3">
+                        <label for="editKeyCode" class="form-label">Key Code</label>
+                        <input type="text" class="form-control" id="editKeyCode" name="KeyCode" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editUOMName" class="form-label">UOM Name</label>
+                        <input type="text" class="form-control" id="editUOMName" name="UOMName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editValue" class="form-label">Value</label>
+                        <input type="text" class="form-control" id="editValue" name="Value" required>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function confirmEditUOM() {
+        return confirm("Are you sure you want to save these changes?");
+    }
+</script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            populateUOMSelect('addUOM');
+            populateUOMSelect('editUOM');
+        });
+
+        function populateUOMSelect(elementId) {
+            var uomSelect = document.getElementById(elementId);
+            var uomOptions = ["", "kg", "g", "lb", "oz", "ltr", "ml", "m", "cm", "mm"];
+
+            uomSelect.innerHTML = '';
+
+            for (var i = 0; i < uomOptions.length; i++) {
+                var option = document.createElement("option");
+                option.value = uomOptions[i];
+                option.text = uomOptions[i].charAt(0).toUpperCase() + uomOptions[i].slice(1);
+                uomSelect.add(option);
+            }
+        }
+    </script>
+<style>
+    /* Edit button styling */
+    .edit-uom {
+      background-color: #007bff; /* Bootstrap primary color (blue) */
+      color: #fff; /* White text */
+      border: none;
+      padding: 5px 10px;
+      margin-right: 5px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+  
+    /* Delete button styling */
+    .delete-uom {
+      background-color: #dc3545; /* Bootstrap danger color (red) */
+      color: #fff; /* White text */
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+  </style>
+  
+    <script>
+// AJAX and dynamic operations for UOM Master
+$(document).ready(function () {
+    function refreshUOMTable() {
+        $.ajax({
+            url: 'get_uoms.php',
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                buildUOMTable(data);
+            }
+        });
+    }
+
+    function buildUOMTable(data) {
+        // ...
+
+        $('#uomTable').append(`</tbody>`);
+    }
+
+    // ...
+
+    // Handle the response from add_uom.php
+    function handleAddUOMResponse(response) {
+        if (response.status === 'success') {
+            // Show a success message
+            alert(response.message);
+
+            // Redirect to uom_master.html
+            window.location.href = 'uom_master.html';
+        } else {
+            // Show an error message
+            alert(response.message);
+        }
+    }
+
+    $('#addUOMButton').click(function (e) {
+        e.preventDefault();
+
+        // Your existing AJAX code
+        $.ajax({
+            type: 'POST',
+            url: 'add_uom.php',
+            data: $('#addUOMModal form').serialize(), // Serialize the form data
+            dataType: 'json',
+            success: handleAddUOMResponse, // Call the new function to handle the response
+            error: function () {
+                alert('Error occurred during UOM addition process');
+            }
+        });
+    });
+
+            function buildUOMTable(data) {
+                $('#uomTable').empty();
+
+                $('#uomTable').append(`
+                    <thead>
+                        <tr>
+                            <th>KeyCode</th>
+                            <th>UOM Name</th>
+                            <th>Value</th>
+                            <th>ACTIONS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                `);
+
+                $.each(data, function (index, row) {
+                    $('#uomTable').append(`
+                        <tr>
+                            <td>${row.KeyCode}</td>
+                            <td>${row.UOMName}</td>
+                            <td>${row.Value}</td>
+                            <td>
+  <div class="btn-group" role="group">
+    <a class='btn btn-primary edit-uom' href='#' data-bs-toggle='modal' data-bs-target='#editUOMModal'
+      data-id='${row.KeyCode}'
+      data-name='${row.UOMName}'
+      data-value='${row.Value}'>
+      Edit
+    </a>
+    <a class='btn btn-danger delete-uom' href='delete_uom.php?id=${row.KeyCode}' onclick="return confirm('Are you sure you want to delete this UOM?')">
+      Delete
+    </a>
+  </div>
+</td>
+                        </tr>
+                    `);
+                });
+
+                $('#uomTable').append(`</tbody>`);
+            }
+
+            $('#refreshButton').click(function () {
+            refreshUOMTable();
+            });
+
+            function refreshUOMTable() {
+    $.ajax({
+        url: 'get_uoms.php',
+        type: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            buildUOMTable(data);
+        },
+        error: function () {
+            alert('Error occurred during UOM refresh process');
+        }
+    });
+}
+
+
+
+$('#searchInput').on('input', function () {
+    var searchValue = $(this).val();
+    $.ajax({
+        url: 'get_uoms.php',
+        type: 'GET',
+        data: { search: searchValue },
+        success: function (data) {
+            buildUOMTable(data);
+        }
+    });
+});
+            $(document).on("click", ".edit-uom", function () {
+                var keyCode = $(this).data("id");
+                var uomName = $(this).data("name");
+                var value = $(this).data("value");
+
+                $('#editUOMModal').find('#editKeyCode').val(keyCode);
+                $('#editUOMModal').find('#editUOMName').val(uomName);
+                $('#editUOMModal').find('#editValue').val(value);
+            });
+
+
+
+            
+
+            refreshUOMTable();
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</body>
+</html>

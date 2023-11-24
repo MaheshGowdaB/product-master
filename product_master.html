@@ -25,7 +25,7 @@
             <a href="welcome.html">Home</a>
             <a href="#">About</a>
             <a href="product_master.html">Product Master</a>
-            <a href="#">Services</a>
+            <a href="uom_master.html">UOM Master</a>
             <a href="#">Blog</a>
             <a href="#">Contact</a>
             <!-- Add more options as needed -->
@@ -130,19 +130,22 @@ function initializeHeader() {
   </div>
     
 <!-- Add New Product Modal -->
+<!-- Add New Product Modal -->
 <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="addProductModalLabel">Add New Product</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form method="POST" action="add_product.php" onsubmit="return confirmAddProduct();">
-          <div class="mb-3">
-            <label for="productCode" class="form-label">Product Code</label>
-            <input type="text" class="form-control" id="productCode" name="productCode" required>
-          </div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addProductModalLabel">Add New Product</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="add_product.php" onsubmit="return confirmAddProduct();">
+                    <!-- ... existing form fields ... -->
+                    <div class="mb-3">
+                        <label for="productCode" class="form-label">Product Code</label>
+                        <input type="text" class="form-control" id="productCode" name="productCode" required>
+                        <span id="productCodeError" class="error-message"></span>
+                    </div>
           <div class="mb-3">
             <label for="productName" class="form-label">Product Name</label>
             <input type="text" class="form-control" id="productName" name="productName" required>
@@ -170,16 +173,15 @@ function initializeHeader() {
             <input type="text" class="form-control" id="productImage" name="productImage" required>
           </div>
 
-          <div class="modal-footer">
-            <button type="submit" class="btn btn-primary">Add Product</button>
-          </div>
-          <input type="hidden" id="username" name="username" value="">
-        </form>
-      </div>
+   <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" id="addProductButton">Add Product</button>
+                    </div>
+                    <input type="hidden" id="username" name="username" value="">
+                </form>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
-
 <!-- Script to populate UOM options for Add New Product modal -->
 <script>
   document.addEventListener('DOMContentLoaded', function () {
@@ -188,9 +190,40 @@ function initializeHeader() {
 </script>
 
 <script>
-  function confirmAddProduct() {
-    return confirm("Are you sure you want to add this product?");
-  }
+function confirmAddProduct() {
+    // Check if the product code already exists
+    var productCode = $("#productCode").val();
+    var productCodeExists = false; // Initialize flag
+
+    $.ajax({
+        type: "POST",
+        url: "check_product_code.php",
+        data: { productCode: productCode },
+        async: false, // Make the AJAX call synchronous
+        success: function (response) {
+            if (response.status === 'error') {
+                $("#productCodeError")
+                    .text(response.message)
+                    .css('color', 'red'); // Set the error message color to red
+                productCodeExists = true; // Set the flag if the product code exists
+
+                // Focus on the product code input field
+                $("#productCode").focus();
+            } else {
+                $("#productCodeError").text("").css('color', ''); // Reset the error message and color
+                productCodeExists = false; // Reset the flag if the product code doesn't exist
+            }
+        }
+    });
+
+    // Return false if the product code exists
+    return !productCodeExists;
+}
+
+
+
+
+
 </script>
 
 <!-- Edit Product Modal -->
@@ -275,6 +308,30 @@ function initializeHeader() {
   }
 </script>
 
+<style>
+  /* Edit button styling */
+  .edit-product {
+    background-color: #007bff; /* Bootstrap primary color (blue) */
+    color: #fff; /* White text */
+    border: none;
+    padding: 5px 10px;
+    margin-right: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+
+  /* Delete button styling */
+  .delete-product {
+    background-color: #dc3545; /* Bootstrap danger color (red) */
+    color: #fff; /* White text */
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+</style>
+
+
 
 
 
@@ -286,15 +343,78 @@ function initializeHeader() {
     // JavaScript to perform dynamic operations
     $(document).ready(function () {
       // Function to refresh the table
-      function refreshProductTable() {
-        $.ajax({
-          url: 'get_products.php',
-          type: 'GET',
-          success: function (data) {
-            $('#productTable').html(data);
-          }
-        });
-      }
+// Function to refresh the table
+function refreshProductTable() {
+    $.ajax({
+        url: 'get_products.php',
+        type: 'GET',
+        dataType: 'json',  // Specify that the expected response is JSON
+        success: function (data) {
+            // Call a separate function to build the table
+            buildProductTable(data);
+        }
+    });
+}
+
+// Function to build the HTML table from JSON data
+function buildProductTable(data) {
+    // Clear existing table content
+    $('#productTable').empty();
+
+    // Display table headers
+    $('#productTable').append(`
+        <thead>
+            <tr>
+                <th>Product Code</th>
+                <th>Product Name</th>
+                <th>Unit of Measure</th>
+                <th>Stock</th>
+                <th>Selling Price</th>
+                <th>Offer Price</th>
+                <th>Product Image</th>
+                <th>ACTIONS</th>
+            </tr>
+        </thead>
+        <tbody>
+    `);
+
+    // Loop through the JSON data and append rows to the table
+    $.each(data, function (index, row) {
+        $('#productTable').append(`
+            <tr>
+                <th>${row.product_code}</th>
+                <td>${row.product_name}</td>
+                <td>${row.UOM}</td>
+                <td>${row.stock}</td>
+                <td>${row.selling_price}</td>
+                <td>${row.offer_price}</td>
+                <td>${row.product_image}</td>
+                <td>
+  <div class="btn-group" role="group" aria-label="Product Actions">
+    <a class='btn btn-primary edit-product' href='#' data-bs-toggle='modal' data-bs-target='#editProductModal'
+      data-id='${row.product_code}'
+      data-name='${row.product_name}'
+      data-uom='${row.UOM}'
+      data-stock='${row.stock}'
+      data-selling-price='${row.selling_price}'
+      data-offer-price='${row.offer_price}'
+      data-product-image='${row.product_image}'>
+      Edit
+    </a>
+    <a class='btn btn-danger delete-product' href='delete_product.php?id=${row.product_code}' onclick="return confirm('Are you sure you want to delete this Product?')">Delete</a>
+  </div>
+</td>
+
+            </tr>
+        `);
+    });
+
+    // Close the table body
+    $('#productTable').append(`</tbody>`);
+}
+
+
+
 
    // Event listener for the refresh button
     $('#refreshButton').click(function () {
@@ -313,7 +433,7 @@ $('#searchInput').on('input', function () {
         type: 'GET',
         data: { search: searchValue },
         success: function (data) {
-            $('#productTable').html(data);
+            buildProductTable(data);
         }
     });
 });
