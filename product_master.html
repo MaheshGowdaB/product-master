@@ -153,9 +153,9 @@ function initializeHeader() {
           <div class="mb-3">
             <label for="UOM" class="form-label">Unit of Measure</label>
             <select class="form-select" id="UOM" name="UOM" required>
-              <option value="" selected disabled>Select UOM</option>
+                <option value="" selected disabled>Select UOM</option>
             </select>
-          </div>
+        </div>
           <div class="mb-3">
             <label for="stock" class="form-label">Stock</label>
             <input type="number" class="form-control" id="stock" name="stock" required>
@@ -187,6 +187,39 @@ function initializeHeader() {
   document.addEventListener('DOMContentLoaded', function () {
     populateUOMSelect('UOM');
   });
+
+
+  function populateUOMSelect(elementId) {
+    var uomSelect = document.getElementById(elementId);
+
+    // Make an AJAX request to fetch UOM data
+    $.ajax({
+        url: 'get_uom_options.php',  // Replace with the correct URL
+        type: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            // Clear existing options
+            uomSelect.innerHTML = '';
+
+            // Add a default option
+            var defaultOption = document.createElement("option");
+            defaultOption.value = "";
+            defaultOption.text = "Select UOM";
+            uomSelect.add(defaultOption);
+
+            // Add new options from the fetched data
+            data.forEach(function (item) {
+                var option = document.createElement("option");
+                option.value = item.UOMName;
+                option.text = item.UOMName;  // Display UOMName in the dropdown
+                uomSelect.add(option);
+            });
+        },
+        error: function () {
+            console.error('Error fetching UOM data');
+        }
+    });
+}
 </script>
 
 <script>
@@ -290,23 +323,6 @@ function confirmAddProduct() {
 </script>
 
 
-<script>
-  function populateUOMSelect(elementId) {
-    var uomSelect = document.getElementById(elementId);
-    var uomOptions = ["", "kg", "g", "lb", "oz", "ltr", "ml", "m", "cm", "mm"];
-
-    // Clear existing options
-    uomSelect.innerHTML = '';
-
-    // Add new options
-    for (var i = 0; i < uomOptions.length; i++) {
-      var option = document.createElement("option");
-      option.value = uomOptions[i];
-      option.text = uomOptions[i].charAt(0).toUpperCase() + uomOptions[i].slice(1); // Capitalize the first letter
-      uomSelect.add(option);
-    }
-  }
-</script>
 
 <style>
   /* Edit button styling */
@@ -467,6 +483,8 @@ function populateEditProductModal(productCode, productName, UOM, stock, sellingP
     // Display the edit product modal
     $("#editProductModal").modal("show");
 }
+
+
 
 
 
