@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+  <title>Hello, world!</title>
+  <link rel="stylesheet" href="header.css">
+</head>
+<body>
+    <header class="header">
+        <div class="menu-icon" onclick="toggleMenu()">☰</div>
+        <div class="user-menu">
+            <div class="user-menu">
+                <div class="user-icon">&#128100;</div>
+                <span id="usernamePlaceholder"></span>
+                <div class="logout"><a href="#" id="logoutLink">Logout</a></div>
+            </div>
+        </div>
+        <div class="menu-options" id="menuOptions">
+            <a href="welcome.html">Home</a>
+            <a href="#">About</a>
+            <a href="product_master.html">Product Master</a>
+            <a href="uom_master.html">UOM Master</a>
+            <a href="invoice.html">Invoice</a>
+            <a href="#">Blog</a>
+            <a href="#">Contact</a>
+            <!-- Add more options as needed -->
+        </div>
+    </header>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="header.js"></script>
+    <script>
+        // Call the initializeHeader function when the document is ready
+        $(document).ready(function () {
+            initializeHeader();
+        });
+
+
+        // header.js
+
+function toggleMenu() {
+    var menuOptions = document.getElementById('menuOptions');
+    var menuIcon = document.querySelector('.menu-icon');
+
+    if (menuOptions.style.display === 'block') {
+        menuOptions.style.display = 'none';
+        menuIcon.innerHTML = '☰';
+    } else {
+        menuOptions.style.display = 'block';
+        menuIcon.innerHTML = '✖';
+    }
+}
+
+function initializeHeader() {
+    var storedUsername = localStorage.getItem('username');
+    if (storedUsername) {
+        document.getElementById('usernamePlaceholder').textContent = storedUsername;
+    } else {
+        document.getElementById('usernamePlaceholder').textContent = 'Guest';
+    }
+
+    $('#logoutLink').on('click', function (e) {
+        e.preventDefault();
+
+        // Ask for confirmation
+        var confirmLogout = confirm("Are you sure you want to logout?");
+        if (!confirmLogout) {
+            return;
+        }
+
+        localStorage.removeItem('username');
+
+        $.ajax({
+            type: 'GET',
+            url: 'logout_process.php',
+            success: function (response) {
+                if (response === 'success') {
+                    window.location.href = 'login.html';
+                } else {
+                    alert('Logout failed. Please try again.');
+                }
+            },
+            error: function () {
+                alert('Error occurred during logout process');
+            }
+        });
+    });
+}
+</script>
+
+
+
+
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <button type="button" class="btn btn-success nav-link active" data-bs-toggle="modal" data-bs-target="#addUOMModal">
+                        Save
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="#" id="refreshButton">Refresh</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+
+
+
+<div class="container mt-4">
+    <form>
+        <div class="row">
+            <!-- Left column -->
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="invoiceNumber" class="form-label">Invoice Number</label>
+                    <input type="text" class="form-control" id="invoiceNumber" placeholder="Enter Invoice Number" style="width: 250px;">
+                </div>
+                <div class="mb-3">
+                    <label for="customerName" class="form-label">Customer Name</label>
+                    <input type="text" class="form-control" id="customerName" placeholder="Enter Customer Name" style="width: 250px;">
+                </div>
+            </div>
+            <!-- Right column -->
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="invoiceDate" class="form-label">Invoice Date</label>
+                    <input type="date" class="form-control" id="invoiceDate" style="width: 250px;">
+                </div>
+                <div class="mb-3">
+                    <label for="mobileNumber" class="form-label">Mobile Number</label>
+                    <input type="tel" class="form-control" id="mobileNumber" placeholder="Enter Mobile Number" style="width: 250px;">
+                </div>
+            </div>
+        </div>
+        <!-- Add more fields as needed -->
+
+
+        <!-- Table Section -->
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">SL.no</th>
+                    <th scope="col">Code</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">UOM</th>
+                    <th scope="col">Qty</th>
+                    <th scope="col">Rate</th>
+                    <th scope="col">Discount</th>
+                    <th scope="col">Total</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Add rows for your data here -->
+                <tr>
+                    <td>1</td>
+                    <td><input type="text" class="form-control" name="code[]" /></td>
+                    <td><input type="text" class="form-control" name="name[]" /></td>
+                    <td><input type="text" class="form-control" name="uom[]" /></td>
+                    <td><input type="text" class="form-control qty" name="qty[]" /></td>
+                    <td><input type="text" class="form-control rate" name="rate[]" /></td>
+                    <td><input type="text" class="form-control discount" name="discount[]" /></td>
+                    <td><input type="text" class="form-control total" name="total[]" readonly /></td>
+                    <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
+                </tr>
+                <!-- Add more rows as needed -->
+            </tbody>
+        </table>
+
+        <!-- Add a button to add new rows dynamically if required -->
+        <button type="button" class="btn btn-primary" id="addRow">Add Row</button>
+
+
+<!-- Net Total Section -->
+<div id="netTotalContainer" class="mb-3">
+    <div class="row">
+        <div class="col-md-6 text-end">
+            <label for="netTotal" id="netTotal" class="form-label">Net Total:</label>
+        </div>
+        <div class="col-md-6">
+            <input type="text" id="netTotalInput" class="form-control" readonly style="width: 250px;">
+        </div>
+    </div>
+</div>
+
+<style>
+/* Add this style in your CSS file */
+#netTotalContainer {
+    text-align: center; /* Center align the content */
+}
+
+#netTotal {
+    margin-top: 5px; /* Adjust the margin based on your layout */
+    font-size: 18px; /* Adjust the font size as needed for readability */
+    font-weight: bold; /* Make the text bold for emphasis */
+    margin-left: 10px; /* Add some spacing between the label and input */
+}
+
+#netTotalInput.form-control {
+    width: 250px; /* Adjust the width based on your layout */
+    font-size: 16px; /* Adjust the font size as needed for readability */
+}
+</style>
+
+
+
+
+
+
+</body>
+</html>
