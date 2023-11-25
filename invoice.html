@@ -4,11 +4,12 @@
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
-  <title>Hello, world!</title>
+  <title>Product Master</title>
   <link rel="stylesheet" href="header.css">
 </head>
 <body>
@@ -32,7 +33,10 @@
             <!-- Add more options as needed -->
         </div>
     </header>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="header.js"></script>
     <script>
         // Call the initializeHeader function when the document is ready
@@ -92,11 +96,7 @@ function initializeHeader() {
     });
 }
 </script>
-
-
-
-
-
+<!--Page body-->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         <div class="collapse navbar-collapse" id="navbarNav">
@@ -113,10 +113,6 @@ function initializeHeader() {
         </div>
     </div>
 </nav>
-
-
-
-
 
 <div class="container mt-4">
     <form>
@@ -145,8 +141,6 @@ function initializeHeader() {
             </div>
         </div>
         <!-- Add more fields as needed -->
-
-
         <!-- Table Section -->
         <table class="table">
             <thead>
@@ -167,7 +161,7 @@ function initializeHeader() {
                 <tr>
                     <td>1</td>
                     <td><input type="text" class="form-control" name="code[]" /></td>
-                    <td><input type="text" class="form-control" name="name[]" /></td>
+                    <td><input type="text" class="form-control autocomplete" name="name[]" /></td>
                     <td><input type="text" class="form-control" name="uom[]" /></td>
                     <td><input type="text" class="form-control qty" name="qty[]" /></td>
                     <td><input type="text" class="form-control rate" name="rate[]" /></td>
@@ -178,11 +172,8 @@ function initializeHeader() {
                 <!-- Add more rows as needed -->
             </tbody>
         </table>
-
         <!-- Add a button to add new rows dynamically if required -->
         <button type="button" class="btn btn-primary" id="addRow">Add Row</button>
-
-
 <!-- Net Total Section -->
 <div id="netTotalContainer" class="mb-3">
     <div class="row">
@@ -194,29 +185,87 @@ function initializeHeader() {
         </div>
     </div>
 </div>
-
 <style>
 /* Add this style in your CSS file */
 #netTotalContainer {
     text-align: center; /* Center align the content */
 }
-
 #netTotal {
     margin-top: 5px; /* Adjust the margin based on your layout */
     font-size: 18px; /* Adjust the font size as needed for readability */
     font-weight: bold; /* Make the text bold for emphasis */
     margin-left: 10px; /* Add some spacing between the label and input */
 }
-
 #netTotalInput.form-control {
     width: 250px; /* Adjust the width based on your layout */
     font-size: 16px; /* Adjust the font size as needed for readability */
 }
 </style>
 
+<!-- Fetch product names and initialize autocomplete -->
+<script>
+   // Function to handle the "Add Row" button click
+    $('#addRow').on('click', function () {
+        // Clone the last row of the table
+        var newRow = $('table tbody tr:last').clone();
+
+        // Clear the input values in the cloned row
+        newRow.find('input').val('');
+
+        // Increment the SL.no in the cloned row
+        var lastSlNo = parseInt(newRow.find('td:first').text());
+        newRow.find('td:first').text(lastSlNo + 1);
+
+        // Append the cloned row to the table
+        $('table tbody').append(newRow);
+    });
+
+    // Function to handle the "Remove" button click
+    $('table').on('click', '.remove-row', function () {
+        // Remove the corresponding row
+        $(this).closest('tr').remove();
+
+        // Update SL.no for remaining rows
+        updateSlNo();
+    });
+
+    // Function to update SL.no for all rows
+    function updateSlNo() {
+        $('table tbody tr').each(function (index) {
+            $(this).find('td:first').text(index + 1);
+        });
+    }
 
 
+    // Function to fetch product names from the database
+    function fetchProductNames() {
+        $.ajax({
+            type: 'GET',
+            url: 'get_products.php',
+            success: function (response) {
+                // Populate product names in the autocomplete
+                var productNames = response.map(function (product) {
+                    return product.product_name;
+                });
 
+                // Initialize the autocomplete for product names
+                $('.autocomplete').autocomplete({
+                    source: productNames
+                });
+            },
+            error: function () {
+                alert('Error occurred while fetching product names');
+            }
+        });
+    }
+
+    // Call the fetchProductNames function when the document is ready
+    $(document).ready(function () {
+        fetchProductNames();
+    });
+
+    // Your other scripts
+</script>
 
 
 </body>
