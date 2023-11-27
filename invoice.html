@@ -471,9 +471,6 @@ $('table').on('change', '.uom-code-dropdown', function () {
 
 
 
-
-
-
     // Event handler for "Refresh" button click
 $('#refreshButton').on('click', function () {
     // Reset the values of all textboxes in the form
@@ -499,7 +496,7 @@ $('#refreshButton').on('click', function () {
     // Update totals after resetting
     updateTotals();
 });
-    // ... (your existing code)
+
 });
 
 // Function to get the current date and time in a desired format
@@ -508,6 +505,7 @@ function getCurrentDateTime() {
     var formattedDate = currentDate.toISOString().slice(0, 19).replace("T", " "); // Format: YYYY-MM-DD HH:mm:ss
     return formattedDate;
 }
+
 
 
 
