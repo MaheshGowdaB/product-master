@@ -146,12 +146,12 @@ function initializeHeader() {
             <thead>
                 <tr>
                     <th scope="col">SL.no</th>
-                    <th scope="col">Code</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">UOM</th>
-                    <th scope="col">Qty</th>
-                    <th scope="col">Rate</th>
-                    <th scope="col">Discount</th>
+                    <th scope="col">KeyCode</th>
+                    <th scope="col">product_name</th>
+                    <th scope="col">UOMName</th>
+                    <th scope="col">stock</th>
+                    <th scope="col">selling_price</th>
+                    <th scope="col">offer_price</th>
                     <th scope="col">Total</th>
                     <th scope="col">Action</th>
                 </tr>
@@ -160,12 +160,16 @@ function initializeHeader() {
                 <!-- Add rows for your data here -->
                 <tr>
                     <td>1</td>
-                    <td><input type="text" class="form-control" name="code[]" /></td>
-                    <td><input type="text" class="form-control autocomplete" name="name[]" /></td>
-                    <td><input type="text" class="form-control" name="uom[]" /></td>
-                    <td><input type="text" class="form-control qty" name="qty[]" /></td>
-                    <td><input type="text" class="form-control rate" name="rate[]" /></td>
-                    <td><input type="text" class="form-control discount" name="discount[]" /></td>
+                    <td><input type="text" class="form-control" name="KeyCode[]" /></td>
+                    <td>
+                        <select class="form-control product-dropdown" name="product_name[]">
+                            <!-- Options will be dynamically added here -->
+                        </select>
+                    </td>
+                    <td><input type="text" class="form-control" name="UOMName[]" /></td>
+                    <td><input type="text" class="form-control qty" name="stock[]" id="stock" /></td>
+                    <td><input type="text" class="form-control selling-price" name="selling_price[]" /></td>
+                    <td><input type="text" class="form-control offer-price" name="offer_price[]" readonly /></td>
                     <td><input type="text" class="form-control total" name="total[]" readonly /></td>
                     <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
                 </tr>
@@ -202,9 +206,103 @@ function initializeHeader() {
 }
 </style>
 
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<!-- jQuery UI library -->
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/themes/smoothness/jquery-ui.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
+
+<!-- Fetch product names and initialize autocomplete -->
 <!-- Fetch product names and initialize autocomplete -->
 <script>
-   // Function to handle the "Add Row" button click
+
+$(document).ready(function () {
+    // ...
+
+    // Function to fetch product names and populate the dropdown list
+    function fetchProductNames(dropdown) {
+        $.ajax({
+            type: 'GET',
+            url: 'get_products.php',
+            success: function (response) {
+                var productNames = response.map(function (product) {
+                    return product.product_name;
+                });
+
+                dropdown.empty();
+                dropdown.append($('<option>').text('Select Product').attr('value', ''));
+
+                $.each(productNames, function (index, productName) {
+                    dropdown.append($('<option>').text(productName).attr('value', productName));
+                });
+            },
+            error: function () {
+                alert('Error fetching product names');
+            }
+        });
+    }
+
+    // Call the fetchProductNames function to populate the initial dropdown list
+    fetchProductNames($('.product-dropdown'));
+
+    // Event handler for product dropdown change
+    $('table').on('change', '.product-dropdown', function () {
+        var selectedProduct = $(this).val();
+        var sellingPriceInput = $(this).closest('tr').find('.selling-price');
+        var offerPriceInput = $(this).closest('tr').find('.offer-price');
+
+        // Fetch selling_price and offer_price for the selected product
+        $.ajax({
+            type: 'GET',
+            url: 'get_product_prices.php',
+            data: { product_name: selectedProduct },
+            success: function (response) {
+                // Assuming the response is an object with 'selling_price' and 'offer_price' properties
+                var sellingPrice = response.selling_price;
+                var offerPrice = response.offer_price;
+
+                // Update the corresponding input fields with the fetched values
+                sellingPriceInput.val(sellingPrice);
+                offerPriceInput.val(offerPrice);
+            },
+            error: function () {
+                alert('Error fetching product prices');
+            }
+        });
+    });
+
+
+// Event handler for stock quantity change
+$('table').on('input', '.qty', function () {
+    var quantity = parseInt($(this).val()) || 0;
+    var sellingPrice = parseFloat($(this).closest('tr').find('.selling-price').val()) || 0;
+    var existingOfferPrice = parseFloat($(this).closest('tr').find('.offer-price').val()) || 0;
+
+    // Calculate the updated offer price based on quantity and existing offer price
+    var updatedOfferPrice = quantity * existingOfferPrice;
+    $(this).closest('tr').find('.offer-price').val(updatedOfferPrice.toFixed(2));
+
+    // Calculate the updated selling price based on quantity and update the selling price input field
+    var updatedSellingPrice = calculateUpdatedSellingPrice(quantity, sellingPrice);
+    $(this).closest('tr').find('.selling-price').val(updatedSellingPrice.toFixed(2));
+});
+
+// Function to calculate the updated selling price based on quantity (replace this with your logic)
+function calculateUpdatedSellingPrice(quantity, originalSellingPrice) {
+    // Replace this with your logic to calculate the updated selling price based on quantity and original selling price
+    // For example, you can double the selling price when the quantity is increased
+    var updatedSellingPrice = quantity * originalSellingPrice;
+
+    return updatedSellingPrice;
+}
+
+
+
+
+
+
+    // Event handler for "Add Row" button click
     $('#addRow').on('click', function () {
         // Clone the last row of the table
         var newRow = $('table tbody tr:last').clone();
@@ -218,54 +316,70 @@ function initializeHeader() {
 
         // Append the cloned row to the table
         $('table tbody').append(newRow);
-    });
 
-    // Function to handle the "Remove" button click
-    $('table').on('click', '.remove-row', function () {
-        // Remove the corresponding row
-        $(this).closest('tr').remove();
-
-        // Update SL.no for remaining rows
-        updateSlNo();
-    });
-
-    // Function to update SL.no for all rows
-    function updateSlNo() {
-        $('table tbody tr').each(function (index) {
-            $(this).find('td:first').text(index + 1);
-        });
-    }
-
-
-    // Function to fetch product names from the database
-    function fetchProductNames() {
-        $.ajax({
-            type: 'GET',
-            url: 'get_products.php',
-            success: function (response) {
-                // Populate product names in the autocomplete
-                var productNames = response.map(function (product) {
-                    return product.product_name;
-                });
-
-                // Initialize the autocomplete for product names
-                $('.autocomplete').autocomplete({
-                    source: productNames
-                });
-            },
-            error: function () {
-                alert('Error occurred while fetching product names');
-            }
-        });
-    }
-
-    // Call the fetchProductNames function when the document is ready
-    $(document).ready(function () {
-        fetchProductNames();
+        // Fetch product names and populate the new dropdown
+        fetchProductNames(newRow.find('.product-dropdown'));
     });
 
     // Your other scripts
-</script>
+
+        // Event handler for "Remove" button click
+        $('table').on('click', '.remove-row', function () {
+        // Find the closest row and remove it
+        $(this).closest('tr').remove();
+
+        // After removing the row, update the totals
+        updateTotals();
+    });
+
+
+        // Function to calculate the total for a row based on the offer price
+        function calculateRowTotal(row) {
+            var quantity = parseInt(row.find('.qty').val()) || 0;
+            var offerPrice = parseFloat(row.find('.offer-price').val()) || 0;
+            return quantity * offerPrice;
+        }
+    
+        // Function to update the total and net total
+        function updateTotals() {
+            var netTotal = 0;
+    
+            // Iterate through each row in the table
+            $('table tbody tr').each(function () {
+                var row = $(this);
+                var total = calculateRowTotal(row);
+    
+                // Update the total for the current row
+                row.find('.total').val(total.toFixed(2));
+    
+                // Accumulate the total for the net total calculation
+                netTotal += total;
+            });
+    
+            // Update the net total input field
+            $('#netTotalInput').val(netTotal.toFixed(2));
+        }
+    
+        // Event handler for quantity and offer price changes
+        $('table').on('input', '.qty, .offer-price', function () {
+            updateTotals();
+        });
+    
+        // Event handler for "Add Row" button click
+        $('#addRow').on('click', function () {
+            // ... (existing code)
+    
+            // Fetch product names and populate the new dropdown
+            fetchProductNames(newRow.find('.product-dropdown'));
+    
+            // Update totals when a new row is added
+            updateTotals();
+        });
+    
+        // Your other scripts
+    });
+    </script>
+    
 
 
 </body>
