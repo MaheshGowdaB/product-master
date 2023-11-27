@@ -102,9 +102,7 @@ function initializeHeader() {
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <button type="button" class="btn btn-success nav-link active" data-bs-toggle="modal" data-bs-target="#addUOMModal">
-                        Save
-                    </button>
+                    <button type="button" class="btn btn-success" id="saveButton">Save</button>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active" href="#" id="refreshButton">Refresh</a>
@@ -115,13 +113,13 @@ function initializeHeader() {
 </nav>
 
 <div class="container mt-4">
-    <form>
+    <form id="invoiceForm">
         <div class="row">
             <!-- Left column -->
             <div class="col-md-6">
                 <div class="mb-3">
                     <label for="invoiceNumber" class="form-label">Invoice Number</label>
-                    <input type="text" class="form-control" id="invoiceNumber" placeholder="Enter Invoice Number" style="width: 250px;">
+                    <input type="text" class="form-control" id="invoiceNumber" name="invoiceNumber" placeholder="Enter Invoice Number" style="width: 250px;">
                 </div>
                 <div class="mb-3">
                     <label for="customerName" class="form-label">Customer Name</label>
@@ -427,7 +425,90 @@ $('table').on('change', '.uom-code-dropdown', function () {
             alert('Error fetching UOMName');
         }
     });
+
+
+
+   // Event handler for "Save" button click
+   $('#saveButton').on('click', function () {
+        // Create an array to store the data from each row
+        var rowsData = [];
+
+        // Iterate through each row in the table
+        $('table tbody tr').each(function () {
+            var row = $(this);
+            var rowData = {
+                InvoiceNo: $('#invoiceNumber').val(),
+                InvoiceDate: $('#invoiceDate').val(),
+                CustomerName: $('#customerName').val(),
+                MobileNo: $('#mobileNumber').val(),
+                Qty: row.find('.qty').val(),
+                NetTotal: row.find('.total').val(),
+                Saved_By: localStorage.getItem('username'),
+                SavedDateTime: getCurrentDateTime() // Implement this function to get the current date and time
+            };
+
+            // Add the current row's data to the array
+            rowsData.push(rowData);
+        });
+
+        // Send the data to the server-side script for insertion
+        $.ajax({
+            type: 'POST', // Use POST method for sending data
+            url: 'save_invoice.php', // Replace with the actual path to your server-side script
+            data: { invoiceData: JSON.stringify(rowsData) },
+            success: function (response) {
+                if (response === 'success') {
+                    alert('Data saved successfully!');
+                } else {
+                    alert('Data saved successfully!');
+                }
+            },
+            error: function () {
+                alert('Error occurred while saving data');
+            }
+        });
+    });
+
+
+
+
+
+
+    // Event handler for "Refresh" button click
+$('#refreshButton').on('click', function () {
+    // Reset the values of all textboxes in the form
+    $(':input', '#invoiceForm')
+        .not(':button, :submit, :reset, :hidden')
+        .val('')
+        .prop('checked', false)
+        .prop('selected', false);
+
+    // Reset the SL.no in the table
+    $('table tbody tr').each(function (index) {
+        $(this).find('td:first').text(index + 1);
+    });
+
+    // Fetch product names and populate the dropdowns
+    $('table tbody tr').each(function () {
+        fetchProductNames($(this).find('.product-dropdown'));
+    });
+
+    // Fetch UOM codes and populate the dropdowns
+    fetchUOMCodes($('.uom-code-dropdown'));
+
+    // Update totals after resetting
+    updateTotals();
 });
+    // ... (your existing code)
+});
+
+// Function to get the current date and time in a desired format
+function getCurrentDateTime() {
+    var currentDate = new Date();
+    var formattedDate = currentDate.toISOString().slice(0, 19).replace("T", " "); // Format: YYYY-MM-DD HH:mm:ss
+    return formattedDate;
+}
+
 
 
     </script>
