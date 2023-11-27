@@ -160,7 +160,11 @@ function initializeHeader() {
                 <!-- Add rows for your data here -->
                 <tr>
                     <td>1</td>
-                    <td><input type="text" class="form-control" name="KeyCode[]" /></td>
+                    <td>
+                        <select class="form-control uom-code-dropdown" name="KeyCode[]">
+                            <!-- Options will be dynamically added here -->
+                        </select>
+                    </td>
                     <td>
                         <select class="form-control product-dropdown" name="product_name[]">
                             <!-- Options will be dynamically added here -->
@@ -378,6 +382,54 @@ function calculateUpdatedSellingPrice(quantity, originalSellingPrice) {
     
         // Your other scripts
     });
+
+    // Function to fetch UOM codes and populate the dropdown list
+function fetchUOMCodes(dropdown) {
+    $.ajax({
+        type: 'GET',
+        url: 'get_uoms.php',
+        success: function (response) {
+            var uomCodes = response.map(function (uom) {
+                return uom.KeyCode; // Assuming 'KeyCode' is the field for UOM code
+            });
+
+            dropdown.empty();
+            dropdown.append($('<option>').text('Select UOM Code').attr('value', ''));
+
+            $.each(uomCodes, function (index, uomCode) {
+                dropdown.append($('<option>').text(uomCode).attr('value', uomCode));
+            });
+        },
+        error: function () {
+            alert('Error fetching UOM codes');
+        }
+    });
+}
+
+// Call the fetchUOMCodes function to populate the initial dropdown list
+fetchUOMCodes($('.uom-code-dropdown'));
+
+// Event handler for UOM Code dropdown change
+$('table').on('change', '.uom-code-dropdown', function () {
+    var selectedUOMCode = $(this).val();
+    var uomNameInput = $(this).closest('tr').find('[name="UOMName[]"]');
+
+    // Fetch UOMName for the selected UOMCode
+    $.ajax({
+        type: 'GET',
+        url: 'get_uom_name.php',
+        data: { uomCode: selectedUOMCode },
+        success: function (response) {
+            // Assuming the response is the UOMName for the selected UOMCode
+            uomNameInput.val(response.UOMName);
+        },
+        error: function () {
+            alert('Error fetching UOMName');
+        }
+    });
+});
+
+
     </script>
     
 
