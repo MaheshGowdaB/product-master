@@ -158,7 +158,7 @@ function initializeHeader() {
                 <!-- Add rows for your data here -->
                 <tr>
                     <td>1</td>
-                    <td><input type="text" class="form-control product-code-input" name="product_code[]"/></td>
+                    <td><input type="text" class="form-control product-code-input" name="product_code[]" id="productCodeInput" /></td>
                     <td>
                         <select class="form-control product-dropdown" name="product_name[]">
                             <!-- Options will be dynamically added here -->
@@ -303,7 +303,34 @@ function calculateUpdatedSellingPrice(quantity, originalSellingPrice) {
 }
 
 
+// Event handler for product code input change
+$('table').on('input', '.product-code-input', function () {
+    var productCode = $(this).val();
+    var row = $(this).closest('tr');
 
+    // Fetch product details based on the entered product code
+    $.ajax({
+        type: 'GET',
+        url: 'get_product_details.php',
+        data: { product_code: productCode },
+        success: function (response) {
+            // Assuming the response is an object with the required properties
+            var productName = response.product_name;
+            var uom = response.UOM;
+            var sellingPrice = response.selling_price;
+            var offerPrice = response.offer_price;
+
+            // Update the corresponding input fields with the fetched values
+            row.find('.product-dropdown').val(productName);
+            row.find('.uom-input').val(uom);
+            row.find('.selling-price').val(sellingPrice);
+            row.find('.offer-price').val(offerPrice);
+        },
+        error: function () {
+            alert('Error fetching product details');
+        }
+    });
+});
 
 
 
