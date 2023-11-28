@@ -410,53 +410,49 @@ $('table').on('input', '.product-code-input', function () {
     
 
 
- 
-
-
-      
-
-
-
    // Event handler for "Save" button click
    $('#saveButton').on('click', function () {
-        // Create an array to store the data from each row
-        var rowsData = [];
+    var rowsData = [];
 
-        // Iterate through each row in the table
-        $('table tbody tr').each(function () {
-            var row = $(this);
-            var rowData = {
-                InvoiceNo: $('#invoiceNumber').val(),
-                InvoiceDate: $('#invoiceDate').val(),
-                CustomerName: $('#customerName').val(),
-                MobileNo: $('#mobileNumber').val(),
-                Qty: row.find('.qty').val(),
-                NetTotal: row.find('.total').val(),
-                Saved_By: localStorage.getItem('username'),
-                SavedDateTime: getCurrentDateTime() // Implement this function to get the current date and time
-            };
+    // Iterate through each row in the table
+    $('table tbody tr').each(function () {
+        var row = $(this);
+        var rowData = {
+            invoiceNo: $('#invoiceNumber').val(),
+            invoiceDate: $('#invoiceDate').val(),
+            customerName: $('#customerName').val(),
+            mobileNo: $('#mobileNumber').val(),
+            qty: row.find('.qty').val(),
+            netTotal: row.find('.total').val(),
+            savedBy: localStorage.getItem('username'),
+            savedDateTime: getCurrentDateTime(),
+            productCode: row.find('.product-code-input').val()
+        };
 
-            // Add the current row's data to the array
-            rowsData.push(rowData);
-        });
-
-        // Send the data to the server-side script for insertion
-        $.ajax({
-            type: 'POST', // Use POST method for sending data
-            url: 'save_invoice.php', // Replace with the actual path to your server-side script
-            data: { invoiceData: JSON.stringify(rowsData) },
-            success: function (response) {
-                if (response === 'success') {
-                    alert('Data saved successfully!');
-                } else {
-                    alert('Data saved successfully!');
-                }
-            },
-            error: function () {
-                alert('Error occurred while saving data');
-            }
-        });
+        rowsData.push(rowData);
     });
+
+    $.ajax({
+        type: 'POST',
+        url: 'save_invoice.php',
+        data: {
+            invoiceData: JSON.stringify(rowsData)
+        },
+        success: function (response) {
+            if (response === 'success') {
+                alert('Data saved successfully!');
+                // Optionally, you can reload the page or perform other actions
+                location.reload();
+            } else {
+                alert('Data saved successfully!');
+            }
+        },
+        error: function () {
+            alert('Error occurred while saving data');
+        }
+    });
+});
+
 
 
 

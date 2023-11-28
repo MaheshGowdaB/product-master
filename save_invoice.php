@@ -7,14 +7,15 @@ if (isset($_POST['invoiceData']) && !empty($_POST['invoiceData'])) {
 
     // Iterate through each row's data and insert into tblinvhead
     foreach ($invoiceData as $rowData) {
-        $invoiceNo = $rowData['InvoiceNo'];
-        $invoiceDate = $rowData['InvoiceDate'];
-        $customerName = $rowData['CustomerName'];
-        $mobileNo = $rowData['MobileNo'];
-        $qty = $rowData['Qty'];
-        $netTotal = $rowData['NetTotal'];
-        $savedBy = $rowData['Saved_By'];
-        $savedDateTime = $rowData['SavedDateTime'];
+        $invoiceNo = $rowData['invoiceNo'];
+        $invoiceDate = $rowData['invoiceDate'];
+        $customerName = $rowData['customerName'];
+        $mobileNo = $rowData['mobileNo'];
+        $qty = $rowData['qty'];
+        $netTotal = $rowData['netTotal'];
+        $savedBy = $rowData['savedBy'];
+        $savedDateTime = $rowData['savedDateTime'];
+        $productCode = $rowData['productCode'];
 
         $sql = "INSERT INTO tblinvhead (InvoiceNo, InvoiceDate, CustomerName, MobileNo, Qty, NetTotal, Saved_By, SavedDateTime)
                 VALUES ('$invoiceNo', '$invoiceDate', '$customerName', '$mobileNo', '$qty', '$netTotal', '$savedBy', '$savedDateTime')";
@@ -22,6 +23,14 @@ if (isset($_POST['invoiceData']) && !empty($_POST['invoiceData'])) {
         $result = $conn->query($sql);
 
         if (!$result) {
+            die("Invalid query: " . $conn->error);
+        }
+
+        // Update stock in tblproducts
+        $updateStockSql = "UPDATE tblproducts SET stock = stock - '$qty' WHERE product_code = '$productCode'";
+        $updateStockResult = $conn->query($updateStockSql);
+
+        if (!$updateStockResult) {
             die("Invalid query: " . $conn->error);
         }
     }
