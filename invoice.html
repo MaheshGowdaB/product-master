@@ -144,9 +144,9 @@ function initializeHeader() {
             <thead>
                 <tr>
                     <th scope="col">SL.no</th>
-                    <th scope="col">KeyCode</th>
+                    <th scope="col">product_code</th>
                     <th scope="col">product_name</th>
-                    <th scope="col">UOMName</th>
+                    <th scope="col">UOM</th>
                     <th scope="col">stock</th>
                     <th scope="col">selling_price</th>
                     <th scope="col">offer_price</th>
@@ -158,18 +158,14 @@ function initializeHeader() {
                 <!-- Add rows for your data here -->
                 <tr>
                     <td>1</td>
-                    <td>
-                        <select class="form-control uom-code-dropdown" name="KeyCode[]" data-keycode="">
-                            <!-- Options will be dynamically added here -->
-                        </select>
-                    </td>
+                    <td><input type="text" class="form-control product-code-input" name="product_code[]"/></td>
                     <td>
                         <select class="form-control product-dropdown" name="product_name[]">
                             <!-- Options will be dynamically added here -->
                         </select>
                     </td>
-                    <td><input type="text" class="form-control" name="UOMName[]" /></td>
-                    <td><input type="text" class="form-control qty" name="stock[]" id="stock" /></td>
+                    <td><input type="text" class="form-control uom-input" name="UOM[]" /></td>
+                    <td><input type="number" class="form-control qty" name="stock[]" id="stock" /></td>
                     <td><input type="text" class="form-control selling-price" name="selling_price[]" /></td>
                     <td><input type="text" class="form-control offer-price" name="offer_price[]" readonly /></td>
                     <td><input type="text" class="form-control total" name="total[]" readonly /></td>
@@ -248,31 +244,38 @@ $(document).ready(function () {
     // Call the fetchProductNames function to populate the initial dropdown list
     fetchProductNames($('.product-dropdown'));
 
-    // Event handler for product dropdown change
-    $('table').on('change', '.product-dropdown', function () {
-        var selectedProduct = $(this).val();
-        var sellingPriceInput = $(this).closest('tr').find('.selling-price');
-        var offerPriceInput = $(this).closest('tr').find('.offer-price');
+ // Event handler for product dropdown change
+$('table').on('change', '.product-dropdown', function () {
+    var selectedProduct = $(this).val();
+    var sellingPriceInput = $(this).closest('tr').find('.selling-price');
+    var offerPriceInput = $(this).closest('tr').find('.offer-price');
+    var uomInput = $(this).closest('tr').find('.uom-input');
+    var productCodeInput = $(this).closest('tr').find('.product-code-input');
 
-        // Fetch selling_price and offer_price for the selected product
-        $.ajax({
-            type: 'GET',
-            url: 'get_product_prices.php',
-            data: { product_name: selectedProduct },
-            success: function (response) {
-                // Assuming the response is an object with 'selling_price' and 'offer_price' properties
-                var sellingPrice = response.selling_price;
-                var offerPrice = response.offer_price;
+    // Fetch selling_price, offer_price, UOM, and product_code for the selected product
+    $.ajax({
+        type: 'GET',
+        url: 'get_product_prices.php',
+        data: { product_name: selectedProduct },
+        success: function (response) {
+            // Assuming the response is an object with the required properties
+            var sellingPrice = response.selling_price;
+            var offerPrice = response.offer_price;
+            var uom = response.UOM;
+            var productCode = response.product_code;
 
-                // Update the corresponding input fields with the fetched values
-                sellingPriceInput.val(sellingPrice);
-                offerPriceInput.val(offerPrice);
-            },
-            error: function () {
-                alert('Error fetching product prices');
-            }
-        });
+            // Update the corresponding input fields with the fetched values
+            sellingPriceInput.val(sellingPrice);
+            offerPriceInput.val(offerPrice);
+            uomInput.val(uom);
+            productCodeInput.val(productCode);
+        },
+        error: function () {
+            alert('Error fetching product prices');
+        }
     });
+});
+
 
 
 // Event handler for stock quantity change
@@ -378,53 +381,12 @@ function calculateUpdatedSellingPrice(quantity, originalSellingPrice) {
             updateTotals();
         });
     
-        // Your other scripts
-    });
 
-    // Function to fetch UOM codes and populate the dropdown list
-function fetchUOMCodes(dropdown) {
-    $.ajax({
-        type: 'GET',
-        url: 'get_uoms.php',
-        success: function (response) {
-            var uomCodes = response.map(function (uom) {
-                return uom.KeyCode; // Assuming 'KeyCode' is the field for UOM code
-            });
 
-            dropdown.empty();
-            dropdown.append($('<option>').text('Select UOM Code').attr('value', ''));
+ 
 
-            $.each(uomCodes, function (index, uomCode) {
-                dropdown.append($('<option>').text(uomCode).attr('value', uomCode));
-            });
-        },
-        error: function () {
-            alert('Error fetching UOM codes');
-        }
-    });
-}
 
-// Call the fetchUOMCodes function to populate the initial dropdown list
-fetchUOMCodes($('.uom-code-dropdown'));
-
-// Event handler for UOM Code dropdown change
-$('table').on('change', '.uom-code-dropdown', function () {
-    var selectedUOMCode = $(this).val();
-    var uomNameInput = $(this).closest('tr').find('[name="UOMName[]"]');
-
-    // Fetch UOMName for the selected UOMCode
-    $.ajax({
-        type: 'GET',
-        url: 'get_uom_name.php',
-        data: { uomCode: selectedUOMCode },
-        success: function (response) {
-            // Assuming the response is the UOMName for the selected UOMCode
-            uomNameInput.val(response.UOMName);
-        },
-        error: function () {
-            alert('Error fetching UOMName');
-        }
-    });
+      
 
 
 

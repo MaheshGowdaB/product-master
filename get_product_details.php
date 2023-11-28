@@ -1,11 +1,11 @@
 <?php
 include "connection.php";
 
-if (isset($_GET['product_name']) && !empty($_GET['product_name'])) {
-    $product_name = $_GET['product_name'];
+if (isset($_GET['product_code']) && !empty($_GET['product_code'])) {
+    $productCode = $_GET['product_code'];
 
-    // Fetch selling_price, offer_price, UOM, and product_code for the selected product
-    $sql = "SELECT selling_price, offer_price, UOM, product_code FROM tblproducts WHERE product_name = '$product_name'";
+    // Fetch product details for the selected product code
+    $sql = "SELECT product_name, UOM, selling_price, offer_price FROM tblproducts WHERE product_code = '$productCode'";
 
     $result = $conn->query($sql);
 
@@ -21,10 +21,10 @@ if (isset($_GET['product_name']) && !empty($_GET['product_name'])) {
         $data = $row;
     } else {
         // If no row is found, provide default values or handle it as needed
+        $data['product_name'] = '';
+        $data['UOM'] = '';
         $data['selling_price'] = 0;
         $data['offer_price'] = 0;
-        $data['UOM'] = '';
-        $data['product_code'] = '';
     }
 
     // Close the database connection
@@ -34,7 +34,7 @@ if (isset($_GET['product_name']) && !empty($_GET['product_name'])) {
     header('Content-Type: application/json');
     echo json_encode($data);
 } else {
-    // Handle the case where 'product_name' is not provided in the request
-    echo json_encode(['error' => 'Product name not provided']);
+    // Handle the case where 'product_code' is not provided in the request
+    echo json_encode(['error' => 'Product code not provided']);
 }
 ?>
