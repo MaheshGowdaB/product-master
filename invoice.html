@@ -118,24 +118,29 @@ function initializeHeader() {
             <!-- Left column -->
             <div class="col-md-6">
                 <div class="mb-3">
-                    <label for="invoiceNumber" class="form-label">Invoice Number</label>
-                    <input type="text" class="form-control" id="invoiceNumber" name="invoiceNumber" placeholder="Enter Invoice Number" style="width: 250px;">
+                    <label for="invoiceNumber" class="form-label">Invoice Number <span class="required-field">*</span></label>
+                    <input type="text" class="form-control" id="invoiceNumber" name="invoiceNumber" placeholder="Enter Invoice Number" style="width: 250px;" required>
+                    <div class="error-message" id="invoiceNumberError"></div>
                 </div>
+                
                 <div class="mb-3">
-                    <label for="customerName" class="form-label">Customer Name</label>
-                    <input type="text" class="form-control" id="customerName" placeholder="Enter Customer Name" style="width: 250px;">
+                    <label for="invoiceDate" class="form-label">Invoice Date <span class="required-field">*</span></label>
+                    <input type="date" class="form-control" id="invoiceDate" style="width: 250px;" required>
+                    <div class="error-message" id="invoiceDateError"></div>
                 </div>
             </div>
             <!-- Right column -->
             <div class="col-md-6">
                 <div class="mb-3">
-                    <label for="invoiceDate" class="form-label">Invoice Date</label>
-                    <input type="date" class="form-control" id="invoiceDate" style="width: 250px;">
+                    <label for="customerName" class="form-label">Customer Name <span class="required-field">*</span></label>
+                    <input type="text" class="form-control" id="customerName" placeholder="Enter Customer Name" style="width: 250px;" required>
+                    <div class="error-message" id="customerNameError"></div>
                 </div>
+                
                 <div class="mb-3">
-                    <label for="mobileNumber" class="form-label">Mobile Number</label>
+                    <label for="mobileNumber" class="form-label">Mobile Number <span class="required-field">*</span></label>
                     <input type="tel" class="form-control" id="mobileNumber" placeholder="Enter Mobile Number" style="width: 250px;" pattern="[0-9]{10}" title="Please enter a valid 10-digit mobile number" required>
-                    <span id="mobileNumberError" class="error-message"></span>
+                    <div class="error-message" id="mobileNumberError"></div>
                 </div>                
             </div>
         </div>
@@ -167,8 +172,8 @@ function initializeHeader() {
                     </td>
                     <td><input type="text" class="form-control uom-input" name="UOM[]" /></td>
                     <td><input type="number" class="form-control qty" name="stock[]" id="stock" /></td>
-                    <td><input type="text" class="form-control selling-price" name="selling_price[]" /></td>
-                    <td><input type="text" class="form-control offer-price" name="offer_price[]" /></td>
+                    <td><input type="number" class="form-control selling-price" name="selling_price[]" /></td>
+                    <td><input type="number" class="form-control offer-price" name="offer_price[]" /></td>
                     <td><input type="text" class="form-control total" name="total[]" readonly /></td>
                     <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
                 </tr>
@@ -452,6 +457,8 @@ $('table').on('input', '.product-code-input', function () {
             alert('Error occurred while saving data');
         }
     });
+
+    
 });
 
 
@@ -495,26 +502,96 @@ function getCurrentDateTime() {
 
 var mobileNumberInput = $('#mobileNumber');
 var mobileNumberError = $('#mobileNumberError');
+var offerPriceInputs = $('.offer-price');
+var sellingPriceInputs = $('.selling-price');
 
 mobileNumberInput.on('blur', function () {
     validateMobileNumber($(this).val());
 });
 
-// Function to validate the mobile number
+offerPriceInputs.on('blur', function () {
+    validateNumericValue($(this), 'Offer Price');
+});
+
+sellingPriceInputs.on('blur', function () {
+    validateNumericValue($(this), 'Selling Price');
+});
+
+// Modify the validateMobileNumber function to update the error message div
 function validateMobileNumber(mobileNumber) {
     var mobileNumberRegex = /^[0-9]{10}$/;
+    var errorDiv = $('#mobileNumberError');
 
     if (mobileNumberRegex.test(mobileNumber)) {
         // Valid mobile number
-        mobileNumberError.text(''); // Clear the error message
-        mobileNumberError.removeClass('error-text');
+        errorDiv.text(''); // Clear the error message
+        errorDiv.removeClass('error-text');
     } else {
         // Invalid mobile number
-        mobileNumberError.text('Please enter a valid 10-digit mobile number');
-        mobileNumberError.addClass('error-text');
+        errorDiv.text('Please enter a valid 10-digit mobile number');
+        errorDiv.addClass('error-text');
     }
 }
 
+// Modify the validateNumericValue function to update the error message div
+function validateNumericValue(inputElement, fieldName) {
+    var numericValue = inputElement.val();
+    var numericRegex = /^-?\d*\.?\d*$/; // Regex for numeric values
+    var errorDiv = inputElement.closest('.mb-3').find('.error-message');
+
+    if (numericRegex.test(numericValue)) {
+        // Valid numeric value
+        errorDiv.text(''); // Clear the error message
+        errorDiv.removeClass('error-text');
+    } else {
+        // Invalid numeric value
+        errorDiv.text(fieldName + ' must be a valid number');
+        errorDiv.addClass('error-text');
+    }
+}
+
+// Call the toggleStarMarks and toggleErrorMessages functions on input focus
+$('input[required]').on('focus', function () {
+    toggleStarMarks();
+    toggleErrorMessages();
+});
+
+// Call the toggleStarMarks and toggleErrorMessages functions on input change
+$('input[required]').on('input', function () {
+    toggleStarMarks();
+    toggleErrorMessages();
+});
+
+// Call the toggleErrorMessages function when the document is ready
+$(document).ready(function () {
+    toggleStarMarks();
+    toggleErrorMessages();
+});
+
+// Add a function to toggle error messages based on input validity
+function toggleErrorMessages() {
+    $('input[required]').each(function () {
+        var errorDiv = $(this).closest('.mb-3').find('.error-message');
+        errorDiv.toggle(!this.validity.valid || $(this).is(':focus'));
+    });
+}
+
+
+// Function to validate numeric values for offer price and selling price
+function validateNumericValue(inputElement, fieldName) {
+    var numericValue = inputElement.val();
+    var numericRegex = /^-?\d*\.?\d*$/; // Regex for numeric values
+
+    if (numericRegex.test(numericValue)) {
+        // Valid numeric value
+        inputElement.next('.error-message').text(''); // Clear the error message
+        inputElement.next('.error-message').removeClass('error-text');
+    } else {
+        // Invalid numeric value
+        inputElement.next('.error-message').text(fieldName + ' must be a valid number');
+        inputElement.next('.error-message').addClass('error-text');
+    }
+}
 
 
     </script>
@@ -528,6 +605,10 @@ function validateMobileNumber(mobileNumber) {
 
 .error-text {
     display: block;
+}
+
+.required-field {
+    color: red;
 }
 
 </style>
