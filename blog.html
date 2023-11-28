@@ -1,0 +1,70 @@
+
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.scss">
+    <title>Your Page Title</title>
+</head>
+<body>
+    <div class="animation-container">
+        <!-- Your existing animation code goes here -->
+        <link rel="stylesheet" href="style.scss">
+        <div class="animation-container">
+            <div class="lightning-container">
+              <div class="lightning white"></div>
+              <div class="lightning red"></div>
+            </div>
+            <div class="boom-container">
+              <div class="shape circle big white"></div>
+              <div class="shape circle white"></div>
+              <div class="shape triangle big yellow"></div>
+              <div class="shape disc white"></div>
+              <div class="shape triangle blue"></div>
+            </div>
+            <div class="boom-container second">
+              <div class="shape circle big white"></div>
+              <div class="shape circle white"></div>
+              <div class="shape disc white"></div>
+              <div class="shape triangle blue"></div>
+            </div>
+          </div>
+<style>
+ .back-button {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #136315;
+    color: white;
+    text-decoration: none;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    animation: floatAnimation 2s ease-in-out infinite; /* Adjust the duration and timing function as needed */
+}
+
+.back-button:hover {
+    background-color: #277e2b;
+    animation: none; /* Disable the floating animation on hover */
+}
+
+@keyframes floatAnimation {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px); /* Adjust the floating distance */
+    }
+}
+
+
+          </style>
+        
+        <!-- Back button -->
+        <a href="welcome.html" class="back-button">Back</a>
+    </div>
+</body>
+</html>
