@@ -134,8 +134,9 @@ function initializeHeader() {
                 </div>
                 <div class="mb-3">
                     <label for="mobileNumber" class="form-label">Mobile Number</label>
-                    <input type="tel" class="form-control" id="mobileNumber" placeholder="Enter Mobile Number" style="width: 250px;">
-                </div>
+                    <input type="tel" class="form-control" id="mobileNumber" placeholder="Enter Mobile Number" style="width: 250px;" pattern="[0-9]{10}" title="Please enter a valid 10-digit mobile number" required>
+                    <span id="mobileNumberError" class="error-message"></span>
+                </div>                
             </div>
         </div>
         <!-- Add more fields as needed -->
@@ -167,7 +168,7 @@ function initializeHeader() {
                     <td><input type="text" class="form-control uom-input" name="UOM[]" /></td>
                     <td><input type="number" class="form-control qty" name="stock[]" id="stock" /></td>
                     <td><input type="text" class="form-control selling-price" name="selling_price[]" /></td>
-                    <td><input type="text" class="form-control offer-price" name="offer_price[]" readonly /></td>
+                    <td><input type="text" class="form-control offer-price" name="offer_price[]" /></td>
                     <td><input type="text" class="form-control total" name="total[]" readonly /></td>
                     <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
                 </tr>
@@ -492,11 +493,44 @@ function getCurrentDateTime() {
 }
 
 
+var mobileNumberInput = $('#mobileNumber');
+var mobileNumberError = $('#mobileNumberError');
+
+mobileNumberInput.on('blur', function () {
+    validateMobileNumber($(this).val());
+});
+
+// Function to validate the mobile number
+function validateMobileNumber(mobileNumber) {
+    var mobileNumberRegex = /^[0-9]{10}$/;
+
+    if (mobileNumberRegex.test(mobileNumber)) {
+        // Valid mobile number
+        mobileNumberError.text(''); // Clear the error message
+        mobileNumberError.removeClass('error-text');
+    } else {
+        // Invalid mobile number
+        mobileNumberError.text('Please enter a valid 10-digit mobile number');
+        mobileNumberError.addClass('error-text');
+    }
+}
+
 
 
     </script>
     
+<style>
+    .error-message {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+}
 
+.error-text {
+    display: block;
+}
+
+</style>
 
 </body>
 </html>
