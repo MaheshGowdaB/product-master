@@ -252,7 +252,7 @@ $(document).ready(function () {
     // Call the fetchProductNames function to populate the initial dropdown list
     fetchProductNames($('.product-dropdown'));
 
- // Event handler for product dropdown change
+// Event handler for product dropdown change
 $('table').on('change', '.product-dropdown', function () {
     var selectedProduct = $(this).val();
     var sellingPriceInput = $(this).closest('tr').find('.selling-price');
@@ -426,35 +426,31 @@ $('table').on('input', '.product-code-input', function () {
 initializeProductCodeAutocomplete($('table tbody tr:first'));
 
 
-    // Event handler for "Add Row" button click
-    $('#addRow').on('click', function () {
-        // Clone the last row of the table
-        var newRow = $('table tbody tr:last').clone();
+// Event handler for "Add Row" button click
+$('#addRow').on('click', function () {
+    // Clone the last row of the table
+    var newRow = $('table tbody tr:last').clone();
 
-        // Clear the input values in the cloned row
-        newRow.find('input').val('');
+    // Clear the input values in the cloned row
+    newRow.find('input').val('');
 
-        // Increment the SL.no in the cloned row
-        var lastSlNo = parseInt(newRow.find('td:first').text());
-        newRow.find('td:first').text(lastSlNo + 1);
+    // Increment the SL.no in the cloned row
+    var lastSlNo = parseInt(newRow.find('td:first').text());
+    newRow.find('td:first').text(lastSlNo + 1);
 
-        // Append the cloned row to the table
-        $('table tbody').append(newRow);
+    // Append the cloned row to the table
+    $('table tbody').append(newRow);
 
-        // Fetch product names and populate the new dropdown
-        fetchProductNames(newRow.find('.product-dropdown'));
-    });
+    // Fetch product names and populate the new dropdown
+    fetchProductNames(newRow.find('.product-dropdown'));
 
-    // Your other scripts
+    // Initialize Autocomplete for the product code input in the new row
+    initializeProductCodeAutocomplete(newRow);
 
-        // Event handler for "Remove" button click
-        $('table').on('click', '.remove-row', function () {
-        // Find the closest row and remove it
-        $(this).closest('tr').remove();
+    // Update totals when a new row is added
+    updateTotals();
+});
 
-        // After removing the row, update the totals
-        updateTotals();
-    });
 
 
         // Function to calculate the total for a row based on the offer price
