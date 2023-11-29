@@ -165,7 +165,7 @@ function initializeHeader() {
                 <!-- Add rows for your data here -->
                 <tr>
                     <td>1</td>
-                    <td><input type="text" class="form-control product-code-input" name="product_code[]" id="productCodeInput" /></td>
+                    <td><input type="text" class="form-control product-code-input" name="product_code[]" id="productCodeInput" autocomplete="off" /></td>
                     <td>
                         <select class="form-control product-dropdown" name="product_name[]">
                             <!-- Options will be dynamically added here -->
@@ -224,6 +224,7 @@ function initializeHeader() {
 
 $(document).ready(function () {
     // ...
+    
 
     // Function to fetch product names and populate the dropdown list
     function fetchProductNames(dropdown) {
@@ -339,6 +340,90 @@ $('table').on('input', '.product-code-input', function () {
     });
 });
 
+
+
+
+    // Initialize Autocomplete for the product code input
+    $('.product-code-input').autocomplete({
+        source: function (request, response) {
+            // Fetch product codes from the server
+            $.ajax({
+                type: 'GET',
+                url: 'get_product_codes.php', // Create a new PHP file to handle product code fetching
+                data: {
+                    search: request.term
+                },
+                success: function (data) {
+                    // Map the response data to an array of product codes
+                    var productCodes = data.map(function (product) {
+                        return product.product_code;
+                    });
+                    response(productCodes);
+                },
+                error: function () {
+                    alert('Error fetching product codes');
+                }
+            });
+        },
+        select: function (event, ui) {
+            // When a product code is selected, fetch and populate other details
+            var selectedProductCode = ui.item.value;
+            var row = $(this).closest('tr');
+
+            // Fetch product details based on the selected product code
+            $.ajax({
+                type: 'GET',
+                url: 'get_product_details.php',
+                data: {
+                    product_code: selectedProductCode
+                },
+                success: function (response) {
+                    // Assuming the response is an object with the required properties
+                    var productName = response.product_name;
+                    var uom = response.UOM;
+                    var sellingPrice = response.selling_price;
+                    var offerPrice = response.offer_price;
+
+                    // Update the corresponding input fields with the fetched values
+                    row.find('.product-dropdown').val(productName);
+                    row.find('.uom-input').val(uom);
+                    row.find('.selling-price').val(sellingPrice);
+                    row.find('.offer-price').val(offerPrice);
+                },
+                error: function () {
+                    alert('Error fetching product details');
+                }
+            });
+        }
+    });
+
+    function initializeProductCodeAutocomplete(row) {
+    row.find('.product-code-input').autocomplete({
+        source: function (request, response) {
+            // Fetch product codes from the server
+            $.ajax({
+                type: 'GET',
+                url: 'get_product_codes.php',
+                data: {
+                    search: request.term
+                },
+                success: function (data) {
+                    // Map the response data to an array of product codes
+                    var productCodes = data.map(function (product) {
+                        return product.product_code;
+                    });
+                    response(productCodes);
+                },
+                error: function () {
+                    alert('Error fetching product codes');
+                }
+            });
+        }
+    });
+}
+
+// Call this function when the document is ready to initialize the Autocomplete for the first row
+initializeProductCodeAutocomplete($('table tbody tr:first'));
 
 
     // Event handler for "Add Row" button click
