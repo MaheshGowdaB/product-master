@@ -5,28 +5,31 @@ include "connection.php";
 if (isset($_POST['invoiceData']) && !empty($_POST['invoiceData'])) {
     $invoiceData = json_decode($_POST['invoiceData'], true);
 
-    // Iterate through each row's data and insert into tblinvhead
+    // Initialize total quantity
+    $totalQty = 0;
+
+    // Iterate through each row's data and calculate total quantity
     foreach ($invoiceData as $rowData) {
-        $invoiceNo = $rowData['invoiceNo'];
-        $invoiceDate = $rowData['invoiceDate'];
-        $customerName = $rowData['customerName'];
-        $mobileNo = $rowData['mobileNo'];
-        $qty = $rowData['qty'];
-        $netTotal = $rowData['netTotal'];
-        $savedBy = $rowData['savedBy'];
-        $savedDateTime = $rowData['savedDateTime'];
+        $totalQty += $rowData['qty'];
+    }
+
+    // Use the first row's data to insert a single row into tblinvhead
+    $firstRowData = $invoiceData[0];
+
+    $sql = "INSERT INTO tblinvhead (InvoiceNo, InvoiceDate, CustomerName, MobileNo, Qty, NetTotal, Saved_By, SavedDateTime)
+            VALUES ('$firstRowData[invoiceNo]', '$firstRowData[invoiceDate]', '$firstRowData[customerName]', '$firstRowData[mobileNo]', '$totalQty', '$firstRowData[netTotal]', '$firstRowData[savedBy]', '$firstRowData[savedDateTime]')";
+
+    $result = $conn->query($sql);
+
+    if (!$result) {
+        die("Invalid query: " . $conn->error);
+    }
+
+    // Update stock in tblproducts for each product code
+    foreach ($invoiceData as $rowData) {
         $productCode = $rowData['productCode'];
+        $qty = $rowData['qty'];
 
-        $sql = "INSERT INTO tblinvhead (InvoiceNo, InvoiceDate, CustomerName, MobileNo, Qty, NetTotal, Saved_By, SavedDateTime)
-                VALUES ('$invoiceNo', '$invoiceDate', '$customerName', '$mobileNo', '$qty', '$netTotal', '$savedBy', '$savedDateTime')";
-
-        $result = $conn->query($sql);
-
-        if (!$result) {
-            die("Invalid query: " . $conn->error);
-        }
-
-        // Update stock in tblproducts
         $updateStockSql = "UPDATE tblproducts SET stock = stock - '$qty' WHERE product_code = '$productCode'";
         $updateStockResult = $conn->query($updateStockSql);
 
