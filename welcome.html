@@ -8,10 +8,13 @@
     <title>Welcome</title>
     <link rel="stylesheet" href="header.css">
     
+    
 </head>
 <body>
     <header class="header">
         <div class="menu-icon" onclick="toggleMenu()">☰</div>
+        <div class="header-name">PRODUCT MASTER</div>
+        
         <div class="user-menu">
             <div class="user-menu">
                 <div class="user-icon">&#128100;</div>
@@ -29,10 +32,268 @@
             <a href="#">Contact</a>
             <!-- Add more options as needed -->
         </div>
+        
     </header>
-    <center>
-        <h1>Welcome</h1>
-    </center>
+
+    <style>
+.header-name {
+    font-size: 24px;
+    font-weight: bold;
+    margin-left: 60px;
+    color: #ffffff;
+    animation: floatInHeaderName 1.5s ease-out, glowHeaderName 3s infinite alternate;
+}
+
+        /* Professional animation for the username */
+        @keyframes floatIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Professional animation for the logout button */
+        @keyframes floatInButton {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Gentle glow effect */
+        @keyframes glow {
+            0% {
+                text-shadow: 0 0 5px rgba(255, 105, 180, 0.5);
+            }
+
+            50% {
+                text-shadow: 0 0 10px rgba(255, 105, 180, 0.7);
+            }
+
+            100% {
+                text-shadow: 0 0 5px rgba(255, 105, 180, 0.5);
+            }
+        }
+
+        /* Apply the animations to the username and logout button */
+        #usernamePlaceholder,
+        .user-icon,
+        #logoutLink {
+            animation: floatIn 1.5s ease-out;
+        }
+
+        .user-icon {
+            animation: floatIn 1.5s ease-out, glow 3s infinite alternate;
+        }
+/* Keyframes for the header name animation */
+@keyframes floatInHeaderName {
+    0% {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Gentle glow effect for the header name */
+@keyframes glowHeaderName {
+    0% {
+        text-shadow: 0 0 10px rgba(255, 105, 180, 0.7);
+    }
+
+    50% {
+        text-shadow: 0 0 15px rgba(255, 105, 180, 0.9);
+    }
+
+    100% {
+        text-shadow: 0 0 10px rgba(255, 105, 180, 0.7);
+    }
+}
+
+
+/* Apply the animations to the menu options */
+.menu-options a {
+    animation: floatInMenuOption 1.5s ease-out, glowMenuOption 3s infinite alternate;
+}
+
+/* Keyframes for the menu options animation */
+@keyframes floatInMenuOption {
+    0% {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Gentle glow effect for the menu options */
+@keyframes glowMenuOption {
+    0% {
+        text-shadow: 0 0 8px rgba(255, 105, 180, 0.7);
+    }
+
+    50% {
+        text-shadow: 0 0 15px rgba(255, 105, 180, 1);
+    }
+
+    100% {
+        text-shadow: 0 0 8px rgba(255, 105, 180, 0.7);
+    }
+}
+
+
+
+.text.welcome-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff; /* Set the text color as needed */
+    font-size: 54px; /* Adjust the font size as needed */
+    font-weight: bold; /* Make the text bold */
+    font-family: 'Arial', sans-serif; /* Change the font family as desired */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); /* Add a subtle text shadow */
+    letter-spacing: 2px; /* Adjust letter spacing for a stylish look */
+    text-transform: uppercase; /* Convert text to uppercase for emphasis */
+    /* Add more styles as desired */
+}
+
+
+        * {box-sizing: border-box;}
+        body {font-family: Verdana, sans-serif;}
+        .mySlides {display: none;}
+        img {vertical-align: middle;}
+        
+        /* Slideshow container */
+        .slideshow-container {
+          max-width: 10000px;
+          position: relative;
+          margin: auto;
+        }
+        
+        /* Caption text */
+        .text {
+          color: #f2f2f2;
+          font-size: 15px;
+          padding: 8px 12px;
+          position: absolute;
+          bottom: 8px;
+          width: 100%;
+          text-align: center;
+        }
+        
+        /* Number text (1/3 etc) */
+        .numbertext {
+          color: #f2f2f2;
+          font-size: 12px;
+          padding: 8px 12px;
+          position: absolute;
+          top: 0;
+        }
+        
+        /* The dots/bullets/indicators */
+        .dot {
+          height: 15px;
+          width: 15px;
+          margin: 0 2px;
+          background-color: #bbb;
+          border-radius: 50%;
+          display: inline-block;
+          transition: background-color 0.6s ease;
+        }
+        
+        .active {
+          background-color: #717171;
+        }
+        
+        /* Fading animation */
+        .fade {
+          animation-name: fade;
+          animation-duration: 4.5s;
+        }
+        
+        @keyframes fade {
+          from {opacity: .4} 
+          to {opacity: 3}
+        }
+        
+        /* On smaller screens, decrease text size */
+        @media only screen and (max-width: 300px) {
+          .text {font-size: 11px}
+        }
+        </style>
+        </head>
+        <body>
+        
+        
+        <div class="slideshow-container">
+        
+            <div class="mySlides fade">
+                <div class="numbertext">1 / 3</div>
+                <img src="2.jpg" style="width:100%">
+                <div class="text welcome-text">Welcome</div>
+              </div>
+              
+              <div class="mySlides fade">
+                <div class="numbertext">2 / 3</div>
+                <img src="1.jpg" style="width:100%">
+                <div class="text welcome-text">Welcome</div>
+              </div>
+              
+              <div class="mySlides fade">
+                <div class="numbertext">3 / 3</div>
+                <img src="3.jpg" style="width:100%">
+                <div class="text welcome-text">Welcome</div>
+              </div>
+        
+        </div>
+        <br>
+        
+        <div style="text-align:center">
+          <span class="dot"></span> 
+          <span class="dot"></span> 
+          <span class="dot"></span> 
+        </div>
+        
+        <script>
+            let slideIndex = 0;
+            showSlides();
+        
+            function showSlides() {
+                let i;
+                let slides = document.getElementsByClassName("mySlides");
+                let dots = document.getElementsByClassName("dot");
+                for (i = 0; i < slides.length; i++) {
+                    slides[i].style.display = "none";
+                }
+                slideIndex++;
+                if (slideIndex > slides.length) {
+                    slideIndex = 1
+                }
+                for (i = 0; i < dots.length; i++) {
+                    dots[i].className = dots[i].className.replace(" active", "");
+                }
+                slides[slideIndex - 1].style.display = "block";
+                dots[slideIndex - 1].className += " active";
+                setTimeout(showSlides, 4000); // Change image every 2 seconds
+            }
+        </script>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
