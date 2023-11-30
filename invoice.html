@@ -215,62 +215,30 @@ function initializeHeader() {
 
 $(document).ready(function () {
 
-    // Function to fetch product names and populate the dropdown list
     function fetchProductNames(dropdown) {
-        $.ajax({
-            type: 'GET',
-            url: 'get_products.php',
-            success: function (response) {
-                var productNames = response.map(function (product) {
-                    return product.product_name;
-                });
+    $.get('get_products.php', response => {
+        var productNames = response.map(product => product.product_name);
+        dropdown.empty().append($('<option>').text('Select Product').attr('value', ''), ...productNames.map(name => $('<option>').text(name).attr('value', name)));
+    }).fail(() => alert('Error fetching product names'));
+}
 
-                dropdown.empty();
-                dropdown.append($('<option>').text('Select Product').attr('value', ''));
+function updateInputFields(selectedProduct, inputs) {
+    $.get('get_product_details.php', { product_name: selectedProduct }, response => {
+        var { selling_price, offer_price, UOM, product_code } = response;
+        Object.entries({ selling_price, offer_price, UOM, product_code }).forEach(([key, value]) => inputs[key].val(value));
+    }).fail(() => alert('Error fetching product prices'));
+}
 
-                $.each(productNames, function (index, productName) {
-                    dropdown.append($('<option>').text(productName).attr('value', productName));
-                });
-            },
-            error: function () {
-                alert('Error fetching product names');
-            }
-        });
-    }
+fetchProductNames($('.product-dropdown'));
 
-    // Call the fetchProductNames function to populate the initial dropdown list
-    fetchProductNames($('.product-dropdown'));
-
-    $('table').on('change', '.product-name-input', function () {
+$('table').on('change', '.product-name-input', function () {
     var selectedProduct = $(this).val();
-    var sellingPriceInput = $(this).closest('tr').find('.selling-price');
-    var offerPriceInput = $(this).closest('tr').find('.offer-price');
-    var uomInput = $(this).closest('tr').find('.uom-input');
-    var productCodeInput = $(this).closest('tr').find('.product-code-input');
+    var inputs = ['sellingPrice', 'offerPrice', 'uomInput', 'productCodeInput'].reduce((acc, key) => (acc[key] = $(this).closest('tr').find('.' + key.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()), acc), {});
 
-    // Fetch selling_price, offer_price, UOM, and product_code for the selected product
-    $.ajax({
-        type: 'GET',
-        url: 'get_product_prices.php',
-        data: { product_name: selectedProduct },
-        success: function (response) {
-            // Assuming the response is an object with the required properties
-            var sellingPrice = response.selling_price;
-            var offerPrice = response.offer_price;
-            var uom = response.UOM;
-            var productCode = response.product_code;
-
-            // Update the corresponding input fields with the fetched values
-            sellingPriceInput.val(sellingPrice);
-            offerPriceInput.val(offerPrice);
-            uomInput.val(uom);
-            productCodeInput.val(productCode);
-        },
-        error: function () {
-            alert('Error fetching product prices');
-        }
-    });
+    updateInputFields(selectedProduct, inputs);
 });
+
+
 
 // Event handler for stock quantity change
 $('table').on('input', '.qty', function () {
@@ -311,88 +279,53 @@ $('table').on('input', '.product-code-input', function () {
     var productCode = $(this).val();
     var row = $(this).closest('tr');
 
-    // Fetch product details based on the entered product code
-    $.ajax({
-        type: 'GET',
-        url: 'get_product_details.php',
-        data: { product_code: productCode },
-        success: function (response) {
-            // Assuming the response is an object with the required properties
-            var productName = response.product_name;
-            var uom = response.UOM;
-            var sellingPrice = response.selling_price;
-            var offerPrice = response.offer_price;
+    $.get('get_product_details.php', { product_code: productCode }, response => {
+        var { product_name, UOM, selling_price, offer_price } = response;
 
-            // Update the corresponding input fields with the fetched values
-            row.find('.product-name-input').val(productName);
-            row.find('.uom-input').val(uom);
-            row.find('.selling-price').val(sellingPrice);
-            row.find('.offer-price').val(offerPrice);
-        },
-        error: function () {
-            alert('Error fetching product details');
-        }
-    });
+        row.find('.product-name-input, .uom-input, .selling-price, .offer-price').val((_, key) => eval(key));
+    }).fail(() => alert('Error fetching product details'));
 });
 
-            // Function to initialize autocomplete for product code input
-            function initializeProductCodeAutocomplete(row) {
-                row.find('.product-code-input').autocomplete({
-                    source: function (request, response) {
-                        $.ajax({
-                            type: 'GET',
-                            url: 'get_product_codes.php',
-                            data: { search: request.term },
-                            success: function (data) {
-                                var productCodes = data.map(function (product) {
-                                    return product.product_code;
-                                });
-                                response(productCodes);
-                            },
-                            error: function () {
-                                alert('Error fetching product codes');
-                            }
-                        });
-                    },
+
+    // Function to initialize autocomplete for product code input
+    function initializeProductCodeAutocomplete(row) {
+    var codeInput = row.find('.product-code-input');
+    codeInput.autocomplete({
+        source: (request, response) => {
+            $.ajax({
+                type: 'GET',
+                url: 'get_product_codes.php',
+                data: { search: request.term },
+                success: data => response(data.map(product => product.product_code)),
+                error: () => alert('Error fetching product codes')
+            });
+        },
         select: function (event, ui) {
             var selectedProductCode = ui.item.value;
-            var row = $(this).closest('tr');
+            var row = codeInput.closest('tr');
 
             $.ajax({
                 type: 'GET',
                 url: 'get_product_details.php',
-                data: {
-                    product_code: selectedProductCode
-                },
-                success: function (response) {
-                    var productName = response.product_name;
-                    var uom = response.UOM;
-                    var sellingPrice = response.selling_price;
-                    var offerPrice = response.offer_price;
+                data: { product_code: selectedProductCode },
+                success: response => {
+                    var { product_name, UOM, selling_price, offer_price } = response;
 
-                    // Update the corresponding input fields with the fetched values
-                    row.find('.product-name-input').val(productName);
-                    row.find('.uom-input').val(uom);
-                    row.find('.selling-price').val(sellingPrice);
-                    row.find('.offer-price').val(offerPrice);
+                    row.find('.product-name-input').val(product_name);
+                    row.find('.uom-input').val(UOM);
+                    row.find('.selling-price').val(selling_price);
+                    row.find('.offer-price').val(offer_price);
 
-                    // Update totals after selecting a product
                     updateTotals();
                 },
-                error: function () {
-                    alert('Error fetching product details');
-                }
+                error: () => alert('Error fetching product details')
             });
         }
     });
 }
 
-// Call this function when the document is ready to initialize the Autocomplete for the first row
 initializeProductCodeAutocomplete($('table tbody tr:first'));
-
-// Additionally, initialize autocomplete for the product name input in the first row
 initializeProductNameAutocomplete($('table tbody tr:first'));
-
 
     // Function to initialize autocomplete for product name input
     function initializeProductNameAutocomplete(row) {
@@ -417,34 +350,26 @@ initializeProductNameAutocomplete($('table tbody tr:first'));
         });
     }
 
-// Add this block to use the select event of autocomplete
-$('table').on('autocompleteselect', '.product-name-input', function (event, ui) {
+    $('table').on('autocompleteselect', '.product-name-input', function (event, ui) {
     var selectedProduct = ui.item.value;
-    var sellingPriceInput = $(this).closest('tr').find('.selling-price');
-    var offerPriceInput = $(this).closest('tr').find('.offer-price');
-    var uomInput = $(this).closest('tr').find('.uom-input');
-    var productCodeInput = $(this).closest('tr').find('.product-code-input');
+    var $row = $(this).closest('tr');
 
     $.ajax({
         type: 'GET',
-        url: 'get_product_prices.php',
+        url: 'get_product_details.php',
         data: { product_name: selectedProduct },
-        success: function (response) {
-            var sellingPrice = response.selling_price;
-            var offerPrice = response.offer_price;
-            var uom = response.UOM;
-            var productCode = response.product_code;
-
-            sellingPriceInput.val(sellingPrice);
-            offerPriceInput.val(offerPrice);
-            uomInput.val(uom);
-            productCodeInput.val(productCode);
+        success: function ({ selling_price, offer_price, UOM, product_code }) {
+            $row.find('.selling-price').val(selling_price);
+            $row.find('.offer-price').val(offer_price);
+            $row.find('.uom-input').val(UOM);
+            $row.find('.product-code-input').val(product_code);
         },
         error: function () {
             alert('Error fetching product prices');
         }
     });
 });
+
 
     // Event handler for "Add Row" button click
     $('#addRow').on('click', function () {
@@ -562,55 +487,29 @@ $('table').on('click', '.remove-row', function () {
 
 // Event handler for "Refresh" button click
 $('#refreshButton').on('click', function () {
-    // Reset the values of all textboxes in the form
-    $(':input', '#invoiceForm')
-        .not(':button, :submit, :reset, :hidden')
-        .val('')
-        .prop('checked', false)
-        .prop('selected', false);
+    $(':input', '#invoiceForm').not(':button, :submit, :reset, :hidden').val('').prop('checked', false).prop('selected', false);
 
-    // Reset the SL.no in the table
-    $('table tbody tr').each(function (index) {
-        $(this).find('td:first').text(index + 1);
-    });
+    $('table tbody tr').each((index, row) => $(row).find('td:first').text(index + 1));
 
-    // Fetch product names and populate the dropdowns
-    $('table tbody tr').each(function () {
-        fetchProductNames($(this).find('.product-dropdown'));
-    });
+    $('table tbody tr .product-dropdown').each((_, dropdown) => fetchProductNames($(dropdown)));
 
-    // Fetch UOM codes and populate the dropdowns
     fetchUOMCodes($('.uom-code-dropdown'));
 
-    // Update totals after resetting
     updateTotals();
 });
-
 });
 
 // Function to get the current date and time in a desired format
 function getCurrentDateTime() {
-    var currentDate = new Date();
-    var formattedDate = currentDate.toISOString().slice(0, 19).replace("T", " "); // Format: YYYY-MM-DD HH:mm:ss
-    return formattedDate;
+    return new Date().toISOString().slice(0, 19).replace("T", " ");
 }
 
-var mobileNumberInput = $('#mobileNumber');
-var mobileNumberError = $('#mobileNumberError');
-var offerPriceInputs = $('.offer-price');
-var sellingPriceInputs = $('.selling-price');
+$('#mobileNumber').on('blur', () => validateMobileNumber($('#mobileNumber').val()));
 
-mobileNumberInput.on('blur', function () {
-    validateMobileNumber($(this).val());
+$('.offer-price, .selling-price').on('blur', function () {
+    validateNumericValue($(this), $(this).hasClass('offer-price') ? 'Offer Price' : 'Selling Price');
 });
 
-offerPriceInputs.on('blur', function () {
-    validateNumericValue($(this), 'Offer Price');
-});
-
-sellingPriceInputs.on('blur', function () {
-    validateNumericValue($(this), 'Selling Price');
-});
 
 // Modify the validateMobileNumber function to update the error message div
 function validateMobileNumber(mobileNumber) {
@@ -631,15 +530,13 @@ function validateMobileNumber(mobileNumber) {
 // Modify the validateNumericValue function to update the error message div
 function validateNumericValue(inputElement, fieldName) {
     var numericValue = inputElement.val();
-    var numericRegex = /^-?\d*\.?\d*$/; // Regex for numeric values
+    var numericRegex = /^-?\d*\.?\d*$/; 
     var errorDiv = inputElement.closest('.mb-3').find('.error-message');
 
     if (numericRegex.test(numericValue)) {
-        // Valid numeric value
-        errorDiv.text(''); // Clear the error message
+        errorDiv.text(''); 
         errorDiv.removeClass('error-text');
     } else {
-        // Invalid numeric value
         errorDiv.text(fieldName + ' must be a valid number');
         errorDiv.addClass('error-text');
     }
