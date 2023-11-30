@@ -45,9 +45,6 @@
             initializeHeader();
         });
 
-
-        // header.js
-
 function toggleMenu() {
     var menuOptions = document.getElementById('menuOptions');
     var menuIcon = document.querySelector('.menu-icon');
@@ -217,8 +214,6 @@ function initializeHeader() {
 <script>
 
 $(document).ready(function () {
-    // ...
-    
 
     // Function to fetch product names and populate the dropdown list
     function fetchProductNames(dropdown) {
@@ -277,9 +272,6 @@ $(document).ready(function () {
     });
 });
 
-
-
-
 // Event handler for stock quantity change
 $('table').on('input', '.qty', function () {
     var quantity = parseInt($(this).val()) || 0;
@@ -288,8 +280,8 @@ $('table').on('input', '.qty', function () {
     // Fetch the actual offer price from the database for the given product code
     $.ajax({
         type: 'GET',
-        url: 'get_products.php', // Use the same URL as your get_products.php file
-        data: { search: productCode }, // Pass the product code as the search parameter
+        url: 'get_products.php', 
+        data: { search: productCode }, 
         success: function (response) {
             if (response.length > 0) {
                 var actualOfferPrice = parseFloat(response[0].actual_offer_price) || 0;
@@ -313,8 +305,6 @@ $('table').on('input', '.qty', function () {
         }
     });
 });
-
-
 
 // Event handler for product code input change
 $('table').on('input', '.product-code-input', function () {
@@ -344,9 +334,6 @@ $('table').on('input', '.product-code-input', function () {
         }
     });
 });
-
-
-
 
     function initializeProductCodeAutocomplete(row) {
     row.find('.product-code-input').autocomplete({
@@ -458,11 +445,6 @@ $('table').on('autocompleteselect', '.product-name-input', function (event, ui) 
     });
 });
 
-
-
-
-
-
     // Event handler for "Add Row" button click
     $('#addRow').on('click', function () {
       addRow();
@@ -483,15 +465,11 @@ $('table').on('autocompleteselect', '.product-name-input', function (event, ui) 
    // Update totals when a new row is added
     updateTotals();
 
-
-
 // Event handler for "Remove" button click
 $('table').on('click', '.remove-row', function () {
     $(this).closest('tr').remove();
     updateTotals(); // Update totals after removing a row
 });
-
-
 
         // Function to calculate the total for a row based on the offer price
         function calculateRowTotal(row) {
@@ -536,8 +514,6 @@ $('table').on('click', '.remove-row', function () {
             updateTotals();
         });
     
-
-
    // Event handler for "Save" button click
    $('#saveButton').on('click', function () {
     var rowsData = [];
@@ -583,10 +559,7 @@ $('table').on('click', '.remove-row', function () {
     
 });
 
-
-
-
-    // Event handler for "Refresh" button click
+// Event handler for "Refresh" button click
 $('#refreshButton').on('click', function () {
     // Reset the values of all textboxes in the form
     $(':input', '#invoiceForm')
@@ -620,7 +593,6 @@ function getCurrentDateTime() {
     var formattedDate = currentDate.toISOString().slice(0, 19).replace("T", " "); // Format: YYYY-MM-DD HH:mm:ss
     return formattedDate;
 }
-
 
 var mobileNumberInput = $('#mobileNumber');
 var mobileNumberError = $('#mobileNumberError');
@@ -698,7 +670,6 @@ function toggleErrorMessages() {
     });
 }
 
-
 // Function to validate numeric values for offer price and selling price
 function validateNumericValue(inputElement, fieldName) {
     var numericValue = inputElement.val();
@@ -714,9 +685,7 @@ function validateNumericValue(inputElement, fieldName) {
         inputElement.next('.error-message').addClass('error-text');
     }
 }
-
-
-    </script>
+</script>
     
 <style>
     .error-message {
