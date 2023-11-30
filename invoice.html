@@ -343,18 +343,16 @@ $('table').on('input', '.product-code-input', function () {
 
 
 
-    // Initialize Autocomplete for the product code input
-    $('.product-code-input').autocomplete({
+    function initializeProductCodeAutocomplete(row) {
+    row.find('.product-code-input').autocomplete({
         source: function (request, response) {
-            // Fetch product codes from the server
             $.ajax({
                 type: 'GET',
-                url: 'get_product_codes.php', // Create a new PHP file to handle product code fetching
+                url: 'get_product_codes.php',
                 data: {
                     search: request.term
                 },
                 success: function (data) {
-                    // Map the response data to an array of product codes
                     var productCodes = data.map(function (product) {
                         return product.product_code;
                     });
@@ -366,11 +364,9 @@ $('table').on('input', '.product-code-input', function () {
             });
         },
         select: function (event, ui) {
-            // When a product code is selected, fetch and populate other details
             var selectedProductCode = ui.item.value;
             var row = $(this).closest('tr');
 
-            // Fetch product details based on the selected product code
             $.ajax({
                 type: 'GET',
                 url: 'get_product_details.php',
@@ -378,7 +374,6 @@ $('table').on('input', '.product-code-input', function () {
                     product_code: selectedProductCode
                 },
                 success: function (response) {
-                    // Assuming the response is an object with the required properties
                     var productName = response.product_name;
                     var uom = response.UOM;
                     var sellingPrice = response.selling_price;
@@ -389,33 +384,12 @@ $('table').on('input', '.product-code-input', function () {
                     row.find('.uom-input').val(uom);
                     row.find('.selling-price').val(sellingPrice);
                     row.find('.offer-price').val(offerPrice);
+
+                    // Update totals after selecting a product
+                    updateTotals();
                 },
                 error: function () {
                     alert('Error fetching product details');
-                }
-            });
-        }
-    });
-
-    function initializeProductCodeAutocomplete(row) {
-    row.find('.product-code-input').autocomplete({
-        source: function (request, response) {
-            // Fetch product codes from the server
-            $.ajax({
-                type: 'GET',
-                url: 'get_product_codes.php',
-                data: {
-                    search: request.term
-                },
-                success: function (data) {
-                    // Map the response data to an array of product codes
-                    var productCodes = data.map(function (product) {
-                        return product.product_code;
-                    });
-                    response(productCodes);
-                },
-                error: function () {
-                    alert('Error fetching product codes');
                 }
             });
         }
@@ -449,6 +423,13 @@ $('#addRow').on('click', function () {
 
     // Update totals when a new row is added
     updateTotals();
+});
+
+
+// Event handler for "Remove" button click
+$('table').on('click', '.remove-row', function () {
+    $(this).closest('tr').remove();
+    updateTotals(); // Update totals after removing a row
 });
 
 
