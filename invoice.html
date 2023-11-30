@@ -166,11 +166,7 @@ function initializeHeader() {
                 <tr>
                     <td>1</td>
                     <td><input type="text" class="form-control product-code-input" name="product_code[]" id="productCodeInput" autocomplete="off" /></td>
-                    <td>
-                        <select class="form-control product-dropdown" name="product_name[]">
-                            <!-- Options will be dynamically added here -->
-                        </select>
-                    </td>
+                    <td><input type="text" class="form-control product-name-input" name="product_name[]" id="productNameInput" autocomplete="off" /></td>
                     <td><input type="text" class="form-control uom-input" name="UOM[]" /></td>
                     <td><input type="number" class="form-control qty" name="stock[]" id="stock" /></td>
                     <td><input type="number" class="form-control selling-price" name="selling_price[]" /></td>
@@ -252,8 +248,7 @@ $(document).ready(function () {
     // Call the fetchProductNames function to populate the initial dropdown list
     fetchProductNames($('.product-dropdown'));
 
-// Event handler for product dropdown change
-$('table').on('change', '.product-dropdown', function () {
+    $('table').on('change', '.product-name-input', function () {
     var selectedProduct = $(this).val();
     var sellingPriceInput = $(this).closest('tr').find('.selling-price');
     var offerPriceInput = $(this).closest('tr').find('.offer-price');
@@ -283,6 +278,7 @@ $('table').on('change', '.product-dropdown', function () {
         }
     });
 });
+
 
 
 
@@ -329,7 +325,7 @@ $('table').on('input', '.product-code-input', function () {
             var offerPrice = response.offer_price;
 
             // Update the corresponding input fields with the fetched values
-            row.find('.product-dropdown').val(productName);
+            row.find('.product-name-input').val(productName);
             row.find('.uom-input').val(uom);
             row.find('.selling-price').val(sellingPrice);
             row.find('.offer-price').val(offerPrice);
@@ -380,7 +376,7 @@ $('table').on('input', '.product-code-input', function () {
                     var offerPrice = response.offer_price;
 
                     // Update the corresponding input fields with the fetched values
-                    row.find('.product-dropdown').val(productName);
+                    row.find('.product-name-input').val(productName);
                     row.find('.uom-input').val(uom);
                     row.find('.selling-price').val(sellingPrice);
                     row.find('.offer-price').val(offerPrice);
@@ -398,6 +394,64 @@ $('table').on('input', '.product-code-input', function () {
 
 // Call this function when the document is ready to initialize the Autocomplete for the first row
 initializeProductCodeAutocomplete($('table tbody tr:first'));
+
+// Additionally, initialize autocomplete for the product name input in the first row
+initializeProductNameAutocomplete($('table tbody tr:first'));
+
+
+// Function to initialize autocomplete for product name input
+function initializeProductNameAutocomplete(row) {
+    row.find('.product-name-input').autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                type: 'GET',
+                url: 'get_products.php',
+                success: function (data) {
+                    var productNames = data.map(function (product) {
+                        return product.product_name;
+                    });
+                    response(productNames);
+                },
+                error: function () {
+                    alert('Error fetching product names');
+                }
+            });
+        }
+    });
+}
+
+// Add this block to use the select event of autocomplete
+$('table').on('autocompleteselect', '.product-name-input', function (event, ui) {
+    var selectedProduct = ui.item.value;
+    var sellingPriceInput = $(this).closest('tr').find('.selling-price');
+    var offerPriceInput = $(this).closest('tr').find('.offer-price');
+    var uomInput = $(this).closest('tr').find('.uom-input');
+    var productCodeInput = $(this).closest('tr').find('.product-code-input');
+
+    $.ajax({
+        type: 'GET',
+        url: 'get_product_prices.php',
+        data: { product_name: selectedProduct },
+        success: function (response) {
+            var sellingPrice = response.selling_price;
+            var offerPrice = response.offer_price;
+            var uom = response.UOM;
+            var productCode = response.product_code;
+
+            sellingPriceInput.val(sellingPrice);
+            offerPriceInput.val(offerPrice);
+            uomInput.val(uom);
+            productCodeInput.val(productCode);
+        },
+        error: function () {
+            alert('Error fetching product prices');
+        }
+    });
+});
+
+
+
+
 
 
 // Event handler for "Add Row" button click
@@ -420,10 +474,13 @@ $('#addRow').on('click', function () {
 
     // Initialize Autocomplete for the product code input in the new row
     initializeProductCodeAutocomplete(newRow);
+    // Initialize Autocomplete for the product name input in the new row
+    initializeProductNameAutocomplete(newRow);
 
     // Update totals when a new row is added
     updateTotals();
 });
+
 
 
 // Event handler for "Remove" button click
