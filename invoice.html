@@ -214,8 +214,6 @@ function initializeHeader() {
 <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/themes/smoothness/jquery-ui.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
 
-<!-- Fetch product names and initialize autocomplete -->
-<!-- Fetch product names and initialize autocomplete -->
 <script>
 
 $(document).ready(function () {
@@ -285,26 +283,37 @@ $(document).ready(function () {
 // Event handler for stock quantity change
 $('table').on('input', '.qty', function () {
     var quantity = parseInt($(this).val()) || 0;
-    var sellingPrice = parseFloat($(this).closest('tr').find('.selling-price').val()) || 0;
-    var existingOfferPrice = parseFloat($(this).closest('tr').find('.offer-price').val()) || 0;
+    var productCode = $(this).closest('tr').find('.product-code-input').val();
 
-    // Calculate the updated offer price based on quantity and existing offer price
-    var updatedOfferPrice = quantity * existingOfferPrice;
-    $(this).closest('tr').find('.offer-price').val(updatedOfferPrice.toFixed(2));
+    // Fetch the actual offer price from the database for the given product code
+    $.ajax({
+        type: 'GET',
+        url: 'get_products.php', // Use the same URL as your get_products.php file
+        data: { search: productCode }, // Pass the product code as the search parameter
+        success: function (response) {
+            if (response.length > 0) {
+                var actualOfferPrice = parseFloat(response[0].actual_offer_price) || 0;
 
-    // Calculate the updated selling price based on quantity and update the selling price input field
-    var updatedSellingPrice = calculateUpdatedSellingPrice(quantity, sellingPrice);
-    $(this).closest('tr').find('.selling-price').val(updatedSellingPrice.toFixed(2));
+                // Calculate the updated offer price based on quantity and actual offer price
+                var updatedOfferPrice = quantity * actualOfferPrice;
+                $(this).closest('tr').find('.offer-price').val(updatedOfferPrice.toFixed(2));
+
+                // Calculate the updated total based on quantity and updated offer price
+                var updatedTotal = quantity * updatedOfferPrice;
+                $(this).closest('tr').find('.total').val(updatedTotal.toFixed(2));
+
+                // Update totals for all rows
+                updateTotals();
+            } else {
+                alert('Product not found');
+            }
+        },
+        error: function () {
+            alert('Error fetching actual offer price');
+        }
+    });
 });
 
-// Function to calculate the updated selling price based on quantity (replace this with your logic)
-function calculateUpdatedSellingPrice(quantity, originalSellingPrice) {
-    // Replace this with your logic to calculate the updated selling price based on quantity and original selling price
-    // For example, you can double the selling price when the quantity is increased
-    var updatedSellingPrice = quantity * originalSellingPrice;
-
-    return updatedSellingPrice;
-}
 
 
 // Event handler for product code input change
@@ -454,32 +463,25 @@ $('table').on('autocompleteselect', '.product-name-input', function (event, ui) 
 
 
 
-// Event handler for "Add Row" button click
-$('#addRow').on('click', function () {
-    // Clone the last row of the table
-    var newRow = $('table tbody tr:last').clone();
+    // Event handler for "Add Row" button click
+    $('#addRow').on('click', function () {
+      addRow();
+    });
 
-    // Clear the input values in the cloned row
-    newRow.find('input').val('');
-
-    // Increment the SL.no in the cloned row
-    var lastSlNo = parseInt(newRow.find('td:first').text());
-    newRow.find('td:first').text(lastSlNo + 1);
-
-    // Append the cloned row to the table
-    $('table tbody').append(newRow);
-
-    // Fetch product names and populate the new dropdown
-    fetchProductNames(newRow.find('.product-dropdown'));
-
-    // Initialize Autocomplete for the product code input in the new row
-    initializeProductCodeAutocomplete(newRow);
-    // Initialize Autocomplete for the product name input in the new row
-    initializeProductNameAutocomplete(newRow);
-
-    // Update totals when a new row is added
+    // Function to add a new row to the table
+    function addRow() {
+      var newRow = $('table tbody tr:last').clone();
+      newRow.find('input').val('');
+      var lastSlNo = parseInt(newRow.find('td:first').text());
+      newRow.find('td:first').text(lastSlNo + 1);
+      $('table tbody').append(newRow);
+      fetchProductNames(newRow.find('.product-dropdown'));
+      initializeProductCodeAutocomplete(newRow);
+      initializeProductNameAutocomplete(newRow);
+      updateTotals();
+    }
+   // Update totals when a new row is added
     updateTotals();
-});
 
 
 

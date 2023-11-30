@@ -104,20 +104,7 @@
     }
 }
 
-/* Gentle glow effect for the menu options */
-@keyframes glowMenuOption {
-    0% {
-        text-shadow: 0 0 8px rgba(255, 105, 180, 0.7);
-    }
 
-    50% {
-        text-shadow: 0 0 15px rgba(255, 105, 180, 1);
-    }
-
-    100% {
-        text-shadow: 0 0 8px rgba(255, 105, 180, 0.7);
-    }
-}
 
         /* Add this style for the menu icon jump effect */
         @keyframes jumpIn {
