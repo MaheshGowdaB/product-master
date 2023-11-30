@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="header.css">
   <link rel="stylesheet" href="styles.scss">
 </head>
-<body>
+<body style="background-color: #eaedf0;">
     <header class="header">
         <div class="menu-icon" onclick="toggleMenu()">☰</div>
         <div class="user-menu">
@@ -147,13 +147,13 @@ function initializeHeader() {
         <table class="table">
             <thead>
                 <tr>
-                    <th scope="col">SL.no</th>
-                    <th scope="col">product_code</th>
-                    <th scope="col">product_name</th>
+                    <th scope="col">SL.No</th>
+                    <th scope="col">Code</th>
+                    <th scope="col">Name</th>
                     <th scope="col">UOM</th>
-                    <th scope="col">stock</th>
-                    <th scope="col">selling_price</th>
-                    <th scope="col">offer_price</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Offer Price</th>
                     <th scope="col">Total</th>
                     <th scope="col">Action</th>
                 </tr>
@@ -188,19 +188,22 @@ function initializeHeader() {
     </div>
 </div>
 <style>
-/* Add this style in your CSS file */
+#total{
+    background-color: aliceblue;
+}
 #netTotalContainer {
-    text-align: center; /* Center align the content */
+    text-align: center; 
 }
 #netTotal {
-    margin-top: 5px; /* Adjust the margin based on your layout */
-    font-size: 18px; /* Adjust the font size as needed for readability */
-    font-weight: bold; /* Make the text bold for emphasis */
-    margin-left: 10px; /* Add some spacing between the label and input */
+    margin-top: 5px; 
+    font-size: 18px; 
+    font-weight: bold; 
+    margin-left: 10px; 
 }
 #netTotalInput.form-control {
-    width: 250px; /* Adjust the width based on your layout */
-    font-size: 16px; /* Adjust the font size as needed for readability */
+    width: 250px; 
+    font-size: 16px; 
+    background-color: aliceblue;
 }
 </style>
 
@@ -237,8 +240,6 @@ $('table').on('change', '.product-name-input', function () {
 
     updateInputFields(selectedProduct, inputs);
 });
-
-
 
 // Event handler for stock quantity change
 $('table').on('input', '.qty', function () {
