@@ -346,7 +346,7 @@ initializeProductNameAutocomplete($('table tbody tr:first'));
                     }
                 });
             },
-            minLength: 1 // Set the minimum number of characters before triggering autocomplete
+            minLength: 1 
         });
     }
 
@@ -394,7 +394,7 @@ initializeProductNameAutocomplete($('table tbody tr:first'));
 // Event handler for "Remove" button click
 $('table').on('click', '.remove-row', function () {
     $(this).closest('tr').remove();
-    updateTotals(); // Update totals after removing a row
+    updateTotals(); 
 });
 
         // Function to calculate the total for a row based on the offer price
