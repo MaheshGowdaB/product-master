@@ -39,11 +39,5 @@ $conn->close();
 
 // Send the JSON-encoded data as the response
 header('Content-Type: application/json');
-
-// Add error messages for debugging
-if (isset($data['error'])) {
-    $data['query_error'] = $conn->error;
-}
-
 echo json_encode($data);
 ?>
