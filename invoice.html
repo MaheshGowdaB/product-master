@@ -335,26 +335,25 @@ $('table').on('input', '.product-code-input', function () {
     });
 });
 
-    function initializeProductCodeAutocomplete(row) {
-    row.find('.product-code-input').autocomplete({
-        source: function (request, response) {
-            $.ajax({
-                type: 'GET',
-                url: 'get_product_codes.php',
-                data: {
-                    search: request.term
-                },
-                success: function (data) {
-                    var productCodes = data.map(function (product) {
-                        return product.product_code;
-                    });
-                    response(productCodes);
-                },
-                error: function () {
-                    alert('Error fetching product codes');
-                }
-            });
-        },
+            // Function to initialize autocomplete for product code input
+            function initializeProductCodeAutocomplete(row) {
+                row.find('.product-code-input').autocomplete({
+                    source: function (request, response) {
+                        $.ajax({
+                            type: 'GET',
+                            url: 'get_product_codes.php',
+                            data: { search: request.term },
+                            success: function (data) {
+                                var productCodes = data.map(function (product) {
+                                    return product.product_code;
+                                });
+                                response(productCodes);
+                            },
+                            error: function () {
+                                alert('Error fetching product codes');
+                            }
+                        });
+                    },
         select: function (event, ui) {
             var selectedProductCode = ui.item.value;
             var row = $(this).closest('tr');
@@ -395,26 +394,28 @@ initializeProductCodeAutocomplete($('table tbody tr:first'));
 initializeProductNameAutocomplete($('table tbody tr:first'));
 
 
-// Function to initialize autocomplete for product name input
-function initializeProductNameAutocomplete(row) {
-    row.find('.product-name-input').autocomplete({
-        source: function (request, response) {
-            $.ajax({
-                type: 'GET',
-                url: 'get_products.php',
-                success: function (data) {
-                    var productNames = data.map(function (product) {
-                        return product.product_name;
-                    });
-                    response(productNames);
-                },
-                error: function () {
-                    alert('Error fetching product names');
-                }
-            });
-        }
-    });
-}
+    // Function to initialize autocomplete for product name input
+    function initializeProductNameAutocomplete(row) {
+        row.find('.product-name-input').autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    type: 'GET',
+                    url: 'get_products.php',
+                    data: { search: request.term },
+                    success: function (data) {
+                        var productNames = data.map(function (product) {
+                            return product.product_name;
+                        });
+                        response(productNames);
+                    },
+                    error: function () {
+                        alert('Error fetching product names');
+                    }
+                });
+            },
+            minLength: 1 // Set the minimum number of characters before triggering autocomplete
+        });
+    }
 
 // Add this block to use the select event of autocomplete
 $('table').on('autocompleteselect', '.product-name-input', function (event, ui) {
