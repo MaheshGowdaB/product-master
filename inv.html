@@ -332,15 +332,23 @@
 
                 $(document).on('input', '.qty, .selling-price, .offer-price', updateTotals);
 
+                function initializeAutocomplete() {
+                    initializeProductCodeAutocomplete(".product-code-input:first");
+                    initializeProductNameAutocomplete(".product-name-input:first");
+                }
+
+                $(document).ready(function () {
+                    populateProductData();
+                    initializeAutocomplete();
+                });
+
                 function addRow() {
                     var newRow = $("#invoiceForm tbody tr:first").clone().find('input').val('').end();
                     $("#invoiceForm tbody").append(newRow);
 
-                    // Update only SL.No in the new row
                     var newIndex = $("#invoiceForm tbody tr").length;
                     newRow.find('td:first').text(newIndex);
 
-                    // Initialize autocomplete for the new row
                     initializeProductCodeAutocomplete(newRow.find(".product-code-input"));
                     initializeProductNameAutocomplete(newRow.find(".product-name-input"));
                 }
