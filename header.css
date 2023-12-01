@@ -1,115 +1,112 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
 }
 
 .header {
-    background-color: #333;
-    color: white;
-    padding: 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: relative;
+  background-color: #333;
+  color: white;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
 }
 
 .menu-icon,
 .user-icon {
-    font-size: 24px;
-    cursor: pointer;
+  font-size: 24px;
+  cursor: pointer;
 }
 
 .user-icon {
-    font-size: 20px;
-    margin-right: 5px;
+  font-size: 20px;
+  margin-right: 5px;
 }
 
 .user-menu {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .logout a {
-    text-decoration: none;
-    color: white;
+  text-decoration: none;
+  color: white;
 }
 
 center {
-    margin-top: 50px;
+  margin-top: 50px;
 }
 
 h1 {
-    color: #333;
+  color: #333;
 }
 
 .menu-options {
-    display: none;
-    position: absolute;
-    top: 100%; /* Adjusted to position below the header */
-    left: 0;
-    width: 20%;
-    height: 1000%;
-    background-color: #333;
-    padding: 10px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    color: white;
-    z-index: 1;
-    text-align: center;
+  display: none;
+  position: absolute;
+  top: 100%; /* Adjusted to position below the header */
+  left: 0;
+  width: 20%;
+  height: 1000%;
+  background-color: #333;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  color: white;
+  z-index: 1;
+  text-align: center;
 }
 
 .menu-options a {
-    display: block;
-    color: white;
-    text-decoration: none;
-    padding: 8px 0;
+  display: block;
+  color: white;
+  text-decoration: none;
+  padding: 8px 0;
 }
 
 @media only screen and (max-width: 600px) {
-    .header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 
-    .user-menu {
-        margin-top: 10px;
-    }
+  .user-menu {
+    margin-top: 10px;
+  }
 
-    .menu-icon {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-    }
+  .menu-icon {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+  }
 }
 
 /* Style the user icon */
 .user-icon {
-    font-size: 24px;
-    margin-right: 5px;
+  font-size: 24px;
+  margin-right: 5px;
 }
 
 /* Style the username */
 #usernamePlaceholder {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 /* Style the logout link */
 .logout a {
-    text-decoration: none;
-    color: white;
-    background-color: #e44d26; /* Use a color that complements your theme */
-    padding: 8px 15px;
-    border-radius: 5px;
-    margin-left: 10px;
-    transition: background-color 0.3s;
+  text-decoration: none;
+  color: white;
+  background-color: #e44d26; /* Use a color that complements your theme */
+  padding: 8px 15px;
+  border-radius: 5px;
+  margin-left: 10px;
+  transition: background-color 0.3s;
 }
 
 /* Add hover effect for the logout link */
 .logout a:hover {
-    background-color: #c53717; /* Adjusted color on hover */
+  background-color: #c53717; /* Adjusted color on hover */
 }
-
-
-

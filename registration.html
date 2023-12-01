@@ -33,30 +33,30 @@
                     return;
                 }
 
-// AJAX submission
-$.ajax({
-    type: "POST",
-    url: "registration_process.php",
-    data: $("#registrationForm").serialize(),
-    success: function (response) {
-        alert(response);
-        if (response.includes("registered")) {
-            // Save username in local storage
-            var username = $('#UserName').val();
-            localStorage.setItem('username', username);
+                // AJAX submission
+                $.ajax({
+                    type: "POST",
+                    url: "registration_process.php",
+                    data: $("#registrationForm").serialize(),
+                    success: function (response) {
+                        alert(response);
+                        if (response.includes("registered")) {
+                            // Save username in local storage
+                            var username = $('#UserName').val();
+                            localStorage.setItem('username', username);
 
-            // Redirect to welcome.html
-            window.location.href = 'login.html';
-        } else if (response.includes("User already registered")) {
-            // Redirect to login.html
-            window.location.href = 'login.html';
-        } else if (response.includes("Error")) {
-            // Handle error if needed
-        } else {
-            window.location.href = 'welcome.html';
-        }
-    }
-});
+                            // Redirect to welcome.html
+                            window.location.href = 'login.html';
+                        } else if (response.includes("User already registered")) {
+                            // Redirect to login.html
+                            window.location.href = 'login.html';
+                        } else if (response.includes("Error")) {
+                            // Handle error if needed
+                        } else {
+                            window.location.href = 'welcome.html';
+                        }
+                    }
+                });
             });
 
             function isValidMobileNumber(mobileNo) {

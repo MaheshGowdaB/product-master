@@ -1,106 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
   <title>Hello, world!</title>
   <link rel="stylesheet" href="header.css">
   <link rel="stylesheet" href="styles.scss">
 </head>
+
 <body style="background-color: #eaedf0;">
-    <header class="header">
-        <div class="menu-icon" onclick="toggleMenu()">☰</div>
-        <div class="user-menu">
-            <div class="user-menu">
-                <div class="user-icon">&#128100;</div>
-                <span id="usernamePlaceholder"></span>
-                <div class="logout"><a href="#" id="logoutLink">Logout</a></div>
-            </div>
-        </div>
-        <div class="menu-options" id="menuOptions">
-            <a href="welcome.html">Home</a>
-            <a href="#">About</a>
-            <a href="product_master.html">Product Master</a>
-            <a href="uom_master.html">UOM Master</a>
-            <a href="invoice.html">Invoice</a>
-            <a href="blog.html">Blog</a>
-            <a href="#">Contact</a>
-            <!-- Add more options as needed -->
-        </div>
-    </header>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <script src="header.js"></script>
-    <script>
-        // Call the initializeHeader function when the document is ready
-        $(document).ready(function () {
-            initializeHeader();
-        });
+  <header class="header">
+    <div class="menu-icon" onclick="toggleMenu()">☰</div>
+    <div class="user-menu">
+      <div class="user-menu">
+        <div class="user-icon">&#128100;</div>
+        <span id="usernamePlaceholder"></span>
+        <div class="logout"><a href="#" id="logoutLink">Logout</a></div>
+      </div>
+    </div>
+    <div class="menu-options" id="menuOptions">
+      <a href="welcome.html">Home</a>
+      <a href="#">About</a>
+      <a href="product_master.html">Product Master</a>
+      <a href="uom_master.html">UOM Master</a>
+      <a href="invoice.html">Invoice</a>
+      <a href="blog.html">Blog</a>
+      <a href="#">Contact</a>
+      <!-- Add more options as needed -->
+    </div>
+  </header>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script src="header.js"></script>
+  <script>
+    // Call the initializeHeader function when the document is ready
+    $(document).ready(function () {
+      initializeHeader();
+    });
 
 
-        // header.js
+    // header.js
 
-function toggleMenu() {
-    var menuOptions = document.getElementById('menuOptions');
-    var menuIcon = document.querySelector('.menu-icon');
+    function toggleMenu() {
+      var menuOptions = document.getElementById('menuOptions');
+      var menuIcon = document.querySelector('.menu-icon');
 
-    if (menuOptions.style.display === 'block') {
+      if (menuOptions.style.display === 'block') {
         menuOptions.style.display = 'none';
         menuIcon.innerHTML = '☰';
-    } else {
+      } else {
         menuOptions.style.display = 'block';
         menuIcon.innerHTML = '✖';
+      }
     }
-}
 
-function initializeHeader() {
-  var storedUsername = localStorage.getItem('username');
-  var usernameInput = document.getElementById('username');
-  
-  if (storedUsername) {
-      document.getElementById('usernamePlaceholder').textContent = storedUsername;
-      usernameInput.value = storedUsername; // Set the value of the hidden input field
-  } else {
-      document.getElementById('usernamePlaceholder').textContent = 'Guest';
-      usernameInput.value = 'Guest'; // Set the value of the hidden input field
-  }
+    function initializeHeader() {
+      var storedUsername = localStorage.getItem('username');
+      var usernameInput = document.getElementById('username');
 
-    $('#logoutLink').on('click', function (e) {
+      if (storedUsername) {
+        document.getElementById('usernamePlaceholder').textContent = storedUsername;
+        usernameInput.value = storedUsername; // Set the value of the hidden input field
+      } else {
+        document.getElementById('usernamePlaceholder').textContent = 'Guest';
+        usernameInput.value = 'Guest'; // Set the value of the hidden input field
+      }
+
+      $('#logoutLink').on('click', function (e) {
         e.preventDefault();
 
         // Ask for confirmation
         var confirmLogout = confirm("Are you sure you want to logout?");
         if (!confirmLogout) {
-            return;
+          return;
         }
 
         localStorage.removeItem('username');
 
         $.ajax({
-            type: 'GET',
-            url: 'logout_process.php',
-            success: function (response) {
-                if (response === 'success') {
-                    window.location.href = 'login.html';
-                } else {
-                    alert('Logout failed. Please try again.');
-                }
-            },
-            error: function () {
-                alert('Error occurred during logout process');
+          type: 'GET',
+          url: 'logout_process.php',
+          success: function (response) {
+            if (response === 'success') {
+              window.location.href = 'login.html';
+            } else {
+              alert('Logout failed. Please try again.');
             }
+          },
+          error: function () {
+            alert('Error occurred during logout process');
+          }
         });
-    });
-}
+      });
+    }
 
-    </script>
+  </script>
 
 
 
@@ -110,7 +114,8 @@ function initializeHeader() {
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <button type="button" class="btn btn-primary nav-link active" data-bs-toggle="modal" data-bs-target="#addProductModal">
+            <button type="button" class="btn btn-primary nav-link active" data-bs-toggle="modal"
+              data-bs-target="#addProductModal">
               Add New
             </button>
           </li>
@@ -120,7 +125,8 @@ function initializeHeader() {
           <li class="nav-item">
             <div class="form-inline">
               <div class="input-group">
-                <input class="form-control" type="search" id="searchInput" placeholder="Search Product Code" aria-label="Search">
+                <input class="form-control" type="search" id="searchInput" placeholder="Search Product Code"
+                  aria-label="Search">
               </div>
             </div>
           </li>
@@ -133,257 +139,264 @@ function initializeHeader() {
       <!-- Table content will be populated dynamically using JavaScript -->
     </table>
   </div>
-    
-<!-- Add New Product Modal -->
-<!-- Add New Product Modal -->
-<div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+
+  <!-- Add New Product Modal -->
+  <!-- Add New Product Modal -->
+  <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addProductModalLabel">Add New Product</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addProductModalLabel">Add New Product</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="POST" action="add_product.php" onsubmit="return confirmAddProduct();">
+            <!-- ... existing form fields ... -->
+            <div class="mb-3">
+              <label for="productCode" class="form-label">Product Code</label>
+              <input type="text" class="form-control" id="productCode" name="productCode" required>
+              <span id="productCodeError" class="error-message"></span>
             </div>
-            <div class="modal-body">
-                <form method="POST" action="add_product.php" onsubmit="return confirmAddProduct();">
-                    <!-- ... existing form fields ... -->
-                    <div class="mb-3">
-                        <label for="productCode" class="form-label">Product Code</label>
-                        <input type="text" class="form-control" id="productCode" name="productCode" required>
-                        <span id="productCodeError" class="error-message"></span>
-                    </div>
-          <div class="mb-3">
-            <label for="productName" class="form-label">Product Name</label>
-            <input type="text" class="form-control" id="productName" name="productName" required>
-          </div>
-          <div class="mb-3">
-            <label for="UOM" class="form-label">Unit of Measure</label>
-            <select class="form-select" id="UOM" name="UOM" required>
+            <div class="mb-3">
+              <label for="productName" class="form-label">Product Name</label>
+              <input type="text" class="form-control" id="productName" name="productName" required>
+            </div>
+            <div class="mb-3">
+              <label for="UOM" class="form-label">Unit of Measure</label>
+              <select class="form-select" id="UOM" name="UOM" required>
                 <option value="" selected disabled>Select UOM</option>
-            </select>
-        </div>
-          <div class="mb-3">
-            <label for="stock" class="form-label">Stock</label>
-            <input type="number" class="form-control" id="stock" name="stock" required>
-          </div>
-          <div class="mb-3">
-            <label for="sellingPrice" class="form-label">Selling Price</label>
-            <input type="number" class="form-control" id="sellingPrice" name="sellingPrice" required>
-          </div>
-          <div class="mb-3">
-            <label for="offerPrice" class="form-label">Offer Price</label>
-            <input type="number" class="form-control" id="offerPrice" name="offerPrice" required>
-          </div>
-          <div class="mb-3">
-            <label for="productImage" class="form-label">Product Image URL</label>
-            <input type="text" class="form-control" id="productImage" name="productImage" required>
-          </div>
-
-   <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary" id="addProductButton">Add Product</button>
-                    </div>
-                    <input type="hidden" id="username" name="username" value="">
-                </form>
+              </select>
             </div>
+            <div class="mb-3">
+              <label for="stock" class="form-label">Stock</label>
+              <input type="number" class="form-control" id="stock" name="stock" required>
+            </div>
+            <div class="mb-3">
+              <label for="sellingPrice" class="form-label">Selling Price</label>
+              <input type="number" class="form-control" id="sellingPrice" name="sellingPrice" required>
+            </div>
+            <div class="mb-3">
+              <label for="offerPrice" class="form-label">Offer Price</label>
+              <input type="number" class="form-control" id="offerPrice" name="offerPrice" required>
+            </div>
+            <div class="mb-3">
+              <label for="productImage" class="form-label">Product Image URL</label>
+              <input type="text" class="form-control" id="productImage" name="productImage" required>
+            </div>
+
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary" id="addProductButton">Add Product</button>
+            </div>
+            <input type="hidden" id="username" name="username" value="">
+          </form>
         </div>
+      </div>
     </div>
-</div>
-<!-- Script to populate UOM options for Add New Product modal -->
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    populateUOMSelect('UOM');
-  });
+  </div>
+  <!-- Script to populate UOM options for Add New Product modal -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      populateUOMSelect('UOM');
+    });
 
 
-  function populateUOMSelect(elementId) {
-    var uomSelect = document.getElementById(elementId);
+    function populateUOMSelect(elementId) {
+      var uomSelect = document.getElementById(elementId);
 
-    // Make an AJAX request to fetch UOM data
-    $.ajax({
+      // Make an AJAX request to fetch UOM data
+      $.ajax({
         url: 'get_uom.php',  // Replace with the correct URL
         type: 'GET',
         dataType: 'json',
         success: function (data) {
-            // Clear existing options
-            uomSelect.innerHTML = '';
+          // Clear existing options
+          uomSelect.innerHTML = '';
 
-            // Add a default option
-            var defaultOption = document.createElement("option");
-            defaultOption.value = "";
-            defaultOption.text = "Select UOM";
-            uomSelect.add(defaultOption);
+          // Add a default option
+          var defaultOption = document.createElement("option");
+          defaultOption.value = "";
+          defaultOption.text = "Select UOM";
+          uomSelect.add(defaultOption);
 
-            // Add new options from the fetched data
-            data.forEach(function (item) {
-                var option = document.createElement("option");
-                option.value = item.UOMName;
-                option.text = item.UOMName;  // Display UOMName in the dropdown
-                uomSelect.add(option);
-            });
+          // Add new options from the fetched data
+          data.forEach(function (item) {
+            var option = document.createElement("option");
+            option.value = item.UOMName;
+            option.text = item.UOMName;  // Display UOMName in the dropdown
+            uomSelect.add(option);
+          });
         },
         error: function () {
-            console.error('Error fetching UOM data');
+          console.error('Error fetching UOM data');
         }
-    });
-}
-</script>
+      });
+    }
+  </script>
 
-<script>
-function confirmAddProduct() {
-    // Check if the product code already exists
-    var productCode = $("#productCode").val();
-    var productCodeExists = false; // Initialize flag
+  <script>
+    function confirmAddProduct() {
+      // Check if the product code already exists
+      var productCode = $("#productCode").val();
+      var productCodeExists = false; // Initialize flag
 
-    $.ajax({
+      $.ajax({
         type: "POST",
         url: "check_product_code.php",
         data: { productCode: productCode },
         async: false, // Make the AJAX call synchronous
         success: function (response) {
-            if (response.status === 'error') {
-                $("#productCodeError")
-                    .text(response.message)
-                    .css('color', 'red'); // Set the error message color to red
-                productCodeExists = true; // Set the flag if the product code exists
+          if (response.status === 'error') {
+            $("#productCodeError")
+              .text(response.message)
+              .css('color', 'red'); // Set the error message color to red
+            productCodeExists = true; // Set the flag if the product code exists
 
-                // Focus on the product code input field
-                $("#productCode").focus();
-            } else {
-                $("#productCodeError").text("").css('color', ''); // Reset the error message and color
-                productCodeExists = false; // Reset the flag if the product code doesn't exist
-            }
+            // Focus on the product code input field
+            $("#productCode").focus();
+          } else {
+            $("#productCodeError").text("").css('color', ''); // Reset the error message and color
+            productCodeExists = false; // Reset the flag if the product code doesn't exist
+          }
         }
-    });
+      });
 
-    // Return false if the product code exists
-    return !productCodeExists;
-}
-
-
+      // Return false if the product code exists
+      return !productCodeExists;
+    }
 
 
 
-</script>
 
-<!-- Edit Product Modal -->
-<div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="editProductModalLabel">Edit Product Details</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form method="POST" action="edit_product.php" onsubmit="return confirmEditProduct();">
-          <div class="mb-3">
-            <label for="editProductCode" class="form-label">Product Code</label>
-            <input type="text" class="form-control" id="editProductCode" name="productCode" readonly>
-          </div>
-          <div class="mb-3">
-            <label for="editProductName" class="form-label">Product Name</label>
-            <input type="text" class="form-control" id="editProductName" name="productName" required>
-          </div>
-          <div class="mb-3">
-            <label for="editUOM" class="form-label">Unit of Measure</label>
-            <select class="form-select" id="editUOM" name="UOM" required>
-              <!-- Options for Unit of Measure will be populated dynamically -->
-            </select>
-          </div>
-          <div class="mb-3">
-            <label for="editStock" class="form-label">Stock</label>
-            <input type="number" class="form-control" id="editStock" name="stock" required>
-          </div>
-          <div class="mb-3">
-            <label for="editSellingPrice" class="form-label">Selling Price</label>
-            <input type="number" class="form-control" id="editSellingPrice" name="sellingPrice" required>
-          </div>
-          <div class="mb-3">
-            <label for="editOfferPrice" class="form-label">Offer Price</label>
-            <input type="number" class="form-control" id="editOfferPrice" name="offerPrice" required>
-          </div>
-          <div class="mb-3">
-            <label for="editProductImage" class="form-label">Product Image URL</label>
-            <input type="text" class="form-control" id="editProductImage" name="productImage" required>
-          </div>
 
-          <div class="modal-footer">
-            <button type="submit" class="btn btn-primary">Save Changes</button>
-          </div>
-        </form>
+  </script>
+
+  <!-- Edit Product Modal -->
+  <div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editProductModalLabel">Edit Product Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="POST" action="edit_product.php" onsubmit="return confirmEditProduct();">
+            <div class="mb-3">
+              <label for="editProductCode" class="form-label">Product Code</label>
+              <input type="text" class="form-control" id="editProductCode" name="productCode" readonly>
+            </div>
+            <div class="mb-3">
+              <label for="editProductName" class="form-label">Product Name</label>
+              <input type="text" class="form-control" id="editProductName" name="productName" required>
+            </div>
+            <div class="mb-3">
+              <label for="editUOM" class="form-label">Unit of Measure</label>
+              <select class="form-select" id="editUOM" name="UOM" required>
+                <!-- Options for Unit of Measure will be populated dynamically -->
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="editStock" class="form-label">Stock</label>
+              <input type="number" class="form-control" id="editStock" name="stock" required>
+            </div>
+            <div class="mb-3">
+              <label for="editSellingPrice" class="form-label">Selling Price</label>
+              <input type="number" class="form-control" id="editSellingPrice" name="sellingPrice" required>
+            </div>
+            <div class="mb-3">
+              <label for="editOfferPrice" class="form-label">Offer Price</label>
+              <input type="number" class="form-control" id="editOfferPrice" name="offerPrice" required>
+            </div>
+            <div class="mb-3">
+              <label for="editProductImage" class="form-label">Product Image URL</label>
+              <input type="text" class="form-control" id="editProductImage" name="productImage" required>
+            </div>
+
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary">Save Changes</button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- Script to populate UOM options for Edit Product modal -->
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    populateUOMSelect('editUOM');
-  });
-</script>
+  <!-- Script to populate UOM options for Edit Product modal -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      populateUOMSelect('editUOM');
+    });
+  </script>
 
-<script>
-  function confirmEditProduct() {
-    return confirm("Are you sure you want to save these changes?");
-  }
-</script>
-
-
-
-<style>
-  /* Edit button styling */
-  .edit-product {
-    background-color: #007bff; /* Bootstrap primary color (blue) */
-    color: #fff; /* White text */
-    border: none;
-    padding: 5px 10px;
-    margin-right: 5px;
-    cursor: pointer;
-    border-radius: 5px;
-  }
-
-  /* Delete button styling */
-  .delete-product {
-    background-color: #dc3545; /* Bootstrap danger color (red) */
-    color: #fff; /* White text */
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    border-radius: 5px;
-  }
-</style>
+  <script>
+    function confirmEditProduct() {
+      return confirm("Are you sure you want to save these changes?");
+    }
+  </script>
 
 
 
+  <style>
+    /* Edit button styling */
+    .edit-product {
+      background-color: #007bff;
+      /* Bootstrap primary color (blue) */
+      color: #fff;
+      /* White text */
+      border: none;
+      padding: 5px 10px;
+      margin-right: 5px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    /* Delete button styling */
+    .delete-product {
+      background-color: #dc3545;
+      /* Bootstrap danger color (red) */
+      color: #fff;
+      /* White text */
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+  </style>
 
 
- <!-- Bootstrap Bundle with Popper -->
- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+
+  <!-- Bootstrap Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
   <script>
     // JavaScript to perform dynamic operations
     $(document).ready(function () {
       // Function to refresh the table
-// Function to refresh the table
-function refreshProductTable() {
-    $.ajax({
-        url: 'get_products.php',
-        type: 'GET',
-        dataType: 'json',  // Specify that the expected response is JSON
-        success: function (data) {
+      // Function to refresh the table
+      function refreshProductTable() {
+        $.ajax({
+          url: 'get_products.php',
+          type: 'GET',
+          dataType: 'json',  // Specify that the expected response is JSON
+          success: function (data) {
             // Call a separate function to build the table
             buildProductTable(data);
-        }
-    });
-}
+          }
+        });
+      }
 
-// Function to build the HTML table from JSON data
-function buildProductTable(data) {
-    // Clear existing table content
-    $('#productTable').empty();
+      // Function to build the HTML table from JSON data
+      function buildProductTable(data) {
+        // Clear existing table content
+        $('#productTable').empty();
 
-    // Display table headers
-    $('#productTable').append(`
+        // Display table headers
+        $('#productTable').append(`
         <thead>
             <tr>
                 <th>Product Code</th>
@@ -399,9 +412,9 @@ function buildProductTable(data) {
         <tbody>
     `);
 
-    // Loop through the JSON data and append rows to the table
-    $.each(data, function (index, row) {
-        $('#productTable').append(`
+        // Loop through the JSON data and append rows to the table
+        $.each(data, function (index, row) {
+          $('#productTable').append(`
             <tr>
                 <th>${row.product_code}</th>
                 <td>${row.product_name}</td>
@@ -428,66 +441,66 @@ function buildProductTable(data) {
 
             </tr>
         `);
-    });
+        });
 
-    // Close the table body
-    $('#productTable').append(`</tbody>`);
-}
-
-
+        // Close the table body
+        $('#productTable').append(`</tbody>`);
+      }
 
 
-   // Event listener for the refresh button
-    $('#refreshButton').click(function () {
-    // Call the function to refresh with all data
-    refreshProductTable();
-
-    // Clear the search input
-    $('#searchInput').val('');
-});
 
 
-$('#searchInput').on('input', function () {
-    var searchValue = $(this).val();
-    $.ajax({
-        url: 'get_products.php',
-        type: 'GET',
-        data: { search: searchValue },
-        success: function (data) {
+      // Event listener for the refresh button
+      $('#refreshButton').click(function () {
+        // Call the function to refresh with all data
+        refreshProductTable();
+
+        // Clear the search input
+        $('#searchInput').val('');
+      });
+
+
+      $('#searchInput').on('input', function () {
+        var searchValue = $(this).val();
+        $.ajax({
+          url: 'get_products.php',
+          type: 'GET',
+          data: { search: searchValue },
+          success: function (data) {
             buildProductTable(data);
-        }
-    });
-});
+          }
+        });
+      });
 
 
 
-// Event listener for the edit button
-$(document).on("click", ".edit-product", function () {
-    var productCode = $(this).data("id");
-    var productName = $(this).data("name");
-    var UOM = $(this).data("uom");
-    var stock = $(this).data("stock");
-    var sellingPrice = $(this).data("selling-price");
-    var offerPrice = $(this).data("offer-price");
-    var productImage = $(this).data("product-image");
+      // Event listener for the edit button
+      $(document).on("click", ".edit-product", function () {
+        var productCode = $(this).data("id");
+        var productName = $(this).data("name");
+        var UOM = $(this).data("uom");
+        var stock = $(this).data("stock");
+        var sellingPrice = $(this).data("selling-price");
+        var offerPrice = $(this).data("offer-price");
+        var productImage = $(this).data("product-image");
 
-    populateEditProductModal(productCode, productName, UOM, stock, sellingPrice, offerPrice, productImage);
-});
+        populateEditProductModal(productCode, productName, UOM, stock, sellingPrice, offerPrice, productImage);
+      });
 
-// Function to populate the edit modal with selected product details
-function populateEditProductModal(productCode, productName, UOM, stock, sellingPrice, offerPrice, productImage) {
-    // Set values in the edit product modal input fields
-    $("#editProductCode").val(productCode);
-    $("#editProductName").val(productName);
-    $("#editUOM").val(UOM);
-    $("#editStock").val(stock);
-    $("#editSellingPrice").val(sellingPrice);
-    $("#editOfferPrice").val(offerPrice);
-    $("#editProductImage").val(productImage);
+      // Function to populate the edit modal with selected product details
+      function populateEditProductModal(productCode, productName, UOM, stock, sellingPrice, offerPrice, productImage) {
+        // Set values in the edit product modal input fields
+        $("#editProductCode").val(productCode);
+        $("#editProductName").val(productName);
+        $("#editUOM").val(UOM);
+        $("#editStock").val(stock);
+        $("#editSellingPrice").val(sellingPrice);
+        $("#editOfferPrice").val(offerPrice);
+        $("#editProductImage").val(productImage);
 
-    // Display the edit product modal
-    $("#editProductModal").modal("show");
-}
+        // Display the edit product modal
+        $("#editProductModal").modal("show");
+      }
 
 
 
@@ -500,4 +513,5 @@ function populateEditProductModal(productCode, productName, UOM, stock, sellingP
     });
   </script>
 </body>
+
 </html>
