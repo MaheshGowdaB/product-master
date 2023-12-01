@@ -1,18 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
-  <title>Product Master</title>
-  <link rel="stylesheet" href="header.css">
-  <link rel="stylesheet" href="styles.scss">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <title>Product Master</title>
+    <link rel="stylesheet" href="header.css">
+    <link rel="stylesheet" href="styles.scss">
 </head>
+
 <body style="background-color: #eaedf0;">
     <header class="header">
         <div class="menu-icon" onclick="toggleMenu()">☰</div>
@@ -34,10 +37,11 @@
             <!-- Add more options as needed -->
         </div>
     </header>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="header.js"></script>
     <script>
         // Call the initializeHeader function when the document is ready
@@ -45,553 +49,529 @@
             initializeHeader();
         });
 
-function toggleMenu() {
-    var menuOptions = document.getElementById('menuOptions');
-    var menuIcon = document.querySelector('.menu-icon');
+        function toggleMenu() {
+            var menuOptions = document.getElementById('menuOptions');
+            var menuIcon = document.querySelector('.menu-icon');
 
-    if (menuOptions.style.display === 'block') {
-        menuOptions.style.display = 'none';
-        menuIcon.innerHTML = '☰';
-    } else {
-        menuOptions.style.display = 'block';
-        menuIcon.innerHTML = '✖';
-    }
-}
-
-function initializeHeader() {
-    var storedUsername = localStorage.getItem('username');
-    if (storedUsername) {
-        document.getElementById('usernamePlaceholder').textContent = storedUsername;
-    } else {
-        document.getElementById('usernamePlaceholder').textContent = 'Guest';
-    }
-
-    $('#logoutLink').on('click', function (e) {
-        e.preventDefault();
-
-        // Ask for confirmation
-        var confirmLogout = confirm("Are you sure you want to logout?");
-        if (!confirmLogout) {
-            return;
-        }
-
-        localStorage.removeItem('username');
-
-        $.ajax({
-            type: 'GET',
-            url: 'logout_process.php',
-            success: function (response) {
-                if (response === 'success') {
-                    window.location.href = 'login.html';
-                } else {
-                    alert('Logout failed. Please try again.');
-                }
-            },
-            error: function () {
-                alert('Error occurred during logout process');
-            }
-        });
-    });
-}
-</script>
-<!--Page body-->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <button type="button" class="btn btn-success" id="saveButton">Save</button>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="#" id="refreshButton">Refresh</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
-
-<div class="container mt-4">
-    <form id="invoiceForm">
-        <div class="row">
-            <!-- Left column -->
-            <div class="col-md-6">
-                <div class="mb-3">
-                    <label for="invoiceNumber" class="form-label">Invoice Number <span class="required-field">*</span></label>
-                    <input type="text" class="form-control" id="invoiceNumber" name="invoiceNumber" placeholder="Enter Invoice Number" style="width: 250px;" required>
-                    <div class="error-message" id="invoiceNumberError"></div>
-                </div>
-                
-                <div class="mb-3">
-                    <label for="invoiceDate" class="form-label">Invoice Date <span class="required-field">*</span></label>
-                    <input type="date" class="form-control" id="invoiceDate" style="width: 250px;" required>
-                    <div class="error-message" id="invoiceDateError"></div>
-                </div>
-            </div>
-            <!-- Right column -->
-            <div class="col-md-6">
-                <div class="mb-3">
-                    <label for="customerName" class="form-label">Customer Name <span class="required-field">*</span></label>
-                    <input type="text" class="form-control" id="customerName" placeholder="Enter Customer Name" style="width: 250px;" required>
-                    <div class="error-message" id="customerNameError"></div>
-                </div>
-                
-                <div class="mb-3">
-                    <label for="mobileNumber" class="form-label">Mobile Number <span class="required-field">*</span></label>
-                    <input type="tel" class="form-control" id="mobileNumber" placeholder="Enter Mobile Number" style="width: 250px;" pattern="[0-9]{10}" title="Please enter a valid 10-digit mobile number" required>
-                    <div class="error-message" id="mobileNumberError"></div>
-                </div>                
-            </div>
-        </div>
-        <!-- Add more fields as needed -->
-        <!-- Table Section -->
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">SL.No</th>
-                    <th scope="col">Code</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">UOM</th>
-                    <th scope="col">Quantity</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Offer Price</th>
-                    <th scope="col">Total</th>
-                    <th scope="col">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Add rows for your data here -->
-                <tr>
-                    <td>1</td>
-                    <td><input type="text" class="form-control product-code-input" name="product_code[]" id="productCodeInput" autocomplete="off" /></td>
-                    <td><input type="text" class="form-control product-name-input" name="product_name[]" id="productNameInput" autocomplete="off" /></td>
-                    <td><input type="text" class="form-control uom-input" name="UOM[]" /></td>
-                    <td><input type="number" class="form-control qty" name="stock[]" id="stock" /></td>
-                    <td><input type="number" class="form-control selling-price" name="selling_price[]" /></td>
-                    <td><input type="number" class="form-control offer-price" name="offer_price[]" /></td>
-                    <td><input type="text" class="form-control total" name="total[]" readonly /></td>
-                    <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
-                </tr>
-                <!-- Add more rows as needed -->
-            </tbody>
-        </table>
-        <!-- Add a button to add new rows dynamically if required -->
-        <button type="button" class="btn btn-primary" id="addRow">Add Row</button>
-<!-- Net Total Section -->
-<div id="netTotalContainer" class="mb-3">
-    <div class="row">
-        <div class="col-md-6 text-end">
-            <label for="netTotal" id="netTotal" class="form-label">Net Total:</label>
-        </div>
-        <div class="col-md-6">
-            <input type="text" id="netTotalInput" class="form-control" readonly style="width: 250px;">
-        </div>
-    </div>
-</div>
-<style>
-#total{
-    background-color: aliceblue;
-}
-#netTotalContainer {
-    text-align: center; 
-}
-#netTotal {
-    margin-top: 5px; 
-    font-size: 18px; 
-    font-weight: bold; 
-    margin-left: 10px; 
-}
-#netTotalInput.form-control {
-    width: 250px; 
-    font-size: 16px; 
-    background-color: aliceblue;
-}
-</style>
-
-<!-- jQuery library -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
-<!-- jQuery UI library -->
-<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/themes/smoothness/jquery-ui.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
-
-<script>
-
-$(document).ready(function () {
-
-    function fetchProductNames(dropdown) {
-    $.get('get_products.php', response => {
-        var productNames = response.map(product => product.product_name);
-        dropdown.empty().append($('<option>').text('Select Product').attr('value', ''), ...productNames.map(name => $('<option>').text(name).attr('value', name)));
-    }).fail(() => alert('Error fetching product names'));
-}
-
-function updateInputFields(selectedProduct, inputs) {
-    $.get('get_product_details.php', { product_name: selectedProduct }, response => {
-        var { selling_price, offer_price, UOM, product_code } = response;
-        Object.entries({ selling_price, offer_price, UOM, product_code }).forEach(([key, value]) => inputs[key].val(value));
-    }).fail(() => alert('Error fetching product prices'));
-}
-
-fetchProductNames($('.product-dropdown'));
-
-$('table').on('change', '.product-name-input', function () {
-    var selectedProduct = $(this).val();
-    var inputs = ['sellingPrice', 'offerPrice', 'uomInput', 'productCodeInput'].reduce((acc, key) => (acc[key] = $(this).closest('tr').find('.' + key.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()), acc), {});
-
-    updateInputFields(selectedProduct, inputs);
-});
-
-// Event handler for stock quantity change
-$('table').on('input', '.qty', function () {
-    var quantity = parseInt($(this).val()) || 0;
-    var productCode = $(this).closest('tr').find('.product-code-input').val();
-
-    // Fetch the actual offer price from the database for the given product code
-    $.ajax({
-        type: 'GET',
-        url: 'get_products.php', 
-        data: { search: productCode }, 
-        success: function (response) {
-            if (response.length > 0) {
-                var actualOfferPrice = parseFloat(response[0].actual_offer_price) || 0;
-
-                // Calculate the updated offer price based on quantity and actual offer price
-                var updatedOfferPrice = quantity * actualOfferPrice;
-                $(this).closest('tr').find('.offer-price').val(updatedOfferPrice.toFixed(2));
-
-                // Calculate the updated total based on quantity and updated offer price
-                var updatedTotal = quantity * updatedOfferPrice;
-                $(this).closest('tr').find('.total').val(updatedTotal.toFixed(2));
-
-                // Update totals for all rows
-                updateTotals();
+            if (menuOptions.style.display === 'block') {
+                menuOptions.style.display = 'none';
+                menuIcon.innerHTML = '☰';
             } else {
-                alert('Product not found');
+                menuOptions.style.display = 'block';
+                menuIcon.innerHTML = '✖';
             }
-        },
-        error: function () {
-            alert('Error fetching actual offer price');
         }
-    });
-});
 
-// Event handler for product code input change
-$('table').on('input', '.product-code-input', function () {
-    var productCode = $(this).val();
-    var row = $(this).closest('tr');
+        function initializeHeader() {
+            var storedUsername = localStorage.getItem('username');
+            if (storedUsername) {
+                document.getElementById('usernamePlaceholder').textContent = storedUsername;
+            } else {
+                document.getElementById('usernamePlaceholder').textContent = 'Guest';
+            }
 
-    $.get('get_products.php', { product_code: productCode }, response => {
-        var { product_name, UOM, selling_price, offer_price } = response;
+            $('#logoutLink').on('click', function (e) {
+                e.preventDefault();
 
-        row.find('.product-name-input, .uom-input, .selling-price, .offer-price').val((_, key) => eval(key));
-    }).fail(() => alert('Error fetching product details'));
-});
+                // Ask for confirmation
+                var confirmLogout = confirm("Are you sure you want to logout?");
+                if (!confirmLogout) {
+                    return;
+                }
 
-    // Function to initialize autocomplete for product code input
-    function initializeProductCodeAutocomplete(row) {
-    var codeInput = row.find('.product-code-input');
-    codeInput.autocomplete({
-        source: (request, response) => {
-            $.ajax({
-                type: 'GET',
-                url: 'get_product_codes.php',
-                data: { search: request.term },
-                success: data => response(data.map(product => product.product_code)),
-                error: () => alert('Error fetching product codes')
-            });
-        },
-        select: function (event, ui) {
-            var selectedProductCode = ui.item.value;
-            var row = codeInput.closest('tr');
+                localStorage.removeItem('username');
 
-            $.ajax({
-                type: 'GET',
-                url: 'get_products.php',
-                data: { product_code: selectedProductCode },
-                success: response => {
-                    var { product_name, UOM, selling_price, offer_price } = response;
-
-                    row.find('.product-name-input').val(product_name);
-                    row.find('.uom-input').val(UOM);
-                    row.find('.selling-price').val(selling_price);
-                    row.find('.offer-price').val(offer_price);
-
-                    updateTotals();
-                },
-                error: () => alert('Error fetching product details')
-            });
-        }
-    });
-}
-
-initializeProductCodeAutocomplete($('table tbody tr:first'));
-initializeProductNameAutocomplete($('table tbody tr:first'));
-
-    // Function to initialize autocomplete for product name input
-    function initializeProductNameAutocomplete(row) {
-        row.find('.product-name-input').autocomplete({
-            source: function (request, response) {
                 $.ajax({
                     type: 'GET',
-                    url: 'get_products.php',
-                    data: { search: request.term },
-                    success: function (data) {
-                        var productNames = data.map(function (product) {
-                            return product.product_name;
-                        });
-                        response(productNames);
+                    url: 'logout_process.php',
+                    success: function (response) {
+                        if (response === 'success') {
+                            window.location.href = 'login.html';
+                        } else {
+                            alert('Logout failed. Please try again.');
+                        }
                     },
                     error: function () {
-                        alert('Error fetching product names');
+                        alert('Error occurred during logout process');
                     }
                 });
-            },
-            minLength: 1 
-        });
-    }
-
-    $('table').on('autocompleteselect', '.product-name-input', function (event, ui) {
-    var selectedProduct = ui.item.value;
-    var $row = $(this).closest('tr');
-
-    $.ajax({
-        type: 'GET',
-        url: 'get_products.php',
-        data: { product_name: selectedProduct },
-        success: function ({ selling_price, offer_price, UOM, product_code }) {
-            $row.find('.selling-price').val(selling_price);
-            $row.find('.offer-price').val(offer_price);
-            $row.find('.uom-input').val(UOM);
-            $row.find('.product-code-input').val(product_code);
-        },
-        error: function () {
-            alert('Error fetching product prices');
-        }
-    });
-});
-
-    // Event handler for "Add Row" button click
-    $('#addRow').on('click', function () {
-      addRow();
-    });
-
-    // Function to add a new row to the table
-    function addRow() {
-      var newRow = $('table tbody tr:last').clone();
-      newRow.find('input').val('');
-      var lastSlNo = parseInt(newRow.find('td:first').text());
-      newRow.find('td:first').text(lastSlNo + 1);
-      $('table tbody').append(newRow);
-      fetchProductNames(newRow.find('.product-dropdown'));
-      initializeProductCodeAutocomplete(newRow);
-      initializeProductNameAutocomplete(newRow);
-      updateTotals();
-    }
-   // Update totals when a new row is added
-    updateTotals();
-
-// Event handler for "Remove" button click
-$('table').on('click', '.remove-row', function () {
-    $(this).closest('tr').remove();
-    updateTotals(); 
-});
-
-        // Function to calculate the total for a row based on the offer price
-        function calculateRowTotal(row) {
-            var quantity = parseInt(row.find('.qty').val()) || 0;
-            var offerPrice = parseFloat(row.find('.offer-price').val()) || 0;
-            return quantity * offerPrice;
-        }
-    
-        // Function to update the total and net total
-        function updateTotals() {
-            var netTotal = 0;
-
-            $('table tbody tr').each(function () {
-                var row = $(this);
-                var total = calculateRowTotal(row);
-
-                row.find('.total').val(total.toFixed(2));
-
-                netTotal += total;
             });
-
-            $('#netTotalInput').val(netTotal.toFixed(2));
         }
-    
-        // Event handler for quantity and offer price changes
-        $('table').on('input', '.qty, .offer-price', function () {
-            updateTotals();
-        });
-    
-        // Event handler for "Add Row" button click
-        $('#addRow').on('click', function () {
+    </script>
+    <!--Page body-->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <button type="button" class="btn btn-success" id="saveButton">Save</button>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" id="refreshButton">Refresh</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-            fetchProductNames(newRow.find('.product-dropdown'));
+    <div class="container mt-4">
+        <form id="invoiceForm">
+            <div class="row">
+                <!-- Left column -->
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="invoiceNumber" class="form-label">Invoice Number <span
+                                class="required-field">*</span></label>
+                        <input type="text" class="form-control" id="invoiceNumber" name="invoiceNumber"
+                            placeholder="Enter Invoice Number" style="width: 250px;" required>
+                        <div class="error-message" id="invoiceNumberError"></div>
+                    </div>
 
-            updateTotals();
-        });
-    
-   // Event handler for "Save" button click
-   $('#saveButton').on('click', function () {
-    var rowsData = [];
+                    <div class="mb-3">
+                        <label for="invoiceDate" class="form-label">Invoice Date <span
+                                class="required-field">*</span></label>
+                        <input type="date" class="form-control" id="invoiceDate" style="width: 250px;" required>
+                        <div class="error-message" id="invoiceDateError"></div>
+                    </div>
+                </div>
+                <!-- Right column -->
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="customerName" class="form-label">Customer Name <span
+                                class="required-field">*</span></label>
+                        <input type="text" class="form-control" id="customerName" placeholder="Enter Customer Name"
+                            style="width: 250px;" required>
+                        <div class="error-message" id="customerNameError"></div>
+                    </div>
 
-    // Iterate through each row in the table
-    $('table tbody tr').each(function () {
-        var row = $(this);
-        var rowData = {
-            invoiceNo: $('#invoiceNumber').val(),
-            invoiceDate: $('#invoiceDate').val(),
-            customerName: $('#customerName').val(),
-            mobileNo: $('#mobileNumber').val(),
-            qty: row.find('.qty').val(),
-            netTotal: row.find('.total').val(),
-            savedBy: localStorage.getItem('username'),
-            savedDateTime: getCurrentDateTime(),
-            productCode: row.find('.product-code-input').val()
-        };
+                    <div class="mb-3">
+                        <label for="mobileNumber" class="form-label">Mobile Number <span
+                                class="required-field">*</span></label>
+                        <input type="tel" class="form-control" id="mobileNumber" placeholder="Enter Mobile Number"
+                            style="width: 250px;" pattern="[0-9]{10}"
+                            title="Please enter a valid 10-digit mobile number" required>
+                        <div class="error-message" id="mobileNumberError"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- Add more fields as needed -->
+            <!-- Table Section -->
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">SL.No</th>
+                        <th scope="col">Code</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">UOM</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Offer Price</th>
+                        <th scope="col">Total</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Add rows for your data here -->
+                    <tr>
+                        <td>1</td>
+                        <td><input type="text" class="form-control product-code-input" name="product_code[]"
+                                id="productCodeInput" autocomplete="off" /></td>
+                        <td><input type="text" class="form-control product-name-input" name="product_name[]"
+                                id="productNameInput" autocomplete="off" /></td>
+                        <td><input type="text" class="form-control uom-input" name="UOM[]" /></td>
+                        <td><input type="number" class="form-control qty" name="stock[]" id="stock" /></td>
+                        <td><input type="number" class="form-control selling-price" name="selling_price[]" /></td>
+                        <td><input type="number" class="form-control offer-price" name="offer_price[]" /></td>
+                        <td><input type="text" class="form-control total" name="total[]" readonly /></td>
+                        <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
+                    </tr>
+                    <!-- Add more rows as needed -->
+                </tbody>
+            </table>
+            <!-- Add a button to add new rows dynamically if required -->
+            <button type="button" class="btn btn-primary" id="addRow">Add Row</button>
+            <!-- Net Total Section -->
+            <div id="netTotalContainer" class="mb-3">
+                <div class="row">
+                    <div class="col-md-6 text-end">
+                        <label for="netTotal" id="netTotal" class="form-label">Net Total:</label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" id="netTotalInput" class="form-control" readonly style="width: 250px;">
+                    </div>
+                </div>
+            </div>
+            <style>
+                #total {
+                    background-color: aliceblue;
+                }
 
-        rowsData.push(rowData);
-    });
+                #netTotalContainer {
+                    text-align: center;
+                }
 
-    $.ajax({
-        type: 'POST',
-        url: 'save_invoice.php',
-        data: {
-            invoiceData: JSON.stringify(rowsData)
-        },
-        success: function (response) {
-            if (response === 'success') {
-                alert('Data saved successfully!');
-                // Optionally, you can reload the page or perform other actions
-                location.reload();
-            } else {
-                alert('Data saved successfully!');
-            }
-        },
-        error: function () {
-            alert('Error occurred while saving data');
-        }
-    });
-  
-});
+                #netTotal {
+                    margin-top: 5px;
+                    font-size: 18px;
+                    font-weight: bold;
+                    margin-left: 10px;
+                }
 
-// Event handler for "Refresh" button click
-$('#refreshButton').on('click', function () {
-    $(':input', '#invoiceForm').not(':button, :submit, :reset, :hidden').val('').prop('checked', false).prop('selected', false);
+                #netTotalInput.form-control {
+                    width: 250px;
+                    font-size: 16px;
+                    background-color: aliceblue;
+                }
+            </style>
 
-    $('table tbody tr').each((index, row) => $(row).find('td:first').text(index + 1));
+            <!-- jQuery library -->
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
-    $('table tbody tr .product-dropdown').each((_, dropdown) => fetchProductNames($(dropdown)));
+            <!-- jQuery UI library -->
+            <link rel="stylesheet"
+                href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/themes/smoothness/jquery-ui.css">
+            <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
 
-    fetchUOMCodes($('.uom-code-dropdown'));
+            <script>
 
-    updateTotals();
-});
-});
+                $(document).ready(function () {
 
-// Function to get the current date and time in a desired format
-function getCurrentDateTime() {
-    return new Date().toISOString().slice(0, 19).replace("T", " ");
-}
+                    function fetchProductNames(dropdown) {
+                        $.get('get_products.php', response => {
+                            var productNames = response.map(product => product.product_name);
+                            dropdown.empty().append($('<option>').text('Select Product').attr('value', ''), ...productNames.map(name => $('<option>').text(name).attr('value', name)));
+                        }).fail(() => alert('Error fetching product names'));
+                    }
 
-$('#mobileNumber').on('blur', () => validateMobileNumber($('#mobileNumber').val()));
+                    function updateInputFields(selectedProduct, inputs) {
+                        $.get('get_products.php', { product_name: selectedProduct }, response => {
+                            var { selling_price, offer_price, UOM, product_code } = response;
+                            Object.entries({ selling_price, offer_price, UOM, product_code }).forEach(([key, value]) => inputs[key].val(value));
+                        }).fail(() => alert('Error fetching product prices'));
+                    }
 
-$('.offer-price, .selling-price').on('blur', function () {
-    validateNumericValue($(this), $(this).hasClass('offer-price') ? 'Offer Price' : 'Selling Price');
-});
+                    fetchProductNames($('.product-dropdown'));
 
+                    $('table').on('change', '.product-name-input', function () {
+                        var selectedProduct = $(this).val();
+                        var inputs = ['sellingPrice', 'offerPrice', 'uomInput', 'productCodeInput'].reduce((acc, key) => (acc[key] = $(this).closest('tr').find('.' + key.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()), acc), {});
 
-// Modify the validateMobileNumber function to update the error message div
-function validateMobileNumber(mobileNumber) {
-    var mobileNumberRegex = /^[0-9]{10}$/;
-    var errorDiv = $('#mobileNumberError');
+                        updateInputFields(selectedProduct, inputs);
+                    });
 
-    if (mobileNumberRegex.test(mobileNumber)) {
-        // Valid mobile number
-        errorDiv.text(''); // Clear the error message
-        errorDiv.removeClass('error-text');
-    } else {
-        // Invalid mobile number
-        errorDiv.text('Please enter a valid 10-digit mobile number');
-        errorDiv.addClass('error-text');
-    }
-}
+                    // Event handler for stock quantity change
+                    $('table').on('input', '.qty', function () {
+                        var quantity = parseInt($(this).val()) || 0;
+                        var productCode = $(this).closest('tr').find('.product-code-input').val();
 
-// Modify the validateNumericValue function to update the error message div
-function validateNumericValue(inputElement, fieldName) {
-    var numericValue = inputElement.val();
-    var numericRegex = /^-?\d*\.?\d*$/; 
-    var errorDiv = inputElement.closest('.mb-3').find('.error-message');
+                        $.ajax({
+                            type: 'GET',
+                            url: 'get_products.php',
+                            data: { search: productCode },
+                            success: function (response) {
+                                if (response.length > 0) {
+                                    var actualOfferPrice = parseFloat(response[0].actual_offer_price) || 0;
 
-    if (numericRegex.test(numericValue)) {
-        errorDiv.text(''); 
-        errorDiv.removeClass('error-text');
-    } else {
-        errorDiv.text(fieldName + ' must be a valid number');
-        errorDiv.addClass('error-text');
-    }
-}
+                                    var updatedOfferPrice = quantity * actualOfferPrice;
+                                    $(this).closest('tr').find('.offer-price').val(updatedOfferPrice.toFixed(2));
 
-// Call the toggleStarMarks and toggleErrorMessages functions on input focus
-$('input[required]').on('focus', function () {
-    toggleStarMarks();
-    toggleErrorMessages();
-});
+                                    var updatedTotal = quantity * updatedOfferPrice;
+                                    $(this).closest('tr').find('.total').val(updatedTotal.toFixed(2));
 
-// Call the toggleStarMarks and toggleErrorMessages functions on input change
-$('input[required]').on('input', function () {
-    toggleStarMarks();
-    toggleErrorMessages();
-});
+                                    updateTotals();
+                                } else {
+                                    alert('Product not found');
+                                }
+                            },
+                            error: function () {
+                                alert('Error fetching actual offer price');
+                            }
+                        });
+                    });
 
-// Call the toggleErrorMessages function when the document is ready
-$(document).ready(function () {
-    toggleStarMarks();
-    toggleErrorMessages();
-});
+                    // Event handler for product code input change
+                    $('table').on('input', '.product-code-input', function () {
+                        var productCode = $(this).val();
+                        var row = $(this).closest('tr');
 
-// Add a function to toggle error messages based on input validity
-function toggleErrorMessages() {
-    $('input[required]').each(function () {
-        var errorDiv = $(this).closest('.mb-3').find('.error-message');
-        errorDiv.toggle(!this.validity.valid || $(this).is(':focus'));
-    });
-}
+                        $.get('get_products.php', { product_code: productCode }, response => {
+                            var { product_name, UOM, selling_price, offer_price } = response;
 
-// Function to validate numeric values for offer price and selling price
-function validateNumericValue(inputElement, fieldName) {
-    var numericValue = inputElement.val();
-    var numericRegex = /^-?\d*\.?\d*$/; // Regex for numeric values
+                            row.find('.product-name-input, .uom-input, .selling-price, .offer-price').val((_, key) => eval(key));
+                        }).fail(() => alert('Error fetching product details'));
+                    });
 
-    if (numericRegex.test(numericValue)) {
-        // Valid numeric value
-        inputElement.next('.error-message').text(''); // Clear the error message
-        inputElement.next('.error-message').removeClass('error-text');
-    } else {
-        // Invalid numeric value
-        inputElement.next('.error-message').text(fieldName + ' must be a valid number');
-        inputElement.next('.error-message').addClass('error-text');
-    }
-}
-</script>
-    
-<style>
-    .error-message {
-    color: red;
-    font-size: 12px;
-    margin-top: 5px;
-}
+                    // Function to initialize autocomplete for product code input
+                    function initializeProductCodeAutocomplete(row) {
+                        var codeInput = row.find('.product-code-input');
+                        codeInput.autocomplete({
+                            source: (request, response) => {
+                                $.ajax({
+                                    type: 'GET',
+                                    url: 'get_product_codes.php',
+                                    data: { search: request.term },
+                                    success: data => response(data.map(product => product.product_code)),
+                                    error: () => alert('Error fetching product codes')
+                                });
+                            },
+                            select: function (event, ui) {
+                                var selectedProductCode = ui.item.value;
+                                var row = codeInput.closest('tr');
 
-.error-text {
-    display: block;
-}
+                                $.ajax({
+                                    type: 'GET',
+                                    url: 'get_products.php',
+                                    data: { product_code: selectedProductCode },
+                                    success: response => {
+                                        var { product_name, UOM, selling_price, offer_price } = response;
 
-.required-field {
-    color: red;
-}
+                                        row.find('.product-name-input').val(product_name);
+                                        row.find('.uom-input').val(UOM);
+                                        row.find('.selling-price').val(selling_price);
+                                        row.find('.offer-price').val(offer_price);
 
-</style>
+                                        updateTotals();
+                                    },
+                                    error: () => alert('Error fetching product details')
+                                });
+                            }
+                        });
+                    }
 
+                    initializeProductCodeAutocomplete($('table tbody tr:first'));
+                    initializeProductNameAutocomplete($('table tbody tr:first'));
+
+                    // Function to initialize autocomplete for product name input
+                    function initializeProductNameAutocomplete(row) {
+                        row.find('.product-name-input').autocomplete({
+                            source: function (request, response) {
+                                $.ajax({
+                                    type: 'GET',
+                                    url: 'get_products.php',
+                                    data: { search: request.term },
+                                    success: function (data) {
+                                        var productNames = data.map(function (product) {
+                                            return product.product_name;
+                                        });
+                                        response(productNames);
+                                    },
+                                    error: function () {
+                                        alert('Error fetching product names');
+                                    }
+                                });
+                            },
+                            minLength: 1
+                        });
+                    }
+
+                    $('table').on('autocompleteselect', '.product-name-input', function (event, ui) {
+                        var selectedProduct = ui.item.value;
+                        var $row = $(this).closest('tr');
+
+                        $.ajax({
+                            type: 'GET',
+                            url: 'get_products.php',
+                            data: { product_name: selectedProduct },
+                            success: function ({ selling_price, offer_price, UOM, product_code }) {
+                                $row.find('.selling-price').val(selling_price);
+                                $row.find('.offer-price').val(offer_price);
+                                $row.find('.uom-input').val(UOM);
+                                $row.find('.product-code-input').val(product_code);
+                            },
+                            error: function () {
+                                alert('Error fetching product prices');
+                            }
+                        });
+                    });
+
+                    // Event handler for "Add Row" button click
+                    $('#addRow').on('click', function () {
+                        addRow();
+                    });
+
+                    // Function to add a new row to the table
+                    function addRow() {
+                        var newRow = $('table tbody tr:last').clone();
+                        newRow.find('input').val('');
+                        var lastSlNo = parseInt(newRow.find('td:first').text());
+                        newRow.find('td:first').text(lastSlNo + 1);
+                        $('table tbody').append(newRow);
+                        fetchProductNames(newRow.find('.product-dropdown'));
+                        initializeProductCodeAutocomplete(newRow);
+                        initializeProductNameAutocomplete(newRow);
+                        updateTotals();
+                    }
+                    // Update totals when a new row is added
+                    updateTotals();
+
+                    // Event handler for "Remove" button click
+                    $('table').on('click', '.remove-row', function () {
+                        $(this).closest('tr').remove();
+                        updateTotals();
+                    });
+
+                    // Function to calculate the total for a row based on the offer price
+                    function calculateRowTotal(row) {
+                        var quantity = parseInt(row.find('.qty').val()) || 0;
+                        var offerPrice = parseFloat(row.find('.offer-price').val()) || 0;
+                        return quantity * offerPrice;
+                    }
+
+                    // Function to update the total and net total
+                    function updateTotals() {
+                        var netTotal = 0;
+
+                        $('table tbody tr').each(function () {
+                            var row = $(this);
+                            var total = calculateRowTotal(row);
+
+                            row.find('.total').val(total.toFixed(2));
+
+                            netTotal += total;
+                        });
+
+                        $('#netTotalInput').val(netTotal.toFixed(2));
+                    }
+
+                    // Event handler for quantity and offer price changes
+                    $('table').on('input', '.qty, .offer-price', function () {
+                        updateTotals();
+                    });
+
+                    // Event handler for "Add Row" button click
+                    $('#addRow').on('click', function () {
+
+                        fetchProductNames(newRow.find('.product-dropdown'));
+
+                        updateTotals();
+                    });
+
+                    // Event handler for "Save" button click
+                    $('#saveButton').on('click', function () {
+                        var rowsData = [];
+
+                        // Iterate through each row in the table
+                        $('table tbody tr').each(function () {
+                            var row = $(this);
+                            var rowData = {
+                                invoiceNo: $('#invoiceNumber').val(),
+                                invoiceDate: $('#invoiceDate').val(),
+                                customerName: $('#customerName').val(),
+                                mobileNo: $('#mobileNumber').val(),
+                                qty: row.find('.qty').val(),
+                                netTotal: row.find('.total').val(),
+                                savedBy: localStorage.getItem('username'),
+                                savedDateTime: getCurrentDateTime(),
+                                productCode: row.find('.product-code-input').val()
+                            };
+
+                            rowsData.push(rowData);
+                        });
+
+                        $.ajax({
+                            type: 'POST',
+                            url: 'save_invoice.php',
+                            data: {
+                                invoiceData: JSON.stringify(rowsData)
+                            },
+                            success: function (response) {
+                                if (response === 'success') {
+                                    alert('Data saved successfully!');
+                                    // Optionally, you can reload the page or perform other actions
+                                    location.reload();
+                                } else {
+                                    alert('Data saved successfully!');
+                                }
+                            },
+                            error: function () {
+                                alert('Error occurred while saving data');
+                            }
+                        });
+
+                    });
+
+                    // Event handler for "Refresh" button click
+                    $('#refreshButton').on('click', function () {
+                        $(':input', '#invoiceForm').not(':button, :submit, :reset, :hidden').val('').prop('checked', false).prop('selected', false);
+
+                        $('table tbody tr').each((index, row) => $(row).find('td:first').text(index + 1));
+
+                        $('table tbody tr .product-dropdown').each((_, dropdown) => fetchProductNames($(dropdown)));
+
+                        fetchUOMCodes($('.uom-code-dropdown'));
+
+                        updateTotals();
+                    });
+                });
+
+                // Function to get the current date and time in a desired format
+                function getCurrentDateTime() {
+                    return new Date().toISOString().slice(0, 19).replace("T", " ");
+                }
+
+                $('#mobileNumber').on('blur', () => validateMobileNumber($('#mobileNumber').val()));
+
+                $('.offer-price, .selling-price').on('blur', function () {
+                    validateNumericValue($(this), $(this).hasClass('offer-price') ? 'Offer Price' : 'Selling Price');
+                });
+
+                // Modify the validateNumericValue function to update the error message div
+                function validateNumericValue(inputElement, fieldName) {
+                    var numericValue = inputElement.val();
+                    var numericRegex = /^-?\d*\.?\d*$/;
+                    var errorDiv = inputElement.closest('.mb-3').find('.error-message');
+
+                    if (numericRegex.test(numericValue)) {
+                        errorDiv.text('');
+                        errorDiv.removeClass('error-text');
+                    } else {
+                        errorDiv.text(fieldName + ' must be a valid number');
+                        errorDiv.addClass('error-text');
+                    }
+                }
+
+                // Call the toggleStarMarks and toggleErrorMessages functions on input focus
+                $('input[required]').on('focus', function () {
+                    toggleStarMarks();
+                    toggleErrorMessages();
+                });
+
+                // Call the toggleStarMarks and toggleErrorMessages functions on input change
+                $('input[required]').on('input', function () {
+                    toggleStarMarks();
+                    toggleErrorMessages();
+                });
+
+                // Call the toggleErrorMessages function when the document is ready
+                $(document).ready(function () {
+                    toggleStarMarks();
+                    toggleErrorMessages();
+                });
+
+                // Add a function to toggle error messages based on input validity
+                function toggleErrorMessages() {
+                    $('input[required]').each(function () {
+                        var errorDiv = $(this).closest('.mb-3').find('.error-message');
+                        errorDiv.toggle(!this.validity.valid || $(this).is(':focus'));
+                    });
+                }
+
+                // Function to validate numeric values for offer price and selling price
+                function validateNumericValue(inputElement, fieldName) {
+                    var numericValue = inputElement.val();
+                    var numericRegex = /^-?\d*\.?\d*$/; // Regex for numeric values
+
+                    if (numericRegex.test(numericValue)) {
+                        // Valid numeric value
+                        inputElement.next('.error-message').text(''); // Clear the error message
+                        inputElement.next('.error-message').removeClass('error-text');
+                    } else {
+                        // Invalid numeric value
+                        inputElement.next('.error-message').text(fieldName + ' must be a valid number');
+                        inputElement.next('.error-message').addClass('error-text');
+                    }
+                }
+            </script>
 </body>
+
 </html>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,6 +9,7 @@
     <link rel="stylesheet" href="styles.css">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
+
 <body>
 
     <div class="container">
@@ -41,8 +43,8 @@
             }
         }
 
-        $(document).ready(function(){
-            $('#loginForm').submit(function(e){
+        $(document).ready(function () {
+            $('#loginForm').submit(function (e) {
                 e.preventDefault(); // Prevent form submission
 
                 // Perform AJAX request
@@ -50,8 +52,8 @@
                     type: 'POST',
                     url: 'login_process.php',
                     data: $('#loginForm').serialize(),
-                    success: function(response){
-                        if(response == 1){
+                    success: function (response) {
+                        if (response == 1) {
                             // Save username in local storage
                             var username = $('#UserName').val();
                             localStorage.setItem('username', username);
@@ -62,7 +64,7 @@
                             alert('Invalid username or password');
                         }
                     },
-                    error: function(){
+                    error: function () {
                         alert('Error occurred during login process');
                     }
                 });
@@ -71,4 +73,5 @@
     </script>
 
 </body>
+
 </html>

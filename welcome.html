@@ -8,13 +8,14 @@
     <title>Welcome</title>
     <link rel="stylesheet" href="header.css">
     <link rel="stylesheet" href="styles.scss">
-    
-    
+
+
 </head>
+
 <body style="background-color: #eaedf0;">
     <header class="header">
         <div class="menu-icon" onclick="toggleMenu()">☰</div>
-        
+
         <div class="user-menu">
             <div class="user-menu">
                 <div class="user-icon">&#128100;</div>
@@ -32,49 +33,50 @@
             <a href="#">Contact</a>
             <!-- Add more options as needed -->
         </div>
-        
+
     </header>
 
     <style>
 
-        </style>
-        </head>
-        <body>
-        
-        
+    </style>
+    </head>
+
+    <body>
+
+
         <div class="slideshow-container">
-        
+
             <div class="mySlides fade">
                 <div class="numbertext">1 / 3</div>
                 <img src="2.jpg" style="width:100%">
                 <div class="text welcome-text">Welcome</div>
-              </div>
-              
-              <div class="mySlides fade">
+            </div>
+
+            <div class="mySlides fade">
                 <div class="numbertext">2 / 3</div>
                 <img src="1.jpg" style="width:100%">
                 <div class="text welcome-text">Welcome</div>
-              </div>
-              
-              <div class="mySlides fade">
+            </div>
+
+            <div class="mySlides fade">
                 <div class="numbertext">3 / 3</div>
                 <img src="3.jpg" style="width:100%">
                 <div class="text welcome-text">Welcome</div>
-              </div>
-        
+            </div>
+
         </div>
         <br>
-        
+
         <div style="text-align:center">
-          <span class="dot"></span> 
-          <span class="dot"></span> 
-          <span class="dot"></span> 
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
         </div>
-        
+
         <script>
             let slideIndex = 0;
             showSlides();
-        
+
             function showSlides() {
                 let i;
                 let slides = document.getElementsByClassName("mySlides");
@@ -94,87 +96,88 @@
                 setTimeout(showSlides, 4000); // Change image every 2 seconds
             }
 
-                   // Modify the toggleMenu function to include animation
-        function toggleMenu() {
-            var menuOptions = document.getElementById('menuOptions');
-            var menuIcon = document.querySelector('.menu-icon');
+            // Modify the toggleMenu function to include animation
+            function toggleMenu() {
+                var menuOptions = document.getElementById('menuOptions');
+                var menuIcon = document.querySelector('.menu-icon');
 
-            if (menuOptions.style.display === 'block') {
-                menuOptions.style.display = 'none';
-                menuIcon.innerHTML = '☰';
-            } else {
-                menuOptions.style.display = 'block';
-                menuIcon.innerHTML = '✖';
+                if (menuOptions.style.display === 'block') {
+                    menuOptions.style.display = 'none';
+                    menuIcon.innerHTML = '☰';
+                } else {
+                    menuOptions.style.display = 'block';
+                    menuIcon.innerHTML = '✖';
+                }
             }
-        }
         </script>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <script src="header.js"></script>
-    <script>
-        // Call the initializeHeader function when the document is ready
-        $(document).ready(function () {
-            initializeHeader();
-        });
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+            integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script src="header.js"></script>
+        <script>
+            // Call the initializeHeader function when the document is ready
+            $(document).ready(function () {
+                initializeHeader();
+            });
 
 
-        // header.js
+            // header.js
 
-function toggleMenu() {
-    var menuOptions = document.getElementById('menuOptions');
-    var menuIcon = document.querySelector('.menu-icon');
+            function toggleMenu() {
+                var menuOptions = document.getElementById('menuOptions');
+                var menuIcon = document.querySelector('.menu-icon');
 
-    if (menuOptions.style.display === 'block') {
-        menuOptions.style.display = 'none';
-        menuIcon.innerHTML = '☰';
-    } else {
-        menuOptions.style.display = 'block';
-        menuIcon.innerHTML = '✖';
-    }
-}
-
-function initializeHeader() {
-    var storedUsername = localStorage.getItem('username');
-    if (storedUsername) {
-        document.getElementById('usernamePlaceholder').textContent = storedUsername;
-    } else {
-        document.getElementById('usernamePlaceholder').textContent = 'Guest';
-    }
-
-    $('#logoutLink').on('click', function (e) {
-        e.preventDefault();
-
-        // Ask for confirmation
-        var confirmLogout = confirm("Are you sure you want to logout?");
-        if (!confirmLogout) {
-            return;
-        }
-
-        localStorage.removeItem('username');
-
-        $.ajax({
-            type: 'GET',
-            url: 'logout_process.php',
-            success: function (response) {
-                if (response === 'success') {
-                    window.location.href = 'login.html';
+                if (menuOptions.style.display === 'block') {
+                    menuOptions.style.display = 'none';
+                    menuIcon.innerHTML = '☰';
                 } else {
-                    alert('Logout failed. Please try again.');
+                    menuOptions.style.display = 'block';
+                    menuIcon.innerHTML = '✖';
                 }
-            },
-            error: function () {
-                alert('Error occurred during logout process');
             }
-        });
-    });
-}
 
-    </script>
+            function initializeHeader() {
+                var storedUsername = localStorage.getItem('username');
+                if (storedUsername) {
+                    document.getElementById('usernamePlaceholder').textContent = storedUsername;
+                } else {
+                    document.getElementById('usernamePlaceholder').textContent = 'Guest';
+                }
 
- 
-</body>
+                $('#logoutLink').on('click', function (e) {
+                    e.preventDefault();
+
+                    // Ask for confirmation
+                    var confirmLogout = confirm("Are you sure you want to logout?");
+                    if (!confirmLogout) {
+                        return;
+                    }
+
+                    localStorage.removeItem('username');
+
+                    $.ajax({
+                        type: 'GET',
+                        url: 'logout_process.php',
+                        success: function (response) {
+                            if (response === 'success') {
+                                window.location.href = 'login.html';
+                            } else {
+                                alert('Logout failed. Please try again.');
+                            }
+                        },
+                        error: function () {
+                            alert('Error occurred during logout process');
+                        }
+                    });
+                });
+            }
+
+        </script>
+
+
+    </body>
 
 </html>
