@@ -178,7 +178,7 @@
                         <td><input type="text" class="form-control product-name-input" name="product_name[]"
                                 id="productNameInput" autocomplete="off" /></td>
                         <td><input type="text" class="form-control uom-input" name="UOM[]" /></td>
-                        <td><input type="number" class="form-control qty" name="qty" id="qty" />
+                        <td><input type="number" class="form-control qty" name="qty" id="qty" value="1" /></td>
                         <td><input type="number" class="form-control selling-price" name="selling_price[]" /></td>
                         <td><input type="number" class="form-control offer-price" name="offer_price[]" /></td>
                         <td><input type="text" class="form-control total" name="total[]" readonly /></td>
@@ -291,6 +291,9 @@
                             row.find(".uom-input").val(selectedProduct.UOM);
                             row.find(".selling-price").val(selectedProduct.selling_price);
                             row.find(".offer-price").val(selectedProduct.offer_price);
+
+                            // Trigger input event to recalculate totals
+                            row.find('.qty, .selling-price, .offer-price').trigger('input');
                         }
                     });
                 }
@@ -308,6 +311,9 @@
                             row.find(".uom-input").val(selectedProduct.UOM);
                             row.find(".selling-price").val(selectedProduct.selling_price);
                             row.find(".offer-price").val(selectedProduct.offer_price);
+
+                            // Trigger input event to recalculate totals
+                            row.find('.qty, .selling-price, .offer-price').trigger('input');
                         }
                     });
                 }
@@ -342,11 +348,16 @@
                     $("#invoiceDate").val(new Date().toISOString().split('T')[0]); // Set default date
                     populateProductData();
                     initializeAutocomplete();
+
+                    // Trigger input event for existing rows
+                    $("#invoiceForm tbody tr").find('.qty, .selling-price, .offer-price').trigger('input');
                 });
+
 
 
                 function addRow() {
                     var newRow = $("#invoiceForm tbody tr:first").clone().find('input').val('').end();
+                    newRow.find('.qty').val(1); // Set default quantity to 1
                     $("#invoiceForm tbody").append(newRow);
 
                     var newIndex = $("#invoiceForm tbody tr").length;
@@ -354,7 +365,11 @@
 
                     initializeProductCodeAutocomplete(newRow.find(".product-code-input"));
                     initializeProductNameAutocomplete(newRow.find(".product-name-input"));
+
+                    // Trigger input event to recalculate totals
+                    newRow.find('.qty, .selling-price, .offer-price').trigger('input');
                 }
+
 
                 initializeProductCodeAutocomplete(".product-code-input, .product-name-input");
                 $("#addRow").on('click', addRow);
