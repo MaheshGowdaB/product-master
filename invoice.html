@@ -34,7 +34,6 @@
             <a href="invoice.html">Invoice</a>
             <a href="blog.html">Blog</a>
             <a href="#">Contact</a>
-            <!-- Add more options as needed -->
         </div>
     </header>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -73,7 +72,6 @@
             $('#logoutLink').on('click', function (e) {
                 e.preventDefault();
 
-                // Ask for confirmation
                 var confirmLogout = confirm("Are you sure you want to logout?");
                 if (!confirmLogout) {
                     return;
@@ -154,7 +152,7 @@
                     </div>
                 </div>
             </div>
-            <!-- Add more fields as needed -->
+
             <!-- Table Section -->
             <table class="table">
                 <thead>
@@ -171,7 +169,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Add rows for your data here -->
                     <tr>
                         <td>1</td>
                         <td><input type="text" class="form-control product-code-input" name="product_code[]"
@@ -185,7 +182,6 @@
                         <td><input type="text" class="form-control total" name="total[]" readonly /></td>
                         <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
                     </tr>
-                    <!-- Add more rows as needed -->
                 </tbody>
             </table>
             <!-- Add a button to add new rows dynamically if required -->
@@ -264,7 +260,6 @@
                         var quantity = parseInt($(this).val()) || 0;
                         var productCode = $(this).closest('tr').find('.product-code-input').val();
 
-                        // Fetch the actual offer price from the database for the given product code
                         $.ajax({
                             type: 'GET',
                             url: 'get_products.php',
@@ -273,15 +268,12 @@
                                 if (response.length > 0) {
                                     var actualOfferPrice = parseFloat(response[0].actual_offer_price) || 0;
 
-                                    // Calculate the updated offer price based on quantity and actual offer price
                                     var updatedOfferPrice = quantity * actualOfferPrice;
                                     $(this).closest('tr').find('.offer-price').val(updatedOfferPrice.toFixed(2));
 
-                                    // Calculate the updated total based on quantity and updated offer price
                                     var updatedTotal = quantity * updatedOfferPrice;
                                     $(this).closest('tr').find('.total').val(updatedTotal.toFixed(2));
 
-                                    // Update totals for all rows
                                     updateTotals();
                                 } else {
                                     alert('Product not found');
@@ -346,7 +338,6 @@
                     initializeProductCodeAutocomplete($('table tbody tr:first'));
                     initializeProductNameAutocomplete($('table tbody tr:first'));
 
-                    // Function to initialize autocomplete for product name input
                     function initializeProductNameAutocomplete(row) {
                         row.find('.product-name-input').autocomplete({
                             source: function (request, response) {
@@ -389,13 +380,10 @@
                         });
                     });
 
-
-                    // Event handler for "Add Row" button click
                     $('#addRow').on('click', function () {
                         addRow();
                     });
 
-                    // Function to add a new row to the table
                     function addRow() {
                         var newRow = $('table tbody tr:last').clone();
                         newRow.find('input').val('');
@@ -407,63 +395,43 @@
                         initializeProductNameAutocomplete(newRow);
                         updateTotals();
                     }
-                    // Update totals when a new row is added
                     updateTotals();
 
-                    // Event handler for "Remove" button click
                     $('table').on('click', '.remove-row', function () {
                         $(this).closest('tr').remove();
                         updateTotals();
                     });
 
-                    // Function to calculate the total for a row based on the offer price
                     function calculateRowTotal(row) {
                         var quantity = parseInt(row.find('.qty').val()) || 0;
                         var offerPrice = parseFloat(row.find('.offer-price').val()) || 0;
                         return quantity * offerPrice;
                     }
 
-                    // Function to update the total and net total
                     function updateTotals() {
                         var netTotal = 0;
 
-                        // Iterate through each row in the table
                         $('table tbody tr').each(function () {
                             var row = $(this);
                             var total = calculateRowTotal(row);
-
-                            // Update the total for the current row
                             row.find('.total').val(total.toFixed(2));
-
-                            // Accumulate the total for the net total calculation
                             netTotal += total;
                         });
-
-                        // Update the net total input field
                         $('#netTotalInput').val(netTotal.toFixed(2));
                     }
 
-                    // Event handler for quantity and offer price changes
                     $('table').on('input', '.qty, .offer-price', function () {
                         updateTotals();
                     });
 
-                    // Event handler for "Add Row" button click
                     $('#addRow').on('click', function () {
-                        // ... (existing code)
-
-                        // Fetch product names and populate the new dropdown
                         fetchProductNames(newRow.find('.product-dropdown'));
-
-                        // Update totals when a new row is added
                         updateTotals();
                     });
 
-                    // Event handler for "Save" button click
                     $('#saveButton').on('click', function () {
                         var rowsData = [];
 
-                        // Iterate through each row in the table
                         $('table tbody tr').each(function () {
                             var row = $(this);
                             var rowData = {
@@ -490,7 +458,6 @@
                             success: function (response) {
                                 if (response === 'success') {
                                     alert('Data saved successfully!');
-                                    // Optionally, you can reload the page or perform other actions
                                     location.reload();
                                 } else {
                                     alert('Data saved successfully!');
@@ -504,7 +471,6 @@
 
                     });
 
-                    // Event handler for "Refresh" button click
                     $('#refreshButton').on('click', function () {
                         $(':input', '#invoiceForm').not(':button, :submit, :reset, :hidden').val('').prop('checked', false).prop('selected', false);
 
@@ -518,7 +484,6 @@
                     });
                 });
 
-                // Function to get the current date and time in a desired format
                 function getCurrentDateTime() {
                     return new Date().toISOString().slice(0, 19).replace("T", " ");
                 }
@@ -529,24 +494,6 @@
                     validateNumericValue($(this), $(this).hasClass('offer-price') ? 'Offer Price' : 'Selling Price');
                 });
 
-
-                // Modify the validateMobileNumber function to update the error message div
-                function validateMobileNumber(mobileNumber) {
-                    var mobileNumberRegex = /^[0-9]{10}$/;
-                    var errorDiv = $('#mobileNumberError');
-
-                    if (mobileNumberRegex.test(mobileNumber)) {
-                        // Valid mobile number
-                        errorDiv.text(''); // Clear the error message
-                        errorDiv.removeClass('error-text');
-                    } else {
-                        // Invalid mobile number
-                        errorDiv.text('Please enter a valid 10-digit mobile number');
-                        errorDiv.addClass('error-text');
-                    }
-                }
-
-                // Modify the validateNumericValue function to update the error message div
                 function validateNumericValue(inputElement, fieldName) {
                     var numericValue = inputElement.val();
                     var numericRegex = /^-?\d*\.?\d*$/;
@@ -561,25 +508,21 @@
                     }
                 }
 
-                // Call the toggleStarMarks and toggleErrorMessages functions on input focus
                 $('input[required]').on('focus', function () {
                     toggleStarMarks();
                     toggleErrorMessages();
                 });
 
-                // Call the toggleStarMarks and toggleErrorMessages functions on input change
                 $('input[required]').on('input', function () {
                     toggleStarMarks();
                     toggleErrorMessages();
                 });
 
-                // Call the toggleErrorMessages function when the document is ready
                 $(document).ready(function () {
                     toggleStarMarks();
                     toggleErrorMessages();
                 });
 
-                // Add a function to toggle error messages based on input validity
                 function toggleErrorMessages() {
                     $('input[required]').each(function () {
                         var errorDiv = $(this).closest('.mb-3').find('.error-message');
@@ -587,39 +530,19 @@
                     });
                 }
 
-                // Function to validate numeric values for offer price and selling price
                 function validateNumericValue(inputElement, fieldName) {
                     var numericValue = inputElement.val();
-                    var numericRegex = /^-?\d*\.?\d*$/; // Regex for numeric values
+                    var numericRegex = /^-?\d*\.?\d*$/;
 
                     if (numericRegex.test(numericValue)) {
-                        // Valid numeric value
-                        inputElement.next('.error-message').text(''); // Clear the error message
+                        inputElement.next('.error-message').text('');
                         inputElement.next('.error-message').removeClass('error-text');
                     } else {
-                        // Invalid numeric value
                         inputElement.next('.error-message').text(fieldName + ' must be a valid number');
                         inputElement.next('.error-message').addClass('error-text');
                     }
                 }
             </script>
-
-            <style>
-                .error-message {
-                    color: red;
-                    font-size: 12px;
-                    margin-top: 5px;
-                }
-
-                .error-text {
-                    display: block;
-                }
-
-                .required-field {
-                    color: red;
-                }
-            </style>
-
 </body>
 
 </html>
