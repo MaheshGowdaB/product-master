@@ -338,9 +338,12 @@
                 }
 
                 $(document).ready(function () {
+                    initializeHeader();
+                    $("#invoiceDate").val(new Date().toISOString().split('T')[0]); // Set default date
                     populateProductData();
                     initializeAutocomplete();
                 });
+
 
                 function addRow() {
                     var newRow = $("#invoiceForm tbody tr:first").clone().find('input').val('').end();
