@@ -280,13 +280,12 @@ $('table').on('input', '.product-code-input', function () {
     var productCode = $(this).val();
     var row = $(this).closest('tr');
 
-    $.get('get_product_details.php', { product_code: productCode }, response => {
+    $.get('get_products.php', { product_code: productCode }, response => {
         var { product_name, UOM, selling_price, offer_price } = response;
 
         row.find('.product-name-input, .uom-input, .selling-price, .offer-price').val((_, key) => eval(key));
     }).fail(() => alert('Error fetching product details'));
 });
-
 
     // Function to initialize autocomplete for product code input
     function initializeProductCodeAutocomplete(row) {
@@ -307,7 +306,7 @@ $('table').on('input', '.product-code-input', function () {
 
             $.ajax({
                 type: 'GET',
-                url: 'get_product_details.php',
+                url: 'get_products.php',
                 data: { product_code: selectedProductCode },
                 success: response => {
                     var { product_name, UOM, selling_price, offer_price } = response;
@@ -357,7 +356,7 @@ initializeProductNameAutocomplete($('table tbody tr:first'));
 
     $.ajax({
         type: 'GET',
-        url: 'get_product_details.php',
+        url: 'get_products.php',
         data: { product_name: selectedProduct },
         success: function ({ selling_price, offer_price, UOM, product_code }) {
             $row.find('.selling-price').val(selling_price);
@@ -370,7 +369,6 @@ initializeProductNameAutocomplete($('table tbody tr:first'));
         }
     });
 });
-
 
     // Event handler for "Add Row" button click
     $('#addRow').on('click', function () {
@@ -408,20 +406,16 @@ $('table').on('click', '.remove-row', function () {
         // Function to update the total and net total
         function updateTotals() {
             var netTotal = 0;
-    
-            // Iterate through each row in the table
+
             $('table tbody tr').each(function () {
                 var row = $(this);
                 var total = calculateRowTotal(row);
-    
-                // Update the total for the current row
+
                 row.find('.total').val(total.toFixed(2));
-    
-                // Accumulate the total for the net total calculation
+
                 netTotal += total;
             });
-    
-            // Update the net total input field
+
             $('#netTotalInput').val(netTotal.toFixed(2));
         }
     
@@ -432,12 +426,9 @@ $('table').on('click', '.remove-row', function () {
     
         // Event handler for "Add Row" button click
         $('#addRow').on('click', function () {
-            // ... (existing code)
-    
-            // Fetch product names and populate the new dropdown
+
             fetchProductNames(newRow.find('.product-dropdown'));
-    
-            // Update totals when a new row is added
+
             updateTotals();
         });
     
@@ -482,8 +473,7 @@ $('table').on('click', '.remove-row', function () {
             alert('Error occurred while saving data');
         }
     });
-
-    
+  
 });
 
 // Event handler for "Refresh" button click
