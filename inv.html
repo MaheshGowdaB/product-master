@@ -208,8 +208,6 @@
                                 style="padding: 0.1rem 0.4rem; font-size: 0.8rem; position: absolute; top: 50%; transform: translateY(-50%); margin-left: 15px;"
                                 data-toggle="modal" data-target="#myModal">+</button>
                         </th>
-
-
                         <th scope="col">Name</th>
                         <th scope="col">UOM</th>
                         <th scope="col">Quantity</th>
@@ -314,12 +312,8 @@
 
                 // Event handler for when the modal is shown
                 $('#myModal').on('shown.bs.modal', function () {
-                    // Fetch and update product data in the modal table
                     updateProductTableModal();
                 });
-
-
-
 
                 function initializeProductCodeAutocomplete() {
                     var productCodeInput = $("#invoiceNumber");
