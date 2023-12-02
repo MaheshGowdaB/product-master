@@ -123,7 +123,7 @@
                                 class="required-field">*</span></label>
                         <input type="text" class="form-control" id="invoiceNumber" name="invoiceNumber"
                             placeholder="Enter Invoice Number" style="width: 250px;" required>
-                        <div class="error-message" id="invoiceNumberError"></div>
+
                     </div>
 
                     <div class="mb-3">
@@ -154,13 +154,33 @@
                     </div>
                 </div>
             </div>
+            <!-- Add this modal code inside the <body> tag, after the existing code -->
+            <div class="modal fade" id="productDetailsModal" tabindex="-1" role="dialog"
+                aria-labelledby="productDetailsModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="productDetailsModalLabel">Product Details</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Add content for product details here -->
+                            <div id="productDetailsContent"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
             <!-- Table Section -->
             <table class="table">
                 <thead>
                     <tr>
                         <th scope="col">SL.No</th>
-                        <th scope="col">Code</th>
+                        <th scope="col">Code <span class="add-product-icon" onclick="showProductDetailsPopup()">+</span>
+                        </th>
                         <th scope="col">Name</th>
                         <th scope="col">UOM</th>
                         <th scope="col">Quantity</th>
@@ -201,6 +221,37 @@
                 </div>
             </div>
             <style>
+                .add-product-icon {
+                    cursor: pointer;
+                    font-size: 16px;
+                    color: #fff;
+                    background-color: #4CAF50;
+                    border-radius: 50%;
+                    width: 20px;
+                    height: 20px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    transition: background-color 0.3s ease, color 0.3s ease;
+                    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+                    animation: pulse 1.5s infinite;
+                    position: absolute;
+                    left: 10px;
+                    /* Adjust the left position as needed */
+                    top: 10px;
+                    /* Adjust the top position as needed */
+                }
+
+                .add-product-icon:hover {
+                    background-color: #2196F3;
+                }
+
+                .table th {
+                    position: relative;
+                    padding-left: 40px;
+                    /* Adjust the left padding to make space for the icon */
+                }
+
                 #total {
                     background-color: aliceblue;
                 }
@@ -263,6 +314,29 @@
         `);
                         tableBody.append(row);
                     });
+                }
+
+                function showProductDetailsPopup(productCodeInput) {
+                    var selectedProductCode = $(productCodeInput).val();
+
+                    // Assuming productList is already available in your script
+                    var selectedProduct = productList.find(product => product.product_code === selectedProductCode);
+
+                    if (selectedProduct) {
+                        var detailsContent = `
+        <p><strong>Product Code:</strong> ${selectedProduct.product_code}</p>
+        <p><strong>Product Name:</strong> ${selectedProduct.product_name}</p>
+        <p><strong>UOM:</strong> ${selectedProduct.UOM}</p>
+        <p><strong>Stock:</strong> ${selectedProduct.stock}</p>
+        <p><strong>Selling Price:</strong> ${selectedProduct.selling_price}</p>
+        <p><strong>Offer Price:</strong> ${selectedProduct.offer_price}</p>
+        <p><strong>Product Image:</strong> ${selectedProduct.product_image}</p>
+      `;
+                        $('#productDetailsContent').html(detailsContent);
+                        $('#productDetailsModal').modal('show');
+                    } else {
+                        alert('Product details not found for the selected code.');
+                    }
                 }
 
                 function initializeProductCodeAutocomplete() {
@@ -348,6 +422,7 @@
                     $("#invoiceDate").val(new Date().toISOString().split('T')[0]); // Set default date
                     populateProductData();
                     initializeAutocomplete();
+                    fetchNextInvoiceNumber();
 
                     // Trigger input event for existing rows
                     $("#invoiceForm tbody tr").find('.qty, .selling-price, .offer-price').trigger('input');
@@ -397,6 +472,7 @@
 
                 $("#refreshButton").on('click', function () {
                     clearInputValues();
+                    fetchNextInvoiceNumber();
                     updateTotals();
                 });
 
@@ -438,6 +514,22 @@
 
                 $(document).ready(() => $("#saveButton").on('click', saveInvoice));
 
+
+                function fetchNextInvoiceNumber() {
+                    $.ajax({
+                        url: "get_max_invoice_number.php", // Updated PHP file
+                        method: "GET",
+                        dataType: "json",
+                        success: function (data) {
+                            // Set the next available InvoiceNo in the textbox
+                            var nextInvoiceNo = data[0];
+                            $("#invoiceNumber").val(nextInvoiceNo).attr("readonly", true);
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Error fetching next invoice number:", error);
+                        }
+                    });
+                }
                 // Call the functions to initialize autocompletes and populate product data
                 $(document).ready(function () {
                     populateProductData();
