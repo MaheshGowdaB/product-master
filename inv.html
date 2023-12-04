@@ -377,7 +377,6 @@
                                 row.find(".selling-price").val(selectedProduct.selling_price);
                                 row.find(".offer-price").val(selectedProduct.offer_price);
 
-                                // Trigger input event to recalculate totals
                                 row.find('.qty, .selling-price, .offer-price').trigger('input');
                             }
                         });
