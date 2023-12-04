@@ -428,12 +428,11 @@
 
                     $(document).ready(function () {
                         initializeHeader();
-                        $("#invoiceDate").val(new Date().toISOString().split('T')[0]); // Set default date
+                        $("#invoiceDate").val(new Date().toISOString().split('T')[0]); 
                         populateProductData();
                         initializeAutocomplete();
                         fetchNextInvoiceNumber();
 
-                        // Trigger input event for existing rows
                         $("#invoiceForm tbody tr").find('.qty, .selling-price, .offer-price').trigger('input');
                     });
 
