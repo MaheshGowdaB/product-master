@@ -168,19 +168,20 @@
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                <h4 class="modal-title"></h4>
+                                <h4 class="modal-title">Product Selection</h4>
                             </div>
                             <div class="modal-body">
                                 <table class="table">
                                     <thead>
                                         <tr>
+                                            <th>Select</th>
                                             <th>Product Code</th>
                                             <th>Product Name</th>
                                             <th>UOM</th>
                                             <th>Stock</th>
                                             <th>Selling Price</th>
                                             <th>Offer Price</th>
+                                            <th>Quantity</th> <!-- New column for Quantity -->
                                         </tr>
                                     </thead>
                                     <tbody id="productTableBody">
@@ -190,330 +191,383 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                <button type="button" class="btn btn-primary" id="submitModal">Submit</button>
+                                <button type="button" class="btn btn-primary" onclick="selectProduct()">Submit</button>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
 
-            <!-- Table Section -->
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col">SL.No</th>
-                        <th scope="col" style="position: relative;">Code
-                            <button type="button" class="btn btn-info btn-sm"
-                                style="padding: 0.1rem 0.4rem; font-size: 0.8rem; position: absolute; top: 50%; transform: translateY(-50%); margin-left: 15px;"
-                                data-toggle="modal" data-target="#myModal">+</button>
-                        </th>
-                        <th scope="col">Name</th>
-                        <th scope="col">UOM</th>
-                        <th scope="col">Quantity</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Offer Price</th>
-                        <th scope="col">Total</th>
-                        <th scope="col">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td><input type="text" class="form-control product-code-input" name="product_code[]"
-                                id="productCodeInput" autocomplete="off" /></td>
-                        <td><input type="text" class="form-control product-name-input" name="product_name[]"
-                                id="productNameInput" autocomplete="off" /></td>
-                        <td><input type="text" class="form-control uom-input" name="UOM[]" /></td>
-                        <td><input type="number" class="form-control qty" name="qty" id="qty" value="1" /></td>
-                        <td><input type="number" class="form-control selling-price" name="selling_price[]" /></td>
-                        <td><input type="number" class="form-control offer-price" name="offer_price[]" /></td>
-                        <td><input type="text" class="form-control total" name="total[]" readonly /></td>
-                        <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
-                    </tr>
-                </tbody>
-            </table>
-            <!-- Add a button to add new rows dynamically if required -->
-            <button type="button" class="btn btn-primary" id="addRow">Add Row</button>
-            <!-- Net Total Section -->
-            <div id="netTotalContainer" class="mb-3">
-                <div class="row">
-                    <div class="col-md-6 text-end">
-                        <label for="netTotal" id="netTotal" class="form-label">Net Total</label>
-                    </div>
-                    <div class="col-md-6">
-                        <input type="text" id="netTotalInput" name="netTotal" class="form-control" readonly
-                            style="width: 250px;">
+
+                <!-- Table Section -->
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">SL.No</th>
+                            <th scope="col" style="position: relative;">Code
+                                <button type="button" class="btn btn-info btn-sm"
+                                    style="padding: 0.1rem 0.4rem; font-size: 0.8rem; position: absolute; top: 50%; transform: translateY(-50%); margin-left: 15px;"
+                                    data-toggle="modal" data-target="#myModal" onclick="openProductModal()">+</button>
+
+                            </th>
+                            <th scope="col">Name</th>
+                            <th scope="col">UOM</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Offer Price</th>
+                            <th scope="col">Total</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td><input type="text" class="form-control product-code-input" name="product_code[]"
+                                    id="productCodeInput" autocomplete="off" /></td>
+                            <td><input type="text" class="form-control product-name-input" name="product_name[]"
+                                    id="productNameInput" autocomplete="off" /></td>
+                            <td><input type="text" class="form-control uom-input" name="UOM[]" /></td>
+                            <td><input type="number" class="form-control qty" name="qty" id="qty" value="1" /></td>
+                            <td><input type="number" class="form-control selling-price" name="selling_price[]" /></td>
+                            <td><input type="number" class="form-control offer-price" name="offer_price[]" /></td>
+                            <td><input type="text" class="form-control total" name="total[]" readonly /></td>
+                            <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- Add a button to add new rows dynamically if required -->
+                <button type="button" class="btn btn-primary" id="addRow">Add Row</button>
+                <!-- Net Total Section -->
+                <div id="netTotalContainer" class="mb-3">
+                    <div class="row">
+                        <div class="col-md-6 text-end">
+                            <label for="netTotal" id="netTotal" class="form-label">Net Total</label>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" id="netTotalInput" name="netTotal" class="form-control" readonly
+                                style="width: 250px;">
+                        </div>
                     </div>
                 </div>
-            </div>
-            <style>
-                #total {
-                    background-color: aliceblue;
-                }
+                <style>
+                    #total {
+                        background-color: aliceblue;
+                    }
 
-                #netTotalContainer {
-                    text-align: center;
-                }
+                    #netTotalContainer {
+                        text-align: center;
+                    }
 
-                #netTotal {
-                    margin-top: 5px;
-                    font-size: 18px;
-                    font-weight: bold;
-                    margin-left: 10px;
-                }
+                    #netTotal {
+                        margin-top: 5px;
+                        font-size: 18px;
+                        font-weight: bold;
+                        margin-left: 10px;
+                    }
 
-                #netTotalInput.form-control {
-                    width: 250px;
-                    font-size: 16px;
-                    background-color: aliceblue;
-                }
-            </style>
+                    #netTotalInput.form-control {
+                        width: 250px;
+                        font-size: 16px;
+                        background-color: aliceblue;
+                    }
+                </style>
 
-            <!-- jQuery library -->
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+                <!-- jQuery library -->
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
-            <!-- jQuery UI library -->
-            <link rel="stylesheet"
-                href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/themes/smoothness/jquery-ui.css">
-            <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
+                <!-- jQuery UI library -->
+                <link rel="stylesheet"
+                    href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/themes/smoothness/jquery-ui.css">
+                <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
 
-            <script>
-                var productList = [];
+                <script>
+                    var productList = [];
 
-                function populateProductData() {
-                    $.ajax({
-                        type: 'GET',
-                        url: 'get_products.php',
-                        dataType: 'json',
-                        success: data => (productList = data),
-                        error: () => console.error('Error fetching product data from the server.')
-                    });
-                }
-
-                // Function to update the product table inside the modal
-                function updateProductTableModal() {
-                    // Clear existing rows
-                    $('#productTableBody').empty();
-
-                    // Fetch and add product data to the table
-                    productList.forEach(function (product) {
-                        var row = $('<tr>').html(`
-                <td>${product.product_code}</td>
-                <td>${product.product_name}</td>
-                <td>${product.UOM}</td>
-                <td>${product.stock}</td>
-                <td>${product.selling_price}</td>
-                <td>${product.offer_price}</td>
-            `);
-                        $('#productTableBody').append(row);
-                    });
-                }
-
-                // Event handler for when the modal is shown
-                $('#myModal').on('shown.bs.modal', function () {
-                    updateProductTableModal();
-                });
-
-                function initializeProductCodeAutocomplete() {
-                    var productCodeInput = $("#invoiceNumber");
-
-                    productCodeInput.autocomplete({
-                        source: (request, response) => response(productList.map(product => product.product_code)),
-                        select: (event, ui) => {
-                            var selectedProduct = productList.find(product => product.product_code === ui.item.label);
-                            var row = $("#invoiceForm").find("tbody tr:first");
-                            row.find(".product-code-input, .product-name-input, .uom-input, .selling-price, .offer-price").val(selectedProduct.product_code, selectedProduct.product_name, selectedProduct.UOM, selectedProduct.selling_price, selectedProduct.offer_price);
-                        }
-                    });
-                }
-
-                function initializeProductCodeAutocomplete(element) {
-                    $(element).autocomplete({
-                        source: (request, response) => {
-                            var filteredProducts = productList.filter(product => product.product_code.toLowerCase().includes(request.term.toLowerCase()));
-                            response(filteredProducts.map(product => product.product_code));
-                        },
-                        select: (event, ui) => {
-                            var selectedProduct = productList.find(product => product.product_code === ui.item.label);
-                            var row = $(element).closest("tr");
-                            row.find(".product-name-input").val(selectedProduct.product_name);
-                            row.find(".uom-input").val(selectedProduct.UOM);
-                            row.find(".selling-price").val(selectedProduct.selling_price);
-                            row.find(".offer-price").val(selectedProduct.offer_price);
-
-                            // Trigger input event to recalculate totals
-                            row.find('.qty, .selling-price, .offer-price').trigger('input');
-                        }
-                    });
-                }
-
-                function initializeProductNameAutocomplete(element) {
-                    $(element).autocomplete({
-                        source: (request, response) => {
-                            var filteredProducts = productList.filter(product => product.product_name.toLowerCase().includes(request.term.toLowerCase()));
-                            response(filteredProducts.map(product => product.product_name));
-                        },
-                        select: (event, ui) => {
-                            var selectedProduct = productList.find(product => product.product_name === ui.item.label);
-                            var row = $(element).closest("tr");
-                            row.find(".product-code-input").val(selectedProduct.product_code);
-                            row.find(".uom-input").val(selectedProduct.UOM);
-                            row.find(".selling-price").val(selectedProduct.selling_price);
-                            row.find(".offer-price").val(selectedProduct.offer_price);
-
-                            // Trigger input event to recalculate totals
-                            row.find('.qty, .selling-price, .offer-price').trigger('input');
-                        }
-                    });
-                }
-
-                function updateTotals() {
-                    var netTotal = 0;
-
-                    $("#invoiceForm tbody tr").each(function () {
-                        var row = $(this);
-                        var quantity = parseFloat(row.find('.qty').val()) || 0;
-                        var price = parseFloat(row.find('.selling-price').val()) || 0;
-                        var offerPrice = parseFloat(row.find('.offer-price').val()) || 0;
-
-                        var total = quantity * (offerPrice || price);
-                        row.find('.total').val(total.toFixed(2));
-
-                        netTotal += total;
-                    });
-
-                    $("#netTotalInput").val(netTotal.toFixed(2));
-                }
-
-                $(document).on('input', '.qty, .selling-price, .offer-price', updateTotals);
-
-                function initializeAutocomplete() {
-                    initializeProductCodeAutocomplete(".product-code-input:first");
-                    initializeProductNameAutocomplete(".product-name-input:first");
-                }
-
-                $(document).ready(function () {
-                    initializeHeader();
-                    $("#invoiceDate").val(new Date().toISOString().split('T')[0]); // Set default date
-                    populateProductData();
-                    initializeAutocomplete();
-                    fetchNextInvoiceNumber();
-
-                    // Trigger input event for existing rows
-                    $("#invoiceForm tbody tr").find('.qty, .selling-price, .offer-price').trigger('input');
-                });
+                    function populateProductData() {
+                        $.ajax({
+                            type: 'GET',
+                            url: 'get_products.php',
+                            dataType: 'json',
+                            success: data => (productList = data),
+                            error: () => console.error('Error fetching product data from the server.')
+                        });
+                    }
 
 
 
-                function addRow() {
-                    var newRow = $("#invoiceForm tbody tr:first").clone().find('input').val('').end();
-                    newRow.find('.qty').val(1); // Set default quantity to 1
-                    $("#invoiceForm tbody").append(newRow);
 
-                    var newIndex = $("#invoiceForm tbody tr").length;
-                    newRow.find('td:first').text(newIndex);
-
-                    initializeProductCodeAutocomplete(newRow.find(".product-code-input"));
-                    initializeProductNameAutocomplete(newRow.find(".product-name-input"));
-
-                    // Trigger input event to recalculate totals
-                    newRow.find('.qty, .selling-price, .offer-price').trigger('input');
-                }
-
-
-                initializeProductCodeAutocomplete(".product-code-input, .product-name-input");
-                $("#addRow").on('click', addRow);
-
-                $(document).on('click', '.remove-row', function () {
-                    $(this).closest('tr').remove();
-                    updateRowNumbers();
-                    calculateNetTotal();
-                });
-
-                // Function to update SL.No in each row
-                function updateRowNumbers() {
-                    $("#invoiceForm tbody tr").each((index, row) => $(row).find('td:first').text(index + 1));
-                }
-
-                function calculateNetTotal() {
-                    $("#netTotalInput").val(calculatedValue);
-                }
-
-                function clearInputValues() {
-                    $("#invoiceForm input[type='text'], #invoiceForm input[type='number'], #invoiceForm input[type='date']").val('');
-
-                    $(".error-message").text('');
-                }
-
-                $("#refreshButton").on('click', function () {
-                    clearInputValues();
-                    fetchNextInvoiceNumber();
-                    updateTotals();
-                });
-
-                function serializeFormData() {
-                    var formData = {
-                        invoiceNumber: $('#invoiceNumber').val(),
-                        invoiceDate: $('#invoiceDate').val(),
-                        customerName: $('#customerName').val(),
-                        mobileNumber: $('#mobileNumber').val(),
-                        Saved_By: $('#usernamePlaceholder').text(),
-                        NetTotal: $('#netTotalInput').val(),
-                    };
-
-                    $("#invoiceForm tbody tr").each((index, row) => {
-                        formData[`productCode${index}`] = $(row).find('.product-code-input').val();
-                        formData[`productName${index}`] = $(row).find('.product-name-input').val();
-                        formData[`qty${index}`] = $(row).find('.qty').val();
-                        formData[`sellingPrice${index}`] = $(row).find('.selling-price').val();
-                        formData[`offerPrice${index}`] = $(row).find('.offer-price').val();
-                    });
-
-                    return formData;
-                }
-
-                function saveInvoice() {
-                    var formData = serializeFormData();
-
-                    $.post('save_invoice.php', { invoiceData: JSON.stringify(formData) })
-                        .done(response => {
-                            if (response === 'success') {
-                                alert('Invoice saved successfully!');
-                                window.location.href = 'welcome.html';
-                            } else {
-                                alert('Data Saved Successfully');
+                    function openProductModal() {
+                        // Make an AJAX request to fetch product data
+                        $.ajax({
+                            type: 'GET',
+                            url: 'get_products.php', // Replace with the actual URL to fetch products
+                            dataType: 'json',
+                            success: function (data) {
+                                // Call a function to populate the modal table with the fetched data
+                                populateProductModal(data);
+                            },
+                            error: function () {
+                                alert('Error fetching product data.');
                             }
-                        })
-                        .fail(() => alert('Error occurred during the save operation.'));
-                }
+                        });
+                    }
 
-                $(document).ready(() => $("#saveButton").on('click', saveInvoice));
+                    function populateProductModal(productData) {
+                        // Clear existing rows
+                        $('#productTableBody').empty();
+
+                        // Loop through the product data and append rows to the table
+                        $.each(productData, function (index, product) {
+                            var row = $('<tr>').html(`
+            <td><input type="checkbox" class="product-checkbox" data-product-code="${product.product_code}"></td>
+            <td>${product.product_code}</td>
+            <td>${product.product_name}</td>
+            <td>${product.UOM}</td>
+            <td>${product.stock}</td>
+            <td>${product.selling_price}</td>
+            <td>${product.offer_price}</td>
+            <td><input type="number" class="form-control quantity-input" style="width: 60px;" value="1"></td> <!-- Adjusted width -->
+        `);
+
+                            $('#productTableBody').append(row);
+                        });
+
+                        // Show the modal
+                        $('#myModal').modal('show');
+                    }
+
+                    function selectProduct() {
+                        // Retrieve selected products and quantities
+                        var selectedProducts = [];
+                        $('.product-checkbox:checked').each(function () {
+                            var productCode = $(this).data('product-code');
+                            var quantity = $(this).closest('tr').find('.quantity-input').val();
+                            selectedProducts.push({ productCode: productCode, quantity: quantity });
+                        });
+
+                        // Populate the invoice table with selected products
+                        $.each(selectedProducts, function (index, product) {
+                            var newRow = $("#invoiceForm tbody tr:first").clone().find('input').val('').end();
+                            newRow.find('.qty').val(product.quantity);
+                            newRow.find('.product-code-input').val(product.productCode);
+                            // Populate other fields based on your needs
+
+                            // Append the new row to the invoice table
+                            $("#invoiceForm tbody").append(newRow);
+                        });
+
+                        // Recalculate totals and net total
+                        updateTotals();
+
+                        // Close the modal
+                        $('#myModal').modal('hide');
+                    }
 
 
-                function fetchNextInvoiceNumber() {
-                    $.ajax({
-                        url: "get_max_invoice_number.php", // Updated PHP file
-                        method: "GET",
-                        dataType: "json",
-                        success: function (data) {
-                            // Set the next available InvoiceNo in the textbox
-                            var nextInvoiceNo = data[0];
-                            $("#invoiceNumber").val(nextInvoiceNo).attr("readonly", true);
-                        },
-                        error: function (xhr, status, error) {
-                            console.error("Error fetching next invoice number:", error);
-                        }
+
+
+
+
+
+                    function initializeProductCodeAutocomplete() {
+                        var productCodeInput = $("#invoiceNumber");
+
+                        productCodeInput.autocomplete({
+                            source: (request, response) => response(productList.map(product => product.product_code)),
+                            select: (event, ui) => {
+                                var selectedProduct = productList.find(product => product.product_code === ui.item.label);
+                                var row = $("#invoiceForm").find("tbody tr:first");
+                                row.find(".product-code-input, .product-name-input, .uom-input, .selling-price, .offer-price").val(selectedProduct.product_code, selectedProduct.product_name, selectedProduct.UOM, selectedProduct.selling_price, selectedProduct.offer_price);
+                            }
+                        });
+                    }
+
+                    function initializeProductCodeAutocomplete(element) {
+                        $(element).autocomplete({
+                            source: (request, response) => {
+                                var filteredProducts = productList.filter(product => product.product_code.toLowerCase().includes(request.term.toLowerCase()));
+                                response(filteredProducts.map(product => product.product_code));
+                            },
+                            select: (event, ui) => {
+                                var selectedProduct = productList.find(product => product.product_code === ui.item.label);
+                                var row = $(element).closest("tr");
+                                row.find(".product-name-input").val(selectedProduct.product_name);
+                                row.find(".uom-input").val(selectedProduct.UOM);
+                                row.find(".selling-price").val(selectedProduct.selling_price);
+                                row.find(".offer-price").val(selectedProduct.offer_price);
+
+                                // Trigger input event to recalculate totals
+                                row.find('.qty, .selling-price, .offer-price').trigger('input');
+                            }
+                        });
+                    }
+
+                    function initializeProductNameAutocomplete(element) {
+                        $(element).autocomplete({
+                            source: (request, response) => {
+                                var filteredProducts = productList.filter(product => product.product_name.toLowerCase().includes(request.term.toLowerCase()));
+                                response(filteredProducts.map(product => product.product_name));
+                            },
+                            select: (event, ui) => {
+                                var selectedProduct = productList.find(product => product.product_name === ui.item.label);
+                                var row = $(element).closest("tr");
+                                row.find(".product-code-input").val(selectedProduct.product_code);
+                                row.find(".uom-input").val(selectedProduct.UOM);
+                                row.find(".selling-price").val(selectedProduct.selling_price);
+                                row.find(".offer-price").val(selectedProduct.offer_price);
+
+                                // Trigger input event to recalculate totals
+                                row.find('.qty, .selling-price, .offer-price').trigger('input');
+                            }
+                        });
+                    }
+
+                    function updateTotals() {
+                        var netTotal = 0;
+
+                        $("#invoiceForm tbody tr").each(function () {
+                            var row = $(this);
+                            var quantity = parseFloat(row.find('.qty').val()) || 0;
+                            var price = parseFloat(row.find('.selling-price').val()) || 0;
+                            var offerPrice = parseFloat(row.find('.offer-price').val()) || 0;
+
+                            var total = quantity * (offerPrice || price);
+                            row.find('.total').val(total.toFixed(2));
+
+                            netTotal += total;
+                        });
+
+                        $("#netTotalInput").val(netTotal.toFixed(2));
+                    }
+
+                    $(document).on('input', '.qty, .selling-price, .offer-price', updateTotals);
+
+                    function initializeAutocomplete() {
+                        initializeProductCodeAutocomplete(".product-code-input:first");
+                        initializeProductNameAutocomplete(".product-name-input:first");
+                    }
+
+                    $(document).ready(function () {
+                        initializeHeader();
+                        $("#invoiceDate").val(new Date().toISOString().split('T')[0]); // Set default date
+                        populateProductData();
+                        initializeAutocomplete();
+                        fetchNextInvoiceNumber();
+
+                        // Trigger input event for existing rows
+                        $("#invoiceForm tbody tr").find('.qty, .selling-price, .offer-price').trigger('input');
                     });
-                }
-                // Call the functions to initialize autocompletes and populate product data
-                $(document).ready(function () {
-                    populateProductData();
-                    initializeProductCodeAutocomplete();
-                    initializeProductNameAutocomplete();
-                    initializeAutocomplete();
-                });
-            </script>
+
+
+
+                    function addRow() {
+                        var newRow = $("#invoiceForm tbody tr:first").clone().find('input').val('').end();
+                        newRow.find('.qty').val(1); // Set default quantity to 1
+                        $("#invoiceForm tbody").append(newRow);
+
+                        var newIndex = $("#invoiceForm tbody tr").length;
+                        newRow.find('td:first').text(newIndex);
+
+                        initializeProductCodeAutocomplete(newRow.find(".product-code-input"));
+                        initializeProductNameAutocomplete(newRow.find(".product-name-input"));
+
+                        // Trigger input event to recalculate totals
+                        newRow.find('.qty, .selling-price, .offer-price').trigger('input');
+                    }
+
+
+                    initializeProductCodeAutocomplete(".product-code-input, .product-name-input");
+                    $("#addRow").on('click', addRow);
+
+                    $(document).on('click', '.remove-row', function () {
+                        $(this).closest('tr').remove();
+                        updateRowNumbers();
+                        calculateNetTotal();
+                    });
+
+                    // Function to update SL.No in each row
+                    function updateRowNumbers() {
+                        $("#invoiceForm tbody tr").each((index, row) => $(row).find('td:first').text(index + 1));
+                    }
+
+                    function calculateNetTotal() {
+                        $("#netTotalInput").val(calculatedValue);
+                    }
+
+                    function clearInputValues() {
+                        $("#invoiceForm input[type='text'], #invoiceForm input[type='number'], #invoiceForm input[type='date']").val('');
+
+                        $(".error-message").text('');
+                    }
+
+                    $("#refreshButton").on('click', function () {
+                        clearInputValues();
+                        fetchNextInvoiceNumber();
+                        updateTotals();
+                    });
+
+                    function serializeFormData() {
+                        var formData = {
+                            invoiceNumber: $('#invoiceNumber').val(),
+                            invoiceDate: $('#invoiceDate').val(),
+                            customerName: $('#customerName').val(),
+                            mobileNumber: $('#mobileNumber').val(),
+                            Saved_By: $('#usernamePlaceholder').text(),
+                            NetTotal: $('#netTotalInput').val(),
+                        };
+
+                        $("#invoiceForm tbody tr").each((index, row) => {
+                            formData[`productCode${index}`] = $(row).find('.product-code-input').val();
+                            formData[`productName${index}`] = $(row).find('.product-name-input').val();
+                            formData[`qty${index}`] = $(row).find('.qty').val();
+                            formData[`sellingPrice${index}`] = $(row).find('.selling-price').val();
+                            formData[`offerPrice${index}`] = $(row).find('.offer-price').val();
+                        });
+
+                        return formData;
+                    }
+
+                    function saveInvoice() {
+                        var formData = serializeFormData();
+
+                        $.post('save_invoice.php', { invoiceData: JSON.stringify(formData) })
+                            .done(response => {
+                                if (response === 'success') {
+                                    alert('Invoice saved successfully!');
+                                    window.location.href = 'welcome.html';
+                                } else {
+                                    alert('Data Saved Successfully');
+                                }
+                            })
+                            .fail(() => alert('Error occurred during the save operation.'));
+                    }
+
+                    $(document).ready(() => $("#saveButton").on('click', saveInvoice));
+
+
+                    function fetchNextInvoiceNumber() {
+                        $.ajax({
+                            url: "get_max_invoice_number.php", // Updated PHP file
+                            method: "GET",
+                            dataType: "json",
+                            success: function (data) {
+                                // Set the next available InvoiceNo in the textbox
+                                var nextInvoiceNo = data[0];
+                                $("#invoiceNumber").val(nextInvoiceNo).attr("readonly", true);
+                            },
+                            error: function (xhr, status, error) {
+                                console.error("Error fetching next invoice number:", error);
+                            }
+                        });
+                    }
+                    // Call the functions to initialize autocompletes and populate product data
+                    $(document).ready(function () {
+                        populateProductData();
+                        initializeProductCodeAutocomplete();
+                        initializeProductNameAutocomplete();
+                        initializeAutocomplete();
+                    });
+                </script>
 
 </body>
 
