@@ -297,13 +297,11 @@
 
 
                     function openProductModal() {
-                        // Make an AJAX request to fetch product data
                         $.ajax({
                             type: 'GET',
-                            url: 'get_products.php', // Replace with the actual URL to fetch products
+                            url: 'get_products.php',
                             dataType: 'json',
                             success: function (data) {
-                                // Call a function to populate the modal table with the fetched data
                                 populateProductModal(data);
                             },
                             error: function () {
@@ -313,10 +311,8 @@
                     }
 
                     function populateProductModal(productData) {
-                        // Clear existing rows
                         $('#productTableBody').empty();
 
-                        // Loop through the product data and append rows to the table
                         $.each(productData, function (index, product) {
                             var row = $('<tr>').html(`
             <td><input type="checkbox" class="product-checkbox" data-product-code="${product.product_code}"></td>
@@ -331,13 +327,11 @@
 
                             $('#productTableBody').append(row);
                         });
-
-                        // Show the modal
                         $('#myModal').modal('show');
                     }
 
+
                     function selectProduct() {
-                        // Retrieve selected products and quantities
                         var selectedProducts = [];
                         $('.product-checkbox:checked').each(function () {
                             var productCode = $(this).data('product-code');
@@ -345,21 +339,16 @@
                             selectedProducts.push({ productCode: productCode, quantity: quantity });
                         });
 
-                        // Populate the invoice table with selected products
                         $.each(selectedProducts, function (index, product) {
                             var newRow = $("#invoiceForm tbody tr:first").clone().find('input').val('').end();
                             newRow.find('.qty').val(product.quantity);
                             newRow.find('.product-code-input').val(product.productCode);
-                            // Populate other fields based on your needs
 
-                            // Append the new row to the invoice table
                             $("#invoiceForm tbody").append(newRow);
                         });
 
-                        // Recalculate totals and net total
                         updateTotals();
 
-                        // Close the modal
                         $('#myModal').modal('hide');
                     }
 
