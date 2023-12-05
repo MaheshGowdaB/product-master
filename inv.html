@@ -237,9 +237,7 @@
                         </tr>
                     </tbody>
                 </table>
-                <!-- Add a button to add new rows dynamically if required -->
                 <button type="button" class="btn btn-primary" id="addRow">Add Row</button>
-                <!-- Net Total Section -->
                 <div id="netTotalContainer" class="mb-3">
                     <div class="row">
                         <div class="col-md-6 text-end">
@@ -321,7 +319,7 @@
             <td>${product.stock}</td>
             <td>${product.selling_price}</td>
             <td>${product.offer_price}</td>
-            <td><input type="number" class="form-control quantity-input" style="width: 60px;" value="1"></td> <!-- Adjusted width -->
+            <td><input type="number" class="form-control quantity-input-modal" style="width: 60px;" value="1"></td>
         `);
                             $('#productTableBody').append(row);
                         });
@@ -333,21 +331,29 @@
                         var selectedProducts = [];
                         $('.product-checkbox:checked').each(function () {
                             var productCode = $(this).data('product-code');
-                            var quantity = $(this).closest('tr').find('.quantity-input').val();
-                            selectedProducts.push({ productCode: productCode, quantity: quantity });
+                            selectedProducts.push({ productCode: productCode });
                         });
 
-                        $.each(selectedProducts, function (index, product) {
-                            var newRow = $("#invoiceForm tbody tr:first").clone().find('input').val('').end();
-                            newRow.find('.qty').val(product.quantity);
-                            newRow.find('.product-code-input').val(product.productCode);
+                        $.each(selectedProducts, function (index, selectedProduct) {
+                            var product = productList.find(product => product.product_code === selectedProduct.productCode);
 
-                            $("#invoiceForm tbody").append(newRow);
+                            if (product) {
+                                var newRow = $("#invoiceForm tbody tr:first").clone().find('input').val('').end();
+                                newRow.find('.qty').val(1); // You can set a default quantity here if needed
+                                newRow.find('.product-code-input').val(product.product_code);
+                                newRow.find('.product-name-input').val(product.product_name);
+                                newRow.find('.uom-input').val(product.UOM);
+                                newRow.find('.selling-price').val(product.selling_price);
+                                newRow.find('.offer-price').val(product.offer_price);
+
+                                $("#invoiceForm tbody").append(newRow);
+                            }
                         });
 
                         updateTotals();
                         $('#myModal').modal('hide');
                     }
+
 
                     function initializeProductCodeAutocomplete() {
                         var productCodeInput = $("#invoiceNumber");
