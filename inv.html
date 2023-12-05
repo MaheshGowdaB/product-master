@@ -118,11 +118,13 @@
             <div class="row">
                 <!-- Left column -->
                 <div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="invoiceNumber" class="form-label">Invoice Number <span
-                                class="required-field">*</span></label>
+                    <label for="invoiceNumber" class="form-label me-2">Invoice Number <span
+                            class="required-field">*</span></label>
+                    <div class="d-flex">
                         <input type="text" class="form-control" id="invoiceNumber" name="invoiceNumber"
-                            placeholder="Enter Invoice Number" style="width: 250px;" required>
+                            placeholder="Enter Invoice Number" style="width: 194px;" required>
+                        <select class="form-select" id="invoiceNumberDropdown" name="invoiceNumberDropdown"
+                            style="width: 55px;"></select>
 
                     </div>
 
@@ -293,9 +295,6 @@
                         });
                     }
 
-
-
-
                     function openProductModal() {
                         $.ajax({
                             type: 'GET',
@@ -436,31 +435,21 @@
                         $("#invoiceForm tbody tr").find('.qty, .selling-price, .offer-price').trigger('input');
                     });
 
-
-
-
-
                     function addRow() {
                         var newRow = $("#invoiceForm tbody tr:first").clone();
 
-                        // Clear input values in the new row
                         newRow.find('input').val('');
 
-                        // Set default quantity to 1
                         newRow.find('.qty').val(1);
 
-                        // Update serial number for the new row
                         var newIndex = $("#invoiceForm tbody tr").length + 1;
                         newRow.find('td:first').text(newIndex);
 
-                        // Append the new row to the invoice table
                         $("#invoiceForm tbody").append(newRow);
 
-                        // Initialize autocomplete for the new row
                         initializeProductCodeAutocomplete(newRow.find(".product-code-input"));
                         initializeProductNameAutocomplete(newRow.find(".product-name-input"));
 
-                        // Trigger input event to recalculate totals
                         newRow.find('.qty, .selling-price, .offer-price').trigger('input');
                     }
 
@@ -475,7 +464,6 @@
                         calculateNetTotal();
                     });
 
-                    // Function to update SL.No in each row
                     function updateRowNumbers() {
                         $("#invoiceForm tbody tr").each((index, row) => $(row).find('td:first').text(index + 1));
                     }
@@ -499,6 +487,7 @@
                     function serializeFormData() {
                         var formData = {
                             invoiceNumber: $('#invoiceNumber').val(),
+                            invoiceType: $('#invoiceType').val(),
                             invoiceDate: $('#invoiceDate').val(),
                             customerName: $('#customerName').val(),
                             mobileNumber: $('#mobileNumber').val(),
@@ -537,11 +526,10 @@
 
                     function fetchNextInvoiceNumber() {
                         $.ajax({
-                            url: "get_max_invoice_number.php", // Updated PHP file
+                            url: "get_max_invoice_number.php",
                             method: "GET",
                             dataType: "json",
                             success: function (data) {
-                                // Set the next available InvoiceNo in the textbox
                                 var nextInvoiceNo = data[0];
                                 $("#invoiceNumber").val(nextInvoiceNo).attr("readonly", true);
                             },
@@ -551,14 +539,67 @@
                         });
                     }
 
+                    function populateInvoiceDetails(invoiceNumber) {
+                        console.log('Fetching details for invoice number:', invoiceNumber);
+                        $.ajax({
+                            type: 'GET',
+                            url: 'get_invoice_details.php',
+                            data: { invoiceNumber: invoiceNumber },
+                            dataType: 'json',
+                            success: function (data) {
+                                console.log('Server response:', data);
 
-                    // Call the functions to initialize autocompletes and populate product data
+                                if (data.length > 0) {
+                                    $('#invoiceNumber').val(data[0].InvoiceNo);
+                                    $('#customerName').val(data[0].CustomerName);
+                                    $('#invoiceDate').val(data[0].InvoiceDate);
+                                    $('#mobileNumber').val(data[0].MobileNo);
+
+                                    updateTotals();
+                                } else {
+                                    alert('No details found for the selected invoice number.');
+                                }
+                            },
+                            error: function () {
+                                console.log('Error fetching invoice details.');
+                            }
+                        });
+                    }
+
+                    function fetchInvoiceNumbers() {
+                        $.ajax({
+                            type: 'GET',
+                            url: 'get_invoice_numbers.php',
+                            dataType: 'json',
+                            success: function (data) {
+                                var dropdown = $('#invoiceNumberDropdown');
+                                dropdown.empty();
+                                $.each(data, function (index, value) {
+                                    dropdown.append($('<option>').text(value).attr('value', value));
+                                });
+
+                                dropdown.on('change', function () {
+                                    var selectedInvoiceNumber = $(this).val();
+                                    populateInvoiceDetails(selectedInvoiceNumber);
+                                });
+                            },
+                            error: function () {
+                                alert('Error fetching invoice numbers.');
+                            }
+                        });
+                    }
+
+
+
                     $(document).ready(function () {
                         populateProductData();
-
+                        fetchInvoiceNumbers();
                         initializeProductCodeAutocomplete();
                         initializeProductNameAutocomplete();
                         initializeAutocomplete();
+                        $('#invoiceNumber').on('focus', function () {
+                            fetchInvoiceNumbers();
+                        });
                     });
                 </script>
 
